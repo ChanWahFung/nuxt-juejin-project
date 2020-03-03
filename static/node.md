@@ -1,0 +1,288 @@
+## 配置端口
+`nuxt.config.js`:
+```js
+export default {
+  server: {
+    port: 8000,
+    host: '127.0.0.1'
+  }
+}
+```
+`package.json`:
+
+``` json
+"config": {
+  "nuxt": {
+    "host": "127.0.0.1",
+    "port": "8000"
+  }
+},
+```
+
+重新 `npm run dev` 
+
+## 全局挂载
+有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到`Vue`实例（客户端），`context`（服务器端）甚至 `store(Vuex)`。按照惯例，新增的属性或方法名使用`$`作为前缀。
+
+### 注入Vue实例
+`plugins/vue-inject.js`
+```js
+import Vue from 'vue'
+
+Vue.prototype.$myInjectedFunction = string => console.log('This is an example', string)
+```
+`nuxt.config.js`
+```js
+export default {
+  plugins: ['~/plugins/vue-inject.js']
+}
+```
+这样在所有`Vue`组件中都可以使用该函数
+```js
+export default {
+  mounted () {
+    this.$myInjectedFunction('test')
+  }
+}
+```
+
+### 注入 context
+`context`注入方式和在其它`vue`应用程序中注入类似。
+
+`plugins/ctx-inject.js`
+```js
+export default ({ app }, inject) => {
+  // Set the function directly on the context.app object
+  app.myInjectedFunction = string => console.log('Okay, another function', string)
+}
+```
+`nuxt.config.js`
+```js
+export default {
+  plugins: ['~/plugins/ctx-inject.js']
+}
+```
+现在，只要您获得`context`，你就可以使用该函数（例如在`asyncData`和`fetch`中）
+```js
+export default {
+  asyncData (context) {
+    context.app.myInjectedFunction('ctx!')
+  }
+}
+```
+
+### 同时注入
+如果需要同时在`context`，`Vue`实例，甚至`Vuex`中同时注入，可以使用`inject`方法，它是`plugin`导出函数的第二个参数。系统会自动将`$`添加到方法名的前面。
+
+`plugins/combined-inject.js`:
+```js
+export default ({ app }, inject) => {
+  inject('myInjectedFunction', string => console.log('That was easy!', string))
+}
+```
+
+`nuxt.config.js`:
+```js
+export default {
+  plugins: ['~/plugins/combined-inject.js']
+}
+```
+
+现在您就可以在`context`，或者`Vue`实例中的`this`，或者`Vuex`的`actions`/`mutations`方法中的`this`来调用`myInjectedFunction`方法
+
+```js
+export default {
+  mounted () {
+    this.$myInjectedFunction('works in mounted')
+  },
+  asyncData (context) {
+    context.app.$myInjectedFunction('works with context')
+  }
+}
+```
+`store/index.js`:
+```js
+export const state = () => ({
+  someValue: ''
+})
+
+export const mutations = {
+  changeSomeValue (state, newValue) {
+    this.$myInjectedFunction('accessible in mutations')
+    state.someValue = newValue
+  }
+}
+
+export const actions = {
+  setSomeValueToWhatever ({ commit }) {
+    this.$myInjectedFunction('accessible in actions')
+    const newValue = 'whatever'
+    commit('changeSomeValue', newValue)
+  }
+}
+```
+
+## CSS预处理器
+
+以 `scss` 为例子
+
+### 安装
+
+`node-sass` 源在国外，下载很容易失败，使用淘宝镜像下载解决
+
+``` cmd
+npm i sass-loader scss-loader --save--dev
+npm i node-sass --save--dev sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+```
+
+### 使用
+
+无需配置，模板内直接使用
+
+``` scss
+<style lang="scss" scoped>
+</style>
+```
+
+### 全局样式
+
+`nuxt.config.js`:
+
+``` js
+{
+    css: [
+        './assets/scss/main.scss'
+    ],
+}
+```
+
+重启即可
+
+### 全局变量
+
+为页面注入 变量 和 `mixin` 而且不用每次都去导入他们，可以使用 `@nuxtjs/style-resources` 来实现。
+
+安装
+
+``` cmd
+npm i @nuxtjs/style-resources --save--dev
+```
+
+`nuxt.config.js`:
+
+``` js
+{
+    modules: [
+        '@nuxtjs/style-resources'
+    ],
+    styleResources: {
+        scss: [
+            './assets/scss/variable.scss'
+        ]
+    },
+}
+```
+
+重启即可
+
+## Axios
+
+### 安装
+`Nuxt` 已为我们集成好 `@nuxtjs/axios` 
+
+``` cmd
+npm i @nuxtjs/axios --save--dev
+```
+
+`nuxt.config.js`:
+```js
+{
+  modules: [
+    '@nuxtjs/axios'
+  ],
+}
+```
+
+### SSR使用Axios
+
+服务器端获取并渲染数据， `asyncData` 方法可以在渲染组件之前异步获取数据，并把获取的数据返回给当前组件。第一个参数被设定为当前页面的上下文对象（`context`）。
+
+context：[https://zh.nuxtjs.org/api/context](https://zh.nuxtjs.org/api/context)
+
+``` js
+export default {
+    async asyncData(context) {
+        let data = await context.app.$axios.get("test")
+        return {
+            list: data
+        };
+    },
+    data() {
+        return {
+            list: []
+        }
+    }
+}
+```
+
+### 非SSR使用Axios
+
+这种使用方式就和我们平常一样
+
+``` js
+export default {
+    data() {
+        return {
+            list: []
+        }
+    },
+    async created() {
+        let data = await this.$axios.get("test")
+        this.list = data
+    },
+}
+```
+
+### 使用二次封装Axios
+
+很多时候，我们都需要对`axios`做二次封装，这时可以通过配置 `plugins` 来引入。
+
+`plugins/axios.js`:
+
+``` js
+//该函数接收的参数为context
+export default function({
+    app: {
+        $axios
+    }
+}) {
+    $axios.defaults.baseURL = 'http://127.0.0.1:8000/'
+    $axios.onRequest(config => {
+        return config
+    })
+    $axios.onError(error => {
+        console.error(error)
+    })
+    // response拦截器，数据返回后，你可以先在这里进行一个简单的判断
+    $axios.interceptors.response.use(response => {
+        let res = response.data
+        if (res.code === 0) {
+            return Promise.reject(res.msg)
+        }
+        return res
+    })
+}
+```
+
+`nuxt.config.js`:
+
+``` js
+{
+    plugins: [
+        './plugins/axios.js'
+    ],
+}
+```
+
+完成后，使用方式也和上面的一样，但是`axios`是使用我们二次封装过的。
+

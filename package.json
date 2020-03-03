@@ -1,0 +1,41 @@
+{
+  "name": "nuxt-project",
+  "version": "1.0.0",
+  "description": "My stellar Nuxt.js project",
+  "author": "ChanWahFung",
+  "private": true,
+  "config": {
+    "nuxt": {
+      "host": "127.0.0.1",
+      "port": "8000"
+    }
+  },
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "cross-env": "^5.2.0",
+    "koa": "^2.6.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^8.0.8",
+    "koa2-cors": "^2.0.6",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^2.0.0",
+    "@nuxtjs/eslint-module": "^1.0.0",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-nuxt": ">=0.4.2",
+    "node-sass": "^4.13.1",
+    "nodemon": "^1.18.9",
+    "sass-loader": "^8.0.2",
+    "scss-loader": "0.0.1"
+  }
+}
