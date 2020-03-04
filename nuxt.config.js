@@ -1,6 +1,10 @@
 
 module.exports = {
   mode: 'universal',
+  server: {
+    port: 8000,
+    host: '127.0.0.1'
+  },
   /*
   ** Headers of the page
   */
@@ -23,14 +27,16 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    './assets/scss/main.scss'
+    './assets/scss/main.scss',
+    'element-ui/lib/theme-chalk/index.css'
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
     './plugins/axios.js',
-    './plugins/api.js'
+    './plugins/api.js',
+    './plugins/components.js',
   ],
   /*
   ** Nuxt.js dev-modules

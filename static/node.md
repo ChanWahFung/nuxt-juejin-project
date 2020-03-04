@@ -1,124 +1,296 @@
 ## 配置端口
-`nuxt.config.js`:
-```js
+第一种：
+`nuxt.config.js` :
+
+``` js
 export default {
-  server: {
-    port: 8000,
-    host: '127.0.0.1'
-  }
+    server: {
+        port: 8000,
+        host: '127.0.0.1'
+    }
 }
 ```
-`package.json`:
+
+第二种：
+`package.json` :
 
 ``` json
 "config": {
   "nuxt": {
+
     "host": "127.0.0.1",
     "port": "8000"
+
   }
 },
-```
-
-重新 `npm run dev` 
+``` 
 
 ## 全局挂载
-有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到`Vue`实例（客户端），`context`（服务器端）甚至 `store(Vuex)`。按照惯例，新增的属性或方法名使用`$`作为前缀。
+
+有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`## 配置端口
+第一种：
+`nuxt.config.js` :
+```js
+export default {
+    server: {
+        port: 8000,
+        host: '127.0.0.1'
+    }
+}
+```
+
+第二种：
+`package.json` : 作为前缀。
 
 ### 注入Vue实例
-`plugins/vue-inject.js`
-```js
+
+`plugins/vue-inject.js` 
+
+``` js
 import Vue from 'vue'
 
 Vue.prototype.$myInjectedFunction = string => console.log('This is an example', string)
 ```
-`nuxt.config.js`
-```js
+
+`nuxt.config.js` 
+
+``` js
 export default {
-  plugins: ['~/plugins/vue-inject.js']
+    plugins: ['~/plugins/vue-inject.js']
 }
 ```
-这样在所有`Vue`组件中都可以使用该函数
-```js
+
+这样在所有 `Vue` 组件中都可以使用该函数
+
+``` js
 export default {
-  mounted () {
-    this.$myInjectedFunction('test')
-  }
+    mounted() {
+        this.$myInjectedFunction('test')
+    }
 }
 ```
 
 ### 注入 context
-`context`注入方式和在其它`vue`应用程序中注入类似。
 
-`plugins/ctx-inject.js`
-```js
-export default ({ app }, inject) => {
-  // Set the function directly on the context.app object
-  app.myInjectedFunction = string => console.log('Okay, another function', string)
+`context` 注入方式和在其它 `vue` 应用程序中注入类似。
+
+`plugins/ctx-inject.js` 
+
+``` js
+export default ({
+    app
+}, inject) => {
+    // Set the function directly on the context.app object
+    app.myInjectedFunction = string => console.log('Okay, another function', string)
 }
 ```
-`nuxt.config.js`
-```js
+
+`nuxt.config.js` 
+
+``` js
 export default {
-  plugins: ['~/plugins/ctx-inject.js']
+    plugins: ['~/plugins/ctx-inject.js']
 }
 ```
-现在，只要您获得`context`，你就可以使用该函数（例如在`asyncData`和`fetch`中）
-```js
+
+现在，只要您获得 `context` ，你就可以使用该函数（例如在 `asyncData` 和 `fetch` 中）
+
+``` js
 export default {
-  asyncData (context) {
-    context.app.myInjectedFunction('ctx!')
-  }
+    asyncData(context) {
+        context.app.myInjectedFunction('ctx!')
+    }
 }
 ```
 
 ### 同时注入
-如果需要同时在`context`，`Vue`实例，甚至`Vuex`中同时注入，可以使用`inject`方法，它是`plugin`导出函数的第二个参数。系统会自动将`$`添加到方法名的前面。
 
-`plugins/combined-inject.js`:
-```js
-export default ({ app }, inject) => {
-  inject('myInjectedFunction', string => console.log('That was easy!', string))
+如果需要同时在 `context` ， `Vue` 实例，甚至 `Vuex` 中同时注入，可以使用 `inject` 方法，它是 `plugin` 导出函数的第二个参数。系统会自动将`## 配置端口
+第一种：
+`nuxt.config.js` :
+
+``` js
+export default {
+    server: {
+        port: 8000,
+        host: '127.0.0.1'
+    }
 }
 ```
 
-`nuxt.config.js`:
-```js
-export default {
-  plugins: ['~/plugins/combined-inject.js']
-}
-```
+第二种：
+`package.json` :
 
-现在您就可以在`context`，或者`Vue`实例中的`this`，或者`Vuex`的`actions`/`mutations`方法中的`this`来调用`myInjectedFunction`方法
+``` json
+"config": {
+  "nuxt": {
 
-```js
-export default {
-  mounted () {
-    this.$myInjectedFunction('works in mounted')
-  },
-  asyncData (context) {
-    context.app.$myInjectedFunction('works with context')
+    "host": "127.0.0.1",
+    "port": "8000"
+
   }
+},
+``` 
+
+## 全局挂载
+
+有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`## 配置端口
+第一种：
+`nuxt.config.js` :
+```js
+export default {
+    server: {
+        port: 8000,
+        host: '127.0.0.1'
+    }
 }
 ```
-`store/index.js`:
-```js
+
+第二种：
+`package.json` : 作为前缀。
+
+### 注入Vue实例
+
+`plugins/vue-inject.js` 
+
+``` js
+import Vue from 'vue'
+
+Vue.prototype.$myInjectedFunction = string => console.log('This is an example', string)
+```
+
+`nuxt.config.js` 
+
+``` js
+export default {
+    plugins: ['~/plugins/vue-inject.js']
+}
+```
+
+这样在所有 `Vue` 组件中都可以使用该函数
+
+``` js
+export default {
+    mounted() {
+        this.$myInjectedFunction('test')
+    }
+}
+```
+
+### 注入 context
+
+`context` 注入方式和在其它 `vue` 应用程序中注入类似。
+
+`plugins/ctx-inject.js` 
+
+``` js
+export default ({
+    app
+}, inject) => {
+    // Set the function directly on the context.app object
+    app.myInjectedFunction = string => console.log('Okay, another function', string)
+}
+```
+
+`nuxt.config.js` 
+
+``` js
+export default {
+    plugins: ['~/plugins/ctx-inject.js']
+}
+```
+
+现在，只要您获得 `context` ，你就可以使用该函数（例如在 `asyncData` 和 `fetch` 中）
+
+``` js
+export default {
+    asyncData(context) {
+        context.app.myInjectedFunction('ctx!')
+    }
+}
+```
+
+### 同时注入
+
+如果需要同时在 `context` ， `Vue` 实例，甚至 `Vuex` 中同时注入，可以使用 `inject` 方法，它是 `plugin` 导出函数的第二个参数。系统会自动将添加到方法名的前面。
+
+`plugins/combined-inject.js` :
+
+``` js
+export default ({
+    app
+}, inject) => {
+    inject('myInjectedFunction', string => console.log('That was easy!', string))
+}
+```
+
+`nuxt.config.js` :
+
+``` js
+export default {
+    plugins: ['~/plugins/combined-inject.js']
+}
+```
+
+现在您就可以在 `context` ，或者 `Vue` 实例中的 `this` ，或者 `Vuex` 的 `actions` / `mutations` 方法中的 `this` 来调用 `myInjectedFunction` 方法
+
+``` js
+export default {
+    mounted() {
+        this.$myInjectedFunction('works in mounted')
+    },
+    asyncData(context) {
+        context.app.$myInjectedFunction('works with context')
+    }
+}
+```
+
+`store/index.js` :
+
+``` js
 export const state = () => ({
-  someValue: ''
+    someValue: ''
 })
 
 export const mutations = {
-  changeSomeValue (state, newValue) {
-    this.$myInjectedFunction('accessible in mutations')
-    state.someValue = newValue
-  }
+    changeSomeValue(state, newValue) {
+        this.$myInjectedFunction('accessible in mutations')
+        state.someValue = newValue
+    }
 }
 
 export const actions = {
-  setSomeValueToWhatever ({ commit }) {
-    this.$myInjectedFunction('accessible in actions')
-    const newValue = 'whatever'
-    commit('changeSomeValue', newValue)
-  }
+    setSomeValueToWhatever({
+        commit
+    }) {
+        this.$myInjectedFunction('accessible in actions')
+        const newValue = 'whatever'
+        commit('changeSomeValue', newValue)
+    }
+}
+```
+
+## 注册组件
+
+`plugins/components.js` :
+
+``` js
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+
+Vue.use(ElementUI)
+```
+
+`nuxt.config.js` :
+
+``` js
+{
+    css: [
+        'element-ui/lib/theme-chalk/index.css'
+    ],
+    plugins: [
+        './plugins/components.js'
+    ]
 }
 ```
 
@@ -146,7 +318,7 @@ npm i node-sass --save--dev sass_binary_site=https://npm.taobao.org/mirrors/node
 
 ### 全局样式
 
-`nuxt.config.js`:
+`nuxt.config.js` :
 
 ``` js
 {
@@ -155,8 +327,6 @@ npm i node-sass --save--dev sass_binary_site=https://npm.taobao.org/mirrors/node
     ],
 }
 ```
-
-重启即可
 
 ### 全局变量
 
@@ -168,7 +338,7 @@ npm i node-sass --save--dev sass_binary_site=https://npm.taobao.org/mirrors/node
 npm i @nuxtjs/style-resources --save--dev
 ```
 
-`nuxt.config.js`:
+`nuxt.config.js` :
 
 ``` js
 {
@@ -183,8 +353,6 @@ npm i @nuxtjs/style-resources --save--dev
 }
 ```
 
-重启即可
-
 ## Axios
 
 ### 安装
@@ -194,18 +362,19 @@ npm i @nuxtjs/style-resources --save--dev
 npm i @nuxtjs/axios --save--dev
 ```
 
-`nuxt.config.js`:
-```js
+`nuxt.config.js` :
+
+``` js
 {
-  modules: [
-    '@nuxtjs/axios'
-  ],
+    modules: [
+        '@nuxtjs/axios'
+    ],
 }
 ```
 
 ### SSR使用Axios
 
-服务器端获取并渲染数据， `asyncData` 方法可以在渲染组件之前异步获取数据，并把获取的数据返回给当前组件。第一个参数被设定为当前页面的上下文对象（`context`）。
+服务器端获取并渲染数据， `asyncData` 方法可以在渲染组件之前异步获取数据，并把获取的数据返回给当前组件。第一个参数被设定为当前页面的上下文对象（ `context` ）。
 
 context：[https://zh.nuxtjs.org/api/context](https://zh.nuxtjs.org/api/context)
 
@@ -245,9 +414,9 @@ export default {
 
 ### 使用二次封装Axios
 
-很多时候，我们都需要对`axios`做二次封装，这时可以通过配置 `plugins` 来引入。
+很多时候，我们都需要对 `axios` 做二次封装，这时可以通过配置 `plugins` 来引入。
 
-`plugins/axios.js`:
+`plugins/axios.js` :
 
 ``` js
 //该函数接收的参数为context
@@ -263,7 +432,6 @@ export default function({
     $axios.onError(error => {
         console.error(error)
     })
-    // response拦截器，数据返回后，你可以先在这里进行一个简单的判断
     $axios.interceptors.response.use(response => {
         let res = response.data
         if (res.code === 0) {
@@ -274,7 +442,7 @@ export default function({
 }
 ```
 
-`nuxt.config.js`:
+`nuxt.config.js` :
 
 ``` js
 {
@@ -284,5 +452,5 @@ export default function({
 }
 ```
 
-完成后，使用方式也和上面的一样，但是`axios`是使用我们二次封装过的。
+完成后，使用方式也和上面的一样，但是 `axios` 是使用我们二次封装过的。
 

@@ -4,12 +4,6 @@
   "description": "My stellar Nuxt.js project",
   "author": "ChanWahFung",
   "private": true,
-  "config": {
-    "nuxt": {
-      "host": "127.0.0.1",
-      "port": "8000"
-    }
-  },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
@@ -20,6 +14,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
     "cross-env": "^5.2.0",
+    "element-ui": "^2.13.0",
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^8.0.8",

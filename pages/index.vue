@@ -2,9 +2,9 @@
   <div class="container">
     <div>
       <logo />
-      <nuxt-link to="/about">
-        about
-      </nuxt-link>
+      <el-button type="primary">
+        <nuxt-link to="/about">about</nuxt-link>
+      </el-button>
     </div>
   </div>
 </template>
@@ -19,9 +19,6 @@ export default {
   asyncData(context) {
     context.app.$axios
       .get("test")
-      .then(res => {
-        console.log(1, context.app.$api2);
-      });
     return {
       list: [{ name: "test" }]
     };
