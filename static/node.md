@@ -24,10 +24,12 @@ export default {
 ``` 
 
 ## plugins
-`plugins`作为全局注入的主要途径，关于一些使用的细节是必须要掌握的
+
+`plugins` 作为全局注入的主要途径，关于一些使用的细节是必须要掌握的
 
 ### plugin函数参数
-函数接收两个参数分别是`context`和`inject`
+
+函数接收两个参数分别是 `context` 和 `inject` 
 
 * context
 
@@ -38,11 +40,12 @@ export default {
 该方法可以将 plugin 同时注入到 context ，Vue 实例， Vuex 中
 
 ### plugin调用
-当`plugin`依赖于其他的`plugin`调用时，我们可以访问`context`来获取，前提是`plugin`需要使用`context`注入。
 
-举个例子：封装了一个`request`的基础请求`plugin`，现在有一个接口`plugin`需要调用`request`
+当 `plugin` 依赖于其他的 `plugin` 调用时，我们可以访问 `context` 来获取，前提是 `plugin` 需要使用 `context` 注入。
 
-`plugins/request.js`
+举个例子：封装了一个 `request` 的基础请求 `plugin` ，现在有一个接口 `plugin` 需要调用 `request` 
+
+`plugins/request.js` 
 ```js
 export default ({ app: { $axios } }, inject) => {
   inject('request', {
@@ -57,21 +60,25 @@ export default ({ app: { $axios } }, inject) => {
 }
 ```
 
-`plugins/api.js`
+`plugins/api.js` 
 
-```js
-export default ({ app: { $request } }, inject) => {
-  inject('api', {
-    getIndexList (params) {
-      return $request.get('/list/indexList', params)
+``` js
+export default ({
+    app: {
+        $request
     }
-  })
+}, inject) => {
+    inject('api', {
+        getIndexList(params) {
+            return $request.get('/list/indexList', params)
+        }
+    })
 }
 ```
 
-值得一提的是，在注册`plugin`时要注意顺序，就上面的例子来看，`request`的注册顺序要在`api`之前
+值得一提的是，在注册 `plugin` 时要注意顺序，就上面的例子来看， `request` 的注册顺序要在 `api` 之前
 
-```js
+``` js
 {
     plugins: [
         './plugins/axios.js',
@@ -81,10 +88,101 @@ export default ({ app: { $request } }, inject) => {
 }
 ```
 
+## 全局挂载
+
+有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`## 配置端口
+第一种：
+`nuxt.config.js` :
+
+``` js
+export default {
+    server: {
+        port: 8000,
+        host: '127.0.0.1'
+    }
+}
+```
+
+第二种：
+`package.json` :
+
+``` json
+"config": {
+  "nuxt": {
+    "host": "127.0.0.1",
+    "port": "8000"
+  }
+},
+``` 
+
+## plugins
+
+`plugins` 作为全局注入的主要途径，关于一些使用的细节是必须要掌握的
+
+### plugin函数参数
+
+函数接收两个参数分别是 `context` 和 `inject` 
+
+* context
+
+上下文对象，该对象存储很多有用的属性。比如常用的 app 属性，包含所有插件的 Vue 根实例。例如：在使用 axios 的时候，你想获取 $axios 可以直接通过 context.app.$axios 来获取。详细属性介绍：[https://zh.nuxtjs.org/api/context](https://zh.nuxtjs.org/api/context)
+
+* inject
+
+该方法可以将 plugin 同时注入到 context ，Vue 实例， Vuex 中
+
+### plugin调用
+
+当 `plugin` 依赖于其他的 `plugin` 调用时，我们可以访问 `context` 来获取，前提是 `plugin` 需要使用 `context` 注入。
+
+举个例子：封装了一个 `request` 的基础请求 `plugin` ，现在有一个接口 `plugin` 需要调用 `request` 
+
+`plugins/request.js` 
+```js
+export default ({ app: { $axios } }, inject) => {
+  inject('request', {
+    get (url, params) {
+      return $axios({
+        method: 'get',
+        url,
+        params
+      })
+    }
+  })
+}
+```
+
+`plugins/api.js` 
+
+``` js
+export default ({
+    app: {
+        $request
+    }
+}, inject) => {
+    inject('api', {
+        getIndexList(params) {
+            return $request.get('/list/indexList', params)
+        }
+    })
+}
+```
+
+值得一提的是，在注册 `plugin` 时要注意顺序，就上面的例子来看， `request` 的注册顺序要在 `api` 之前
+
+``` js
+{
+    plugins: [
+        './plugins/axios.js',
+        './plugins/request.js',
+        './plugins/api.js',
+    ]
+}
+```
 
 ## 全局挂载
 
-有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`$`作为前缀
+有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用作为前缀
 
 ### 注入Vue实例
 
@@ -206,8 +304,6 @@ export const actions = {
     }
 }
 ```
-
-
 
 ## 注册组件
 
@@ -389,4 +485,36 @@ export default function({
 ```
 
 完成后，使用方式也和上面的一样，但是 `axios` 是使用我们二次封装过的。
+
+## 缓存优化
+
+接口缓存：
+
+``` js
+const CACHED = new LRU({
+    max: 100, // 缓存队列长度
+    maxAge: 1000 * 60 // 缓存时间
+})
+export default {
+    async asyncData({
+        app
+    }) {
+        let list = {}
+        if (CACHED.has('indexList')) {
+            let data = CACHED.get('indexList') // 获取缓存
+            data = JSON.parse(data)
+            list = data.list
+        } else {
+            const res = await app.$api.getIndexList();
+            list = res.data
+            CACHED.set('indexList', JSON.stringify({
+                list
+            }))
+        }
+        return {
+            list
+        };
+    }
+}
+```
 

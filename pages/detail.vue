@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div >
-
+      <nuxt-link to="/">首页</nuxt-link>
     </div>
   </div>
 </template>

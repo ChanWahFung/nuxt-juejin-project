@@ -11,7 +11,7 @@
               <span v-for="(label, index) in item.labels" :key="index" class="label">{{ label }}</span>
             </li>
           </ul>
-          <div class="artic-title">{{ item.title }}</div>
+          <nuxt-link class="artic-title" to="/detail">{{ item.title }}</nuxt-link>
           <ul class="artic-action">
             <li class="action-item">
               <img class="icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
@@ -30,11 +30,25 @@
 </template>
 
 <script>
+import LRU from 'lru-cache'
+const CACHED = new LRU({
+  max: 100,
+  maxAge: 1000 * 60
+})
 export default {
   async asyncData({ app }) {
-    const res = await app.$api.getIndexList();
+    let list = {}
+    if (CACHED.has('indexList')) {
+      let data = CACHED.get('indexList')
+      data = JSON.parse(data)
+      list = data.list
+    } else {
+      const res = await app.$api.getIndexList();
+      list = res.data
+      CACHED.set('indexList', JSON.stringify({ list }))
+    }
     return {
-      list: res.data
+      list
     };
   },
   data() {
@@ -110,10 +124,17 @@ export default {
   }
 
   .artic-title {
+    display: block;
     margin: 10px 0 16px;
     line-height: 1.2;
     font-size: 20px;
     font-weight: 600;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover{
+      text-decoration: underline;
+    }
   }
 
   .artic-action {

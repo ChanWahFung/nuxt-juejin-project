@@ -27,17 +27,17 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    './assets/scss/main.scss',
+    '~/assets/scss/main.scss',
     'element-ui/lib/theme-chalk/index.css'
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    './plugins/axios.js',
-    './plugins/request.js',
-    './plugins/api.js',
-    './plugins/vue-global.js',
+    '~/plugins/axios.js',
+    '~/plugins/request.js',
+    '~/plugins/api.js',
+    '~/plugins/vue-global.js',
   ],
   /*
   ** Nuxt.js dev-modules
@@ -56,9 +56,12 @@ module.exports = {
   ],
   styleResources: {
     scss: [
-      './assets/scss/variable.scss'
+      '~/assets/scss/variable.scss'
     ]
   },
+  serverMiddleware: [	
+    { path: '/', handler: '~/middleware/page-cache.js' },	
+  ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
