@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <h1>About</h1>
-    <nuxt-link to="/">
-      index
-    </nuxt-link>
+  <div class="detail">
+    <div >
+
+    </div>
   </div>
 </template>
 
@@ -19,6 +18,6 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang='scss' scoped>
 
 </style>

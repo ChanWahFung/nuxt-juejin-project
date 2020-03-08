@@ -1,8 +1,21 @@
 <template>
   <div>
-    <nuxt />
+    <topBar />
+    <main class="main">
+      <nuxt />
+    </main>
   </div>
 </template>
+
+<script>
+import topBar from '../components/topBar'
+
+export default {
+  components: {
+    topBar
+  }
+}
+</script>
 
 <style>
 html {
@@ -18,10 +31,17 @@ html {
   box-sizing: border-box;
 }
 
+.main{
+  max-width: 960px;
+  margin: 0 auto;
+  margin-top: 12px;
+}
+
 *,
 *:before,
 *:after {
   box-sizing: border-box;
+  padding: 0;
   margin: 0;
 }
 </style>

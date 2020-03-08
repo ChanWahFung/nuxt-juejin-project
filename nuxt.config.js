@@ -35,8 +35,9 @@ module.exports = {
   */
   plugins: [
     './plugins/axios.js',
+    './plugins/request.js',
     './plugins/api.js',
-    './plugins/components.js',
+    './plugins/vue-global.js',
   ],
   /*
   ** Nuxt.js dev-modules

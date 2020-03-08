@@ -1,5 +1,10 @@
-export default ({ app }, inject) => {
+export default ({ app: { $request } }, inject) => {
   inject('api', {
-    token: '123'
+    getIndexList (params = {}) {
+      return $request.get('/list/indexList', params)
+    },
+    getLabelList (params = {}) {
+      return $request.get('/label/labelList', params)
+    }
   })
 }

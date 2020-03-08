@@ -17,137 +17,74 @@ export default {
 ``` json
 "config": {
   "nuxt": {
-
     "host": "127.0.0.1",
     "port": "8000"
-
   }
 },
 ``` 
 
-## 全局挂载
+## plugins
+`plugins`作为全局注入的主要途径，关于一些使用的细节是必须要掌握的
 
-有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`## 配置端口
-第一种：
-`nuxt.config.js` :
+### plugin函数参数
+函数接收两个参数分别是`context`和`inject`
+
+* context
+
+上下文对象，该对象存储很多有用的属性。比如常用的 app 属性，包含所有插件的 Vue 根实例。例如：在使用 axios 的时候，你想获取 $axios 可以直接通过 context.app.$axios 来获取。详细属性介绍：[https://zh.nuxtjs.org/api/context](https://zh.nuxtjs.org/api/context)
+
+* inject
+
+该方法可以将 plugin 同时注入到 context ，Vue 实例， Vuex 中
+
+### plugin调用
+当`plugin`依赖于其他的`plugin`调用时，我们可以访问`context`来获取，前提是`plugin`需要使用`context`注入。
+
+举个例子：封装了一个`request`的基础请求`plugin`，现在有一个接口`plugin`需要调用`request`
+
+`plugins/request.js`
 ```js
-export default {
-    server: {
-        port: 8000,
-        host: '127.0.0.1'
+export default ({ app: { $axios } }, inject) => {
+  inject('request', {
+    get (url, params) {
+      return $axios({
+        method: 'get',
+        url,
+        params
+      })
     }
+  })
 }
 ```
 
-第二种：
-`package.json` : 作为前缀。
+`plugins/api.js`
 
-### 注入Vue实例
-
-`plugins/vue-inject.js` 
-
-``` js
-import Vue from 'vue'
-
-Vue.prototype.$myInjectedFunction = string => console.log('This is an example', string)
-```
-
-`nuxt.config.js` 
-
-``` js
-export default {
-    plugins: ['~/plugins/vue-inject.js']
-}
-```
-
-这样在所有 `Vue` 组件中都可以使用该函数
-
-``` js
-export default {
-    mounted() {
-        this.$myInjectedFunction('test')
+```js
+export default ({ app: { $request } }, inject) => {
+  inject('api', {
+    getIndexList (params) {
+      return $request.get('/list/indexList', params)
     }
+  })
 }
 ```
 
-### 注入 context
+值得一提的是，在注册`plugin`时要注意顺序，就上面的例子来看，`request`的注册顺序要在`api`之前
 
-`context` 注入方式和在其它 `vue` 应用程序中注入类似。
-
-`plugins/ctx-inject.js` 
-
-``` js
-export default ({
-    app
-}, inject) => {
-    // Set the function directly on the context.app object
-    app.myInjectedFunction = string => console.log('Okay, another function', string)
+```js
+{
+    plugins: [
+        './plugins/axios.js',
+        './plugins/request.js',
+        './plugins/api.js',
+    ]
 }
 ```
 
-`nuxt.config.js` 
-
-``` js
-export default {
-    plugins: ['~/plugins/ctx-inject.js']
-}
-```
-
-现在，只要您获得 `context` ，你就可以使用该函数（例如在 `asyncData` 和 `fetch` 中）
-
-``` js
-export default {
-    asyncData(context) {
-        context.app.myInjectedFunction('ctx!')
-    }
-}
-```
-
-### 同时注入
-
-如果需要同时在 `context` ， `Vue` 实例，甚至 `Vuex` 中同时注入，可以使用 `inject` 方法，它是 `plugin` 导出函数的第二个参数。系统会自动将`## 配置端口
-第一种：
-`nuxt.config.js` :
-
-``` js
-export default {
-    server: {
-        port: 8000,
-        host: '127.0.0.1'
-    }
-}
-```
-
-第二种：
-`package.json` :
-
-``` json
-"config": {
-  "nuxt": {
-
-    "host": "127.0.0.1",
-    "port": "8000"
-
-  }
-},
-``` 
 
 ## 全局挂载
 
-有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`## 配置端口
-第一种：
-`nuxt.config.js` :
-```js
-export default {
-    server: {
-        port: 8000,
-        host: '127.0.0.1'
-    }
-}
-```
-
-第二种：
-`package.json` : 作为前缀。
+有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`$`作为前缀
 
 ### 注入Vue实例
 
@@ -270,6 +207,8 @@ export const actions = {
 }
 ```
 
+
+
 ## 注册组件
 
 `plugins/components.js` :
@@ -376,8 +315,6 @@ npm i @nuxtjs/axios --save--dev
 
 服务器端获取并渲染数据， `asyncData` 方法可以在渲染组件之前异步获取数据，并把获取的数据返回给当前组件。第一个参数被设定为当前页面的上下文对象（ `context` ）。
 
-context：[https://zh.nuxtjs.org/api/context](https://zh.nuxtjs.org/api/context)
-
 ``` js
 export default {
     async asyncData(context) {
@@ -419,7 +356,6 @@ export default {
 `plugins/axios.js` :
 
 ``` js
-//该函数接收的参数为context
 export default function({
     app: {
         $axios
