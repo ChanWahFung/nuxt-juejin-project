@@ -1,29 +1,29 @@
 <template>
-  <div class="index">
+  <div>
     <div class="artic-list">
       <div v-for="item in list" :key="item.id" class="artic-item">
         <div class="artic-info">
           <ul class="artic-meta">
             <li class="meta-item post">专栏</li>
-            <li class="meta-item">{{ item.author }}</li>
-            <li class="meta-item">{{ item.create_time | formatTime }}</li>
+            <li class="meta-item">{{ item.user.username }}</li>
+            <li class="meta-item">{{ item.createdAt | formatTime }}</li>
             <li class="meta-item">
-              <span v-for="(label, index) in item.labels" :key="index" class="label">{{ label }}</span>
+              <span v-for="(tag) in item.tags" :key="tag.id" class="label">{{ tag.title }}</span>
             </li>
           </ul>
-          <nuxt-link class="artic-title" to="/detail">{{ item.title }}</nuxt-link>
+          <nuxt-link class="artic-title" :to="{path: '/detail/'+item.artic_id}">{{ item.title }}</nuxt-link>
           <ul class="artic-action">
             <li class="action-item">
               <img class="icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-              {{ item.like_count }}
+              {{ item.likeCount }}
             </li>
             <li class="action-item">
               <img class="icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
-              {{ item.comment_count }}
+              {{ item.commentsCount }}
             </li>
           </ul>
         </div>
-        <div v-if="item.cover" class="artic-cover" :style="'background-image: url('+item.cover+')'"></div>
+        <div v-if="item.screenshot" class="artic-cover" :style="'background-image: url('+item.screenshot+')'"></div>
       </div>
     </div>
   </div>
@@ -38,25 +38,32 @@ const CACHED = new LRU({
 export default {
   async asyncData({ app }) {
     let list = {}
+    let pageInfo = {}
     if (CACHED.has('indexList')) {
       let data = CACHED.get('indexList')
       data = JSON.parse(data)
       list = data.list
+      pageInfo = data.pageInfo
     } else {
       const res = await app.$api.getIndexList();
-      list = res.data
-      CACHED.set('indexList', JSON.stringify({ list }))
+      list = res.list
+      pageInfo = res.pageInfo
+      CACHED.set('indexList', JSON.stringify({ list, pageInfo }))
     }
     return {
-      list
+      list,
+      pageInfo
     };
   },
   data() {
     return {
-      list: []
+      list: [],
+      pageInfo: {}
     };
   },
-  created() {}
+  created() {
+
+  }
 };
 </script>
 
@@ -64,6 +71,7 @@ export default {
 .artic-list {
   background-color: #fff;
   box-shadow: 0 0 4px #eee;
+  border-radius: 2px;
 
   .artic-item {
     display: flex;
@@ -93,7 +101,7 @@ export default {
   .artic-meta {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 12px;
     color: #b2bac2;
 
     .meta-item {
@@ -127,8 +135,8 @@ export default {
     display: block;
     margin: 10px 0 16px;
     line-height: 1.2;
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     color: inherit;
     text-decoration: none;
 
@@ -140,7 +148,8 @@ export default {
   .artic-action {
     display: flex;
     align-items: center;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13px;
     color: #b2bac2;
 
     .action-item {
@@ -148,7 +157,11 @@ export default {
       align-items: center;
       height: 26px;
       padding: 0 10px;
-      border: 1px solid currentColor;
+      border: 1px solid #edeeef;
+
+      .icon{
+        margin-right: 3px;
+      }
 
       &:last-child {
         border-left: 0;

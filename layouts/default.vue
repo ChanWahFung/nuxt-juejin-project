@@ -34,7 +34,7 @@ html {
 .main{
   max-width: 960px;
   margin: 0 auto;
-  margin-top: 12px;
+  margin-top: 20px;
 }
 
 *,

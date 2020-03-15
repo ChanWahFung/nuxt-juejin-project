@@ -1,5 +1,5 @@
 module.exports = {
-  root: false,
+  root: true,
   env: {
     browser: true,
     node: true
@@ -22,6 +22,9 @@ module.exports = {
     'eol-last': 'off',
     'arrow-parens': 'off',
     'no-console': 'off',
-    'vue/singleline-html-element-content-newline': 'off'
+    'vue/singleline-html-element-content-newline': 'off',
+    'no-trailing-spaces': 'off',
+    'prefer-const': 'off',
+    'space-before-blocks': 'off'
   }
 }
