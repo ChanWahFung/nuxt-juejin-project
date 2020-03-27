@@ -4,17 +4,17 @@
       <div class="header">
         <div class="userInfo">
           <img class="avatar" :src="articInfo.user.avatarLarge" alt="头像">
-          <div class="username" :class="['lv'+articInfo.user.level]" :data-lv="articInfo.user.level">{{articInfo.user.username}}</div>
+          <div class="username lv" :class="['lv'+articInfo.user.level]" :data-lv="'Lv'+articInfo.user.level">{{ articInfo.user.username }}</div>
           <div class="meta">
-            <span class="create_time">{{formatDate('Y年M月D' ,articInfo.createdAt)}}</span>
-            <span>阅读{{articInfo.viewsCount}}</span>
+            <span class="create_time">{{ formatDate('Y年M月D' ,articInfo.createdAt) }}</span>
+            <span>阅读{{ articInfo.viewsCount }}</span>
           </div>
         </div>
         <div class="follow-btn">关注</div>
       </div>
       <div v-if="articInfo.screenshot" class="cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
-      <h1 class="title">{{articInfo.title}}</h1>
-      <div class="content" v-html="articDetail.content"></div>
+      <h1 class="title">{{ articInfo.title }}</h1>
+      <!-- <div class="content" v-html="articDetail.content"></div> -->
     </div>
   </div>
 </template>
@@ -54,16 +54,29 @@ export default {
       articInfo
     }
   },
+  created () {
+    this.getCommentList()
+  },
   data () {
     return {
       articDetail: {},
-      articInfo: {}
+      articInfo: {},
+      commentCount: 0,
+      comments: []
     }
   },
-  created () {
-  },
   methods: {
-    formatDate
+    formatDate,
+    getCommentList() {
+      this.$api.getCommentList({
+        entryId: this.articDetail.entryId
+      }).then(res => {
+        if (res.s === 1) {
+          this.commentCount = res.d.count
+          this.comments = res.d.comments
+        }
+      })
+    }
   }
 }
 </script>
@@ -125,13 +138,9 @@ export default {
     }
 
     /deep/ code{
-      background-color: #fff5f5;
-      color: #ff502c;
       font-size: 13px;
-      font-weight: 600;
-      padding: 2px 4px;
-      border-radius: 2px;
-      word-break: break-word;
+      line-height: 1.8;
+      letter-spacing: .6px;
     }
 
     /deep/ ol{
@@ -190,6 +199,39 @@ export default {
   .username{
     font-weight: 700;
     color: #333;
+
+    &.lv:after{
+      content: attr(data-lv);
+      padding: 0 2px;
+      margin-left: 10px;
+      border-radius: 2px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bolder;
+      background-color: #f4f4f4;
+    }
+
+    &.lv1::after,
+    &.lv2::after{
+      background: lightblue;
+    }
+
+    &.lv3::after{
+      background: skyblue;
+    }
+
+    &.lv4::after{
+      background: lightgreen;
+    }
+
+    &.lv5::after{
+      background: lightsalmon;
+    }
+
+    &.lv6::after{
+      background: lightcoral;
+    }
+  
   }
 
   .meta{

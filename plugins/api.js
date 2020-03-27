@@ -7,7 +7,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
      */
     getIndexList (params = {}) {
-      return $request.get('/list/indexList', params)
+      return $request.get('/article/indexList', params)
     },
     getLabelList (params = {}) {
       return $request.get('/label/labelList', params)
@@ -18,14 +18,27 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} postId - 文章id 
      */
     getDetail (params = {}) {
-      return $request.get('/detail', params)
+      return $request.get('/article/detail', params)
     },
     /**
      * 获取文章评论
-     * @param {*} params 
+     * @param {string} entryId - 在文章详情内获取
+     * @param {string} createdAt
+     * @param {string} rankType - new
+     * @param {number} pageSize - 评论条数
      */
     getCommentList (params = {}) {
-      return $request.get('/comment/list', params)
+      return $request.get('/comment/entry', params)
+    },
+    /**
+     * 获取回复列表
+     * @param {string} entryId - 在文章详情内获取
+     * @param {string} commentId - 评论id
+     * @param {number} pageNum - 页码
+     * @param {number} pageSize - 页数
+     */
+    getReplyList (params = {}){
+      return $request.get('/comment/reply', params)
     }
   })
 }
