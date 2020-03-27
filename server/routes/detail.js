@@ -9,7 +9,7 @@ router.get('/', async (ctx,next)=>{
     method: "GET",
     params: {
       uid: config.uid,
-      device_id: 1583548822391,
+      device_id: config.deviceId,
       token: config.token,
       src: 'web',
       type: ctx.query.type,

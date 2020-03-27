@@ -62,7 +62,6 @@ export default {
     };
   },
   created() {
-
   }
 };
 </script>

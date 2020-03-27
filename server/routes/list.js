@@ -9,7 +9,7 @@ router.get('/indexList', async (ctx, next) => {
     method: "POST",
     headers: {
       'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': 1583548822391,
+      'X-Legacy-Device-Id': config.deviceId,
       'X-Legacy-Token': config.token,
       'X-Legacy-Uid': config.uid
     },
@@ -40,6 +40,8 @@ router.get('/indexList', async (ctx, next) => {
         artic_id
       }
     })
+  }else{
+    data = res
   }
   ctx._data = data
 })
