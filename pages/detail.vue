@@ -54,9 +54,6 @@ export default {
       articInfo
     }
   },
-  created () {
-    this.getCommentList()
-  },
   data () {
     return {
       articDetail: {},
@@ -64,6 +61,9 @@ export default {
       commentCount: 0,
       comments: []
     }
+  },
+  created () {
+    this.getCommentList()
   },
   methods: {
     formatDate,

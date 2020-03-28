@@ -30,26 +30,26 @@
 </template>
 
 <script>
-import LRU from 'lru-cache'
-const CACHED = new LRU({
-  max: 100,
-  maxAge: 1000 * 60
-})
+// import LRU from 'lru-cache'
+// const CACHED = new LRU({
+//   max: 100,
+//   maxAge: 1000 * 60
+// })
 export default {
   async asyncData({ app }) {
     let list = {}
     let pageInfo = {}
-    if (CACHED.has('indexList')) {
-      let data = CACHED.get('indexList')
-      data = JSON.parse(data)
-      list = data.list
-      pageInfo = data.pageInfo
-    } else {
+    // if (CACHED.has('indexList')) {
+    //   let data = CACHED.get('indexList')
+    //   data = JSON.parse(data)
+    //   list = data.list
+    //   pageInfo = data.pageInfo
+    // } else {
       const res = await app.$api.getIndexList();
       list = res.list
       pageInfo = res.pageInfo
-      CACHED.set('indexList', JSON.stringify({ list, pageInfo }))
-    }
+    //   CACHED.set('indexList', JSON.stringify({ list, pageInfo }))
+    // }
     return {
       list,
       pageInfo

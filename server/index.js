@@ -3,6 +3,8 @@ const Koa = require('koa')
 const cors = require('koa2-cors')
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
+const conditional = require('koa-conditional-get');
+const etag = require('koa-etag');
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
@@ -13,7 +15,7 @@ const router = new Router()
 const config = require('../nuxt.config.js')
 config.dev = app.env !== 'production'
 
-function createMiddleware(){
+function useMiddleware(){
   app.use(bodyParser())
   //设置全局返回头
   app.use(cors({
@@ -26,9 +28,11 @@ function createMiddleware(){
     allowMethods: ['GET', 'POST'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
   })) 
+  app.use(etag())
+  app.use(conditional())
 }
 
-function createRouter(){
+function useRouter(){
   //注册路由
   let urls = fs.readdirSync(__dirname + '/routes')
   urls.forEach((element) => {
@@ -55,8 +59,8 @@ async function start () {
     const builder = new Builder(nuxt)
     await builder.build()
   }
-  createMiddleware()
-  createRouter()
+  useMiddleware()
+  useRouter()
   app.use((ctx) => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling

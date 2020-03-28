@@ -21,6 +21,7 @@ router.get('/detail', async (ctx,next)=>{
 })
 
 router.get('/indexList', async (ctx, next) => {
+  ctx.set('Cache-Control', 'max-age=60')
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
