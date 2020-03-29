@@ -81,8 +81,8 @@ export default {
     body = document.scrollingElement
     window.onscroll = this.onScroll(() => {
       if (this.pageInfo.hasNextPage) {
-        this.getArticList().then(res => {
-          this.list = this.list.concat(res.list)
+        this.getArticList({
+          isLoadMore: true
         })
       } else {
         this.$message.info('没有更多文章了')
@@ -112,15 +112,17 @@ export default {
         this.navType = item.type
         this.navTypes = item.types || []
       }
-      this.getArticList().then(res => {
-        this.list = res.list
-      })
+      this.getArticList()
     },
-    async getArticList(){
-      const res = await this.$api.getIndexList({
-        after: this.pageInfo.endCursor || '',
+    async getArticList({ isLoadMore = false } = {}){
+      let params = {
         order: this.navType
-      });
+      }
+      if (isLoadMore) {
+        params.after = this.pageInfo.endCursor || ''
+      }
+      const res = await this.$api.getIndexList(params);
+      this.list = isLoadMore ? this.list.concat(res.list) : res.list
       this.pageInfo = res.pageInfo
       return res
     }
