@@ -9,8 +9,15 @@ export default ({ app: { $request } }, inject) => {
     getIndexList (params = {}) {
       return $request.get('/article/indexList', params)
     },
-    getLabelList (params = {}) {
-      return $request.get('/label/labelList', params)
+    /**
+     * 搜索文章
+     * @param {string} first - 单页数
+     * @param {string} after - 下一页的标识
+     * @param {string} keyword - 关键词
+     * @param {string} period - ALL：全部、D1：一天内、W1：一周内、M3：三个月内
+     */
+    searchArticList (params = {}) {
+      return $request.get('/article/search', params)
     },
     /**
      * 获取详情页信息
