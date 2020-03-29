@@ -19,4 +19,18 @@ router.get('/multiUser', async (ctx, next)=>{
   ctx.body = await request(options);
 })
 
+router.get('/notification', async (ctx, next)=>{
+  const options = {
+    url: 'https://ufp-api-ms.juejin.im/v1/getUserNotification',
+    method: "GET",
+    params: {
+      uid: config.uid,
+      token: config.token,
+      src: 'web',
+      before: ctx.query.before || ''
+    }
+  };
+  ctx.body = await request(options);
+})
+
 module.exports = router

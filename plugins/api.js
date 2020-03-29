@@ -53,6 +53,13 @@ export default ({ app: { $request } }, inject) => {
      */
     getMultiUser(params = {}){
       return $request.get('/user/multiUser', params)
+    },
+    /**
+     * 获取用户消息
+     * @param {string} before - 最后一条消息的 beforeAtString
+     */
+    getUserNotification(params = {}){
+      return $request.get('/user/notification', params)
     }
   })
 }
