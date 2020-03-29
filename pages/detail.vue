@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { formatDate } from '~/assets/utils'
+import { formatDate } from '~/utils'
 import commentItem from '~/components/business/commentItem.vue'
 
 export default {
