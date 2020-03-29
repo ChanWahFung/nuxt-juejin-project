@@ -39,6 +39,13 @@ export default ({ app: { $request } }, inject) => {
      */
     getReplyList (params = {}){
       return $request.get('/comment/reply', params)
+    },
+    /**
+     * 获取用户信息（通用）
+     * @param {string} ids - 需要获取的用户id（多个以|分割）
+     */
+    getMultiUser(params = {}){
+      return $request.get('/user/multiUser', params)
     }
   })
 }

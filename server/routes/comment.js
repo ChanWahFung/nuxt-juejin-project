@@ -4,9 +4,6 @@ const request = require('../request')
 const config = require('../request/config')
 
 router.get('/entry', async (ctx, next) => {
-  if (ctx.fresh) {
-    ctx.status = 304;
-  }
   const options = {
     url: 'https://comment-wrapper-ms.juejin.im/v1/comments/entry/'+ctx.query.entryId,
     method: "GET",

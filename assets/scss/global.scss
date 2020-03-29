@@ -1,0 +1,37 @@
+.lv{
+  &::after{
+    content: attr(data-lv);
+    padding: 1px 2px;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bolder;
+    background-color: #f4f4f4;
+  }
+
+  &.lv0::after{
+    display: none;
+  }
+
+  &.lv1::after,
+  &.lv2::after{
+    background: lightblue;
+  }
+
+  &.lv3::after{
+    background: skyblue;
+  }
+
+  &.lv4::after{
+    background: lightgreen;
+  }
+
+  &.lv5::after{
+    background: lightsalmon;
+  }
+
+  &.lv6::after{
+    background: lightcoral;
+  }
+}
+
