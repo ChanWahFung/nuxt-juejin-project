@@ -1,14 +1,25 @@
-# nuxt-project
+# 介绍
 
-> My stellar Nuxt.js project
+使用 Nuxt.js 仿站掘金，练手项目
 
-## Build Setup
+# 完成功能
+1. 首页
+  * 文章列表
+  * 筛选文章
+
+2. 文章详情
+  * 内容
+  * 评论（仅展示）
+
+持续更新中...
+
+# 使用
 
 ``` bash
 # install dependencies
 $ npm install
 
-# serve with hot reload at localhost:3000
+# serve with hot reload at localhost:8000
 $ npm run dev
 
 # build for production and launch server
