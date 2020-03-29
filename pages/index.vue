@@ -18,6 +18,7 @@
 </template>
 
 <script>
+let body = null
 export default {
   async asyncData({ app }) {
     let list = {}
@@ -71,12 +72,40 @@ export default {
       navType: 'POPULAR',
       navTypes: [],
       list: [],
-      pageInfo: {}
+      pageInfo: {},
+      reachBottomDistance: 50,
+      isReachBottom: false
     };
   },
-  created() {
+  mounted() {
+    body = document.scrollingElement
+    window.onscroll = this.onScroll(() => {
+      if (this.pageInfo.hasNextPage) {
+        this.getArticList().then(res => {
+          this.list = this.list.concat(res.list)
+        })
+      } else {
+        this.$message.info('没有更多文章了')
+      }
+    })
   },
   methods: {
+    onScroll(callback) {
+      return () => {
+        let scrollHeight = body.scrollHeight
+        let currentHeight = body.scrollTop + body.clientHeight + this.reachBottomDistance
+        if (currentHeight < scrollHeight && this.isReachBottom) {
+          this.isReachBottom = false
+        }
+        if (this.isReachBottom) {
+          return
+        }
+        if (currentHeight >= scrollHeight) {
+          this.isReachBottom = true
+          callback()
+        }
+      }
+    },
     changeNav (item) {
       if (item.id && this.navId !== item.id) {
         this.navId = item.id
@@ -84,14 +113,15 @@ export default {
         this.navTypes = item.types || []
       }
       this.getArticList().then(res => {
-        this.list = res.list || []
+        this.list = res.list
       })
     },
     async getArticList(){
       const res = await this.$api.getIndexList({
+        after: this.pageInfo.endCursor || '',
         order: this.navType
       });
-      this.pageInfo = res.pageInfo || {}
+      this.pageInfo = res.pageInfo
       return res
     }
   }
