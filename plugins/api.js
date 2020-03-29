@@ -10,7 +10,8 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/article/indexList', params)
     },
     /**
-     * 搜索文章
+     * 搜索
+     * @param {string} type - ALL：综合、ARTICLE：文章、TAG：标签、USER：用户
      * @param {string} first - 单页数
      * @param {string} after - 下一页的标识
      * @param {string} keyword - 关键词

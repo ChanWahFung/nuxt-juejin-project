@@ -30,6 +30,10 @@
 <script>
 export default {
   props: {
+    hasDesc: {
+      type: Boolean,
+      default: false
+    },
     list: {
       type: Array,
       default: () => []
