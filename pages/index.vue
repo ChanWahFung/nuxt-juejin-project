@@ -118,8 +118,10 @@ export default {
       if (isLoadMore) {
         params.after = this.pageInfo.endCursor || ''
       }
-      const res = await this.$api.getIndexList(params);
-      this.list = isLoadMore ? this.list.concat(res.list) : res.list
+      let res = await this.$api.getIndexList(params);
+      console.log(res)
+      res = res.data.articleFeed.items
+      this.list = isLoadMore ? this.list.concat(res.edges) : res.edges
       this.pageInfo = res.pageInfo
       return res
     }
