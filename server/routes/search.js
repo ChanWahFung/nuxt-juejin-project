@@ -26,8 +26,7 @@ router.get('/entry', async (ctx, next) => {
       "extensions": { "query": { "id": "a53db5867466eddc50d16a38cfeb0890" } } 
     }
   };
-  let data = await request(options)
-  ctx.body = dealArticList(data);
+  ctx.body = await request(options)
 })
 
 module.exports = router

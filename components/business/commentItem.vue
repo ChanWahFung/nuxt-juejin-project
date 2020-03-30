@@ -20,7 +20,8 @@
       <div class="comment-reply-area">
         <div class="reply-item" v-for="item in data.topComment" :key="item.id">
           <div class="comment-avatar">
-            <img :src="item.userInfo.avatarLarge" width="100%" height="100%" />
+            <img v-if="item.userInfo.avatarLarge" :src="item.userInfo.avatarLarge" width="100%" height="100%" />
+            <img v-else class="user-item-avatar" src="https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg" />
           </div>
           <div class="comment-main">
             <div class="comment-userinfo">
@@ -76,18 +77,6 @@ export default {
     height: 32px;
     border-radius: 50%;
     overflow: hidden;
-
-    >img::after{
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg);
-      background-size: 100%;
-    }
   }
 
   &>.comment-main{

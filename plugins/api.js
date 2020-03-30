@@ -2,7 +2,7 @@ export default ({ app: { $request } }, inject) => {
   inject('api', {
     /**
      * 获取首页列表
-     * @param {string} first - 单页数
+     * @param {string} first - 单页数 默认20
      * @param {string} after - 下一页的标识
      * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
      */
@@ -12,13 +12,13 @@ export default ({ app: { $request } }, inject) => {
     /**
      * 搜索
      * @param {string} type - ALL：综合、ARTICLE：文章、TAG：标签、USER：用户
-     * @param {string} first - 单页数
+     * @param {string} first - 单页数 默认20
      * @param {string} after - 下一页的标识
      * @param {string} keyword - 关键词
      * @param {string} period - ALL：全部、D1：一天内、W1：一周内、M3：三个月内
      */
-    searchArticList (params = {}) {
-      return $request.get('/article/search', params)
+    searchList (params = {}) {
+      return $request.get('/search/entry', params)
     },
     /**
      * 获取详情页信息

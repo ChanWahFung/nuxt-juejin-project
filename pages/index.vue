@@ -21,14 +21,11 @@
 let body = null
 export default {
   async asyncData({ app }) {
-    let list = {}
-    let pageInfo = {}
-    const res = await app.$api.getIndexList();
-    list = res.list
-    pageInfo = res.pageInfo
+    let res = await app.$api.getIndexList();
+    res = res.data.articleFeed.items
     return {
-      list,
-      pageInfo
+      list: res.edges,
+      pageInfo: res.pageInfo
     };
   },
   data() {

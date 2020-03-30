@@ -3,25 +3,6 @@ const router = new Router()
 const request = require('../request')
 const config = require('../request/config')
 
-function dealArticList(data_){
-  let data = {}
-  let res = JSON.parse(data_)
-  if(res.data && res.data.articleFeed){
-    data.pageInfo = res.data.articleFeed.items.pageInfo
-    // 获取文章id
-    data.list = res.data.articleFeed.items.edges.map(item=>{
-      let artic_id = item.node.originalUrl.split('/').pop()
-      return {
-        ...item.node,
-        artic_id
-      }
-    })
-  }else{
-    data = res
-  }
-  return data
-}
-
 router.get('/detail', async (ctx,next)=>{
   const options = {
     url: 'https://post-storage-api-ms.juejin.im/v1/getDetailData',
@@ -35,8 +16,7 @@ router.get('/detail', async (ctx,next)=>{
       postId: ctx.query.postId
     }
   };
-  const data = await request(options);
-  ctx.body = data;
+  ctx.body = await request(options);
 })
 
 router.get('/indexList', async (ctx, next) => {
@@ -61,8 +41,7 @@ router.get('/indexList', async (ctx, next) => {
       "extensions": { "query": { "id": "21207e9ddb1de777adeaca7a2fb38030" } } 
     }
   };
-  let data = await request(options)
-  ctx.body = dealArticList(data);
+  ctx.body = await request(options)
 })
 
 module.exports = router
