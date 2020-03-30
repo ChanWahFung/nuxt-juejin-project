@@ -9,7 +9,8 @@
           <span v-for="(tag) in props.item.tags" :key="tag.id" class="label">{{ tag.title }}</span>
         </li>
       </ul>
-      <nuxt-link class="artic-title" :to="{path: '/detail/'+props.item.originalUrl.split('/').pop()}" v-html="props.item.title"></nuxt-link>
+      <nuxt-link class="artic-title" v-if="props.item.originalUrl.includes('juejin')" :to="{path: '/detail/'+props.item.originalUrl.split('/').pop()}" v-html="props.item.title"></nuxt-link>
+      <a v-else class="artic-title" :href="props.item.originalUrl" v-html="props.item.title" target="_blank" rel="noopener noreferrer"></a>
       <p v-if="props.hasDesc" class="artic-desc" v-html="props.item.description || props.item.text"></p>
       <ul class="artic-action">
         <li class="action-item">
