@@ -1,37 +1,75 @@
-<template functional>
-  <div class="artic-item">
+<template>
+  <div class="artic-item" @click="toDetail(item.originalUrl)">
     <div class="artic-info">
       <ul class="artic-meta">
-        <li class="meta-item post" v-if="props.item.type === 'post'">专栏</li>
-        <li class="meta-item">{{ props.item.user.username }}</li>
-        <li class="meta-item">{{ props.item.createdAt | formatTime }}</li>
+        <li class="meta-item post" v-if="item.type === 'post'">专栏</li>
+        <li class="meta-item">{{ item.user.username }}</li>
+        <li class="meta-item">{{ item.createdAt | formatTime }}</li>
         <li class="meta-item">
-          <span v-for="(tag) in props.item.tags" :key="tag.id" class="label">{{ tag.title }}</span>
+          <span v-for="(tag) in item.tags" :key="tag.id" class="label">{{ tag.title }}</span>
         </li>
       </ul>
-      <nuxt-link class="artic-title" v-if="props.item.originalUrl.includes('juejin')" :to="{path: '/detail/'+props.item.originalUrl.split('/').pop()}" v-html="props.item.title"></nuxt-link>
-      <a v-else class="artic-title" :href="props.item.originalUrl" v-html="props.item.title" target="_blank" rel="noopener noreferrer"></a>
-      <p v-if="props.hasDesc" class="artic-desc" v-html="props.item.description || props.item.text"></p>
+      <p class="artic-title" v-html="item.title"></p>
+      <p v-if="hasDesc" class="artic-desc" v-html="item.description || item.text"></p>
       <ul class="artic-action">
         <li class="action-item">
           <img class="icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-          {{ props.item.likeCount }}
+          {{ item.likeCount }}
         </li>
         <li class="action-item">
           <img class="icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
-          {{ props.item.commentsCount }}
+          {{ item.commentsCount }}
         </li>
       </ul>
     </div>
-    <div v-if="props.item.screenshot" class="artic-cover" :style="'background-image: url('+props.item.screenshot+')'"></div>
+    <div v-if="item.screenshot" class="artic-cover" :style="'background-image: url('+item.screenshot+')'"></div>
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    item: {
+      type: Object,
+      default: () => []
+    },
+    hasDesc: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    toDetail(originalUrl) {
+      if (!originalUrl) { return }
+      if (originalUrl.includes('juejin')) {
+        this.$router.push({
+          name: 'detail',
+          params: {
+            id: originalUrl.split('/').pop()
+          }
+        })
+      } else {
+        const a = document.createElement("a")
+        a.href = originalUrl
+        a.target = "_blank"
+        a.rel = "noopener noreferrer"
+        a.click()
+      }
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .artic-item {
   display: flex;
   align-items: center;
   padding: 20px 25px;
+  cursor: pointer;
+
+  &:hover{
+    background: rgba(0,0,0,.01);
+  }
 }
 
 .artic-info {
@@ -85,7 +123,7 @@
   display: block;
   margin: 10px 0 16px;
   line-height: 1.2;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: inherit;
   text-decoration: none;
@@ -102,8 +140,8 @@
 .artic-desc {
   width: 800px;
   margin-bottom: 14px;
-  font-size: 14px;
-  color: #909090;
+  font-size: 13px;
+  color: #5b6169;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

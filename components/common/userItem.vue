@@ -3,7 +3,7 @@
     <img v-if="props.item.avatarLarge" class="user-item-avatar" :src="props.item.avatarLarge" />
     <img v-else class="user-item-avatar" src="https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg" />
     <span class="user-item-username" v-html="props.item.username"></span>
-    <div class="user-item-follow">关注</div>
+    <div class="user-item-follow follow-btn">关注</div>
   </div>
 </template>
 
@@ -12,6 +12,11 @@
   display: flex;
   align-items: center;
   padding: 20px 25px;
+  cursor: pointer;
+
+  &:hover{
+    background: rgba(0,0,0,.01);
+  }
 
   .user-item-avatar {
     position: relative;
@@ -33,11 +38,6 @@
 
   .user-item-follow{
     margin-left: auto;
-    padding: 6px 20px;
-    font-size: 14px;
-    color: $success;
-    border: 1px solid $success;
-    border-radius: 2px;
   }
 }
 </style>
