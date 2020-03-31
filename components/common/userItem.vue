@@ -15,11 +15,11 @@ export default {
   props: {
     item: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     highlight: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   }
 }

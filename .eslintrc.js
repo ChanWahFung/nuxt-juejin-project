@@ -28,6 +28,8 @@ module.exports = {
     'space-before-blocks': 'off',
     'vue/max-attributes-per-line': 'off',
     'vue/attributes-order': 'off',
-    'vue/html-self-closing': 'off'
+    'vue/order-in-components': 'off',
+    'vue/html-self-closing': 'off',
+    'no-multi-spaces': 'off'
   }
 }

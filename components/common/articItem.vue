@@ -9,6 +9,7 @@
           <span v-for="(tag) in item.tags" :key="tag.id" class="label">{{ tag.title }}</span>
         </li>
       </ul>
+      
       <p class="artic-title" v-html="highlight.title || item.title"></p>
       <p v-if="hasDesc" class="artic-desc" v-html="highlight.description || highlight.text || item.content"></p>
       <ul class="artic-action">
@@ -31,7 +32,7 @@ export default {
   props: {
     item: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     hasDesc: {
       type: Boolean,
@@ -39,7 +40,7 @@ export default {
     },
     highlight: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   methods: {

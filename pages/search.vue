@@ -13,9 +13,27 @@
 </template>
 
 <script>
+import reachBottom from '~/mixins/reachBottom'
+
 export default {
+  head () {
+    return {
+      title: `${this.$route.query.keyword} - 搜索 - 掘金`
+    }
+  },
+  watchQuery: ['keyword', 'type', 'period'],
+  validate ({ query }) {
+    let types = [undefined, 'all', 'article', 'tag', 'user']
+    let periods = [undefined, 'all', 'd1', 'w1', 'm3']
+    if (types.includes(query.type) && periods.includes(query.period)) {
+      return true
+    }
+    return false
+  },
   async asyncData({ app, query }) {
     let res = await app.$api.searchList({
+      after: 0,
+      first: 20,
       type: query.type ? query.type.toUpperCase() : 'ALL',
       keyword: query.keyword,
       period: query.period ? query.period.toUpperCase() : 'ALL'
@@ -29,10 +47,12 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     next()
-    this.getSearchList()
+    console.log('update')
   },
+  mixins: [reachBottom],
   data() {
     return {
+      first: 20, // 一页数量
       pageInfo: {},
       searchList: [],
       types: [
@@ -84,23 +104,23 @@ export default {
       return this.$route.query.keyword
     }
   },
-  created() {
-  },
-  head () {
-    return {
-      title: `${this.$route.query.keyword} - 搜索 - 掘金`
-    }
-  },
   methods: {
+    reachBottom(){
+      if (this.pageInfo.hasNextPage) {
+        this.getSearchList()
+      }
+    },  
     async getSearchList() {
       let res = await this.$api.searchList({
+        after: this.pageInfo.endCursor,
+        first: this.first,
         type: this.type.toUpperCase(),
         keyword: this.keyword,
         period: this.period.toUpperCase()
       }).then(res => res.data || {})
       if (res.search) {
         this.pageInfo = res.search.pageInfo
-        this.searchList = res.search.edges
+        this.searchList = this.searchList.concat(res.search.edges)
       }
     },
     changeType(item) {
@@ -175,6 +195,7 @@ export default {
       &:not(:last-child){
         &::after{
           content: '·';
+          color: #909090;
           margin: 0 5px;
         }
       }

@@ -18,7 +18,8 @@
 </template>
 
 <script>
-let body = null
+import reachBottom from '~/mixins/reachBottom'
+
 export default {
   async asyncData({ app }) {
     let res = await app.$api.getIndexList();
@@ -28,6 +29,7 @@ export default {
       pageInfo: res.pageInfo
     };
   },
+  mixins: [reachBottom],
   data() {
     return {
       navs: [
@@ -74,33 +76,14 @@ export default {
       isReachBottom: false
     };
   },
-  mounted() {
-    body = document.scrollingElement
-    window.onscroll = this.onScroll(() => {
+  methods: {
+    reachBottom() {
       if (this.pageInfo.hasNextPage) {
         this.getArticList({
           isLoadMore: true
         })
       } else {
         this.$message.info('没有更多文章了')
-      }
-    })
-  },
-  methods: {
-    onScroll(callback) {
-      return () => {
-        let scrollHeight = body.scrollHeight
-        let currentHeight = body.scrollTop + body.clientHeight + this.reachBottomDistance
-        if (currentHeight < scrollHeight && this.isReachBottom) {
-          this.isReachBottom = false
-        }
-        if (this.isReachBottom) {
-          return
-        }
-        if (currentHeight >= scrollHeight) {
-          this.isReachBottom = true
-          callback()
-        }
       }
     },
     changeNav (item) {
