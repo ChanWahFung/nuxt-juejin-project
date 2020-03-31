@@ -2,7 +2,7 @@
   <div class="tag-item">
     <img :src="item.icon" class="tag-item-avatar">
     <div class="tag-item-info">
-      <p class="tag-item-title">{{ item.title }}</p>
+      <p class="tag-item-title" v-html="highlight.title || item.title"></p>
       <p>{{ item.subscribersCount }}关注 · {{ item.entryCount }}文章</p>
     </div>
     <div class="tag-item-follow follow-btn">{{ item.viewerIsFollowing ? '已关注' : '关注' }}</div>
@@ -14,7 +14,11 @@ export default {
   props: {
     item: {
       type: Object,
-      default: () => []
+      default: () => {}
+    },
+    highlight: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -38,13 +42,15 @@ export default {
     background: rgba(0,0,0,.01);
   }
 
+  /deep/ .tag-item-title em{
+    color: #e8001c;
+  }
+
   .tag-item-avatar{
     position: relative;
     width: 42px;
     height: 42px;
     margin-right: 15px;
-    border-radius: 50%;
-    overflow: hidden;
   }
 
   .tag-item-info{

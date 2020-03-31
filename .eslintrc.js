@@ -26,6 +26,8 @@ module.exports = {
     'no-trailing-spaces': 'off',
     'prefer-const': 'off',
     'space-before-blocks': 'off',
-    'vue/max-attributes-per-line': 'offf'
+    'vue/max-attributes-per-line': 'off',
+    'vue/attributes-order': 'off',
+    'vue/html-self-closing': 'off'
   }
 }

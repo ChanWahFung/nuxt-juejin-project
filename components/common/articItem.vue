@@ -9,8 +9,8 @@
           <span v-for="(tag) in item.tags" :key="tag.id" class="label">{{ tag.title }}</span>
         </li>
       </ul>
-      <p class="artic-title" v-html="item.title"></p>
-      <p v-if="hasDesc" class="artic-desc" v-html="item.description || item.text"></p>
+      <p class="artic-title" v-html="highlight.title || item.title"></p>
+      <p v-if="hasDesc" class="artic-desc" v-html="highlight.description || highlight.text || item.content"></p>
       <ul class="artic-action">
         <li class="action-item">
           <img class="icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
@@ -31,11 +31,15 @@ export default {
   props: {
     item: {
       type: Object,
-      default: () => []
+      default: () => {}
     },
     hasDesc: {
       type: Boolean,
       default: false
+    },
+    highlight: {
+      type: Object,
+      default: () => {}
     }
   },
   methods: {
