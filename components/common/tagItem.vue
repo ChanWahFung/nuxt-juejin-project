@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-item">
+  <div class="tag-item" @click="toTag(item.id)">
     <img :src="item.icon" class="tag-item__avatar">
     <div class="tag-item__info">
       <p class="tag-item__title" v-html="highlight.title || item.title"></p>
@@ -30,6 +30,14 @@ export default {
   created() {
   },
   methods: {
+    toTag(id) {
+      this.$router.push({
+        name: 'tag',
+        params: {
+          id
+        }
+      })
+    }
   }
 }
 </script>
@@ -61,9 +69,11 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     padding: 2px 0;
+    font-size: 14px;
     color: #2e3135;
 
-    .tag-item-title{
+    .tag-item__title{
+      font-size: 16px;
       font-weight: bold;
     }
   }

@@ -61,6 +61,22 @@ export default ({ app: { $request } }, inject) => {
      */
     getUserNotification(params = {}){
       return $request.get('/user/notification', params)
+    },
+    /**
+     * 获取标签详情
+     */
+    getTagDetail(params = {}){
+      return $request.get('/tag/detail', params)
+    },
+    /**
+     * 获取对应标签的文章列表
+     * @param {string} tagId - 标签id
+     * @param {number} page - 页码
+     * @param {number} pageSize - 页数
+     * @param {string} sort - rankIndex：热门；createdAt：最新；hotIndex
+     */
+    getTagEntry(params = {}){
+      return $request.get('/tag/entry', params)
     }
   })
 }

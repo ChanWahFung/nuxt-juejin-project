@@ -45,10 +45,6 @@ export default {
       }
     }
   },
-  beforeRouteUpdate (to, from, next) {
-    next()
-    console.log('update')
-  },
   mixins: [reachBottom],
   data() {
     return {
