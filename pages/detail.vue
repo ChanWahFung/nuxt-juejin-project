@@ -2,36 +2,36 @@
   <div class="container">
     <div class="main">
       <div class="detail">
-        <div class="detail-header">
-          <div class="detail-userInfo">
-            <img class="detail-user-avatar" :src="articInfo.user.avatarLarge" alt="头像">
-            <div class="detail-user-name">
+        <div class="detail__header">
+          <div class="detail__userInfo">
+            <img class="detail__user__avatar" :src="articInfo.user.avatarLarge" alt="头像">
+            <div class="detail__user__name">
               <span style="margin-right: 10px">{{ articInfo.user.username }}</span>
               <level :level="articInfo.user.level"></level>
             </div>
-            <div class="detail-user-meta">
-              <span class="meta-time">{{ articInfo.create_date }}</span>
+            <div class="detail__user__meta">
+              <span class="meta__time">{{ articInfo.create_date }}</span>
               <span>阅读{{ articInfo.viewsCount }}</span>
             </div>
           </div>
-          <div class="detail-follow-btn">关注</div>
+          <follow-btn></follow-btn>
         </div>
-        <div v-if="articInfo.screenshot" class="detail-cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
-        <h1 class="detail-title">{{ articInfo.title }}</h1>
-        <div class="detail-content" v-html="articDetail.content"></div>
+        <div v-if="articInfo.screenshot" class="detail__cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
+        <h1 class="detail__title">{{ articInfo.title }}</h1>
+        <div class="detail__content" v-html="articDetail.content"></div>
       </div>
       <div class="tags">
-        <p class="tags-title">关注下面的标签，发现更多相似文章</p>
+        <p class="tags__title">关注下面的标签，发现更多相似文章</p>
         <div v-for="item in articInfo.tags" :key="item.id" class="tag">
-          <img class="tag-icon" :src="item.icon" />
+          <img class="tag__icon" :src="item.icon" />
           <span class="tag-title">{{ item.title }}</span>
         </div>
       </div>
       <div v-if="authorInfo" class="author-info">
-        <img class="author-avatar" :src="authorInfo.avatarLarge" />
-        <div class="author-info-main">
+        <img class="author__avatar" :src="authorInfo.avatarLarge" />
+        <div class="author-info__main">
           <div>
-            <span class="author-name">{{ authorInfo.username }}</span>
+            <span class="author__name">{{ authorInfo.username }}</span>
             <level :level="authorInfo.level"></level>
             <span>{{ authorInfo.jobTitle }}</span>
             <span v-if="authorInfo.jobTitle && authorInfo.company">@</span>
@@ -45,7 +45,7 @@
         </div>
       </div>
       <div class="comment-area">
-        <p class="comment-area-title">评论</p>
+        <p class="comment-area__title">评论</p>
         <comment-item v-for="item in comments" :key="item.id" :data="item"></comment-item>
       </div>
     </div>
@@ -152,22 +152,14 @@ export default {
   padding-top: 30px;
   border-radius: 2px;
 
-  .detail-header{
+  .detail__header{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-
-    .detail-follow-btn{
-      padding: 5px 12px;
-      font-size: 14px;
-      color: $success;
-      border: 1px solid currentColor;
-      border-radius: 2px;
-    }
   }
 
-  .detail-cover{
+  .detail__cover{
     width: 100%;
     padding-top: 50%;
     background-size: cover;
@@ -175,7 +167,7 @@ export default {
     margin-bottom: 30px;
   }
 
-  .detail-title{
+  .detail__title{
     margin-bottom: 50px;
     line-height: 1.6;
     font-size: 30px;
@@ -183,7 +175,7 @@ export default {
     color: #000;
   }
 
-  .detail-content{
+  .detail__content{
     line-height: 1.6;
     color: #333;
 
@@ -243,7 +235,7 @@ export default {
   }
 }
 
-.detail-userInfo{
+.detail__userInfo{
   display: flex;
   height: 40px;
   flex-direction: column;
@@ -251,7 +243,7 @@ export default {
   position: relative;
   padding-left: 50px;
 
-  .detail-user-avatar{
+  .detail__user__avatar{
     position: absolute;
     top: 0;
     left: 0;
@@ -261,19 +253,19 @@ export default {
     border-radius: 50%;
   }
 
-  .detail-user-name{
+  .detail__user__name{
     display: flex;
     align-items: center;
     font-weight: 700;
     color: #333;
   }
 
-  .detail-user-meta{
+  .detail__user__meta{
     letter-spacing: 1px;
     font-size: 14px;
     color: #909090;
 
-    .meta-time{
+    .meta__time{
       margin-right: 10px;
     }
   }
@@ -282,7 +274,7 @@ export default {
 .comment-area{
   padding: 20px 0 20px 50px;
 
-  .comment-area-title{
+  .comment-area__title{
     padding-bottom: 20px;
     color: #777;
     text-align: center;
@@ -292,7 +284,7 @@ export default {
 .tags{
   margin-top: 30px;
 
-  .tags-title{
+  .tags__title{
     padding-left: 20px;
     margin-bottom:20px;
     font-weight: bolder;
@@ -308,7 +300,7 @@ export default {
     padding: 2px;
     border: 1px solid #ddd;
 
-    .tag-icon{
+    .tag__icon{
       width: 21px;
       height: 21px;
     }
@@ -327,7 +319,7 @@ export default {
   margin: 30px 0;
   background: #f4f4f4;
 
-  .author-avatar{
+  .author__avatar{
     position: relative;
     width: 40px;
     height: 40px;
@@ -346,7 +338,7 @@ export default {
     }
   }
 
-  .author-info-main{
+  .author-info__main{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -355,7 +347,7 @@ export default {
     font-size: 14px;
     margin-left: 10px;
 
-    .author-name{
+    .author__name{
       font-size: 16px;
       font-weight: bold;
       color: #262626;

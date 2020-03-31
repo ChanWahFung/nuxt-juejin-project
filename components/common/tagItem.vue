@@ -1,11 +1,13 @@
 <template>
   <div class="tag-item">
-    <img :src="item.icon" class="tag-item-avatar">
-    <div class="tag-item-info">
-      <p class="tag-item-title" v-html="highlight.title || item.title"></p>
+    <img :src="item.icon" class="tag-item__avatar">
+    <div class="tag-item__info">
+      <p class="tag-item__title" v-html="highlight.title || item.title"></p>
       <p>{{ item.subscribersCount }}关注 · {{ item.entryCount }}文章</p>
     </div>
-    <div class="tag-item-follow follow-btn">{{ item.viewerIsFollowing ? '已关注' : '关注' }}</div>
+    <div class="tag-item__btn">
+      <follow-btn :isFollow="item.viewerIsFollowing"></follow-btn>
+    </div>
   </div>
 </template>
 
@@ -42,18 +44,19 @@ export default {
     background: rgba(0,0,0,.01);
   }
 
-  /deep/ .tag-item-title em{
+  /deep/ .tag-item__title em{
     color: #e8001c;
   }
 
-  .tag-item-avatar{
+  .tag-item__avatar{
     position: relative;
     width: 42px;
     height: 42px;
     margin-right: 15px;
+    object-fit: contain;
   }
 
-  .tag-item-info{
+  .tag-item__info{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -65,7 +68,7 @@ export default {
     }
   }
 
-  .tag-item-follow{
+  .tag-item__btn{
     align-self: center;
     margin-left: auto;
   }

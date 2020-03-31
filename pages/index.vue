@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="list-header">
-      <ul class="list-nav">
-        <li class="list-nav-item" :class="{'list-nav-item__active': item.id == navId}" v-for="item in navs" :key="item.title" @click="changeNav(item)">{{ item.title }}</li>
+    <div class="list__header">
+      <ul class="list__nav">
+        <li class="list__nav-item" :class="{'list__nav-item--active': item.id == navId}" v-for="item in navs" :key="item.title" @click="changeNav(item)">{{ item.title }}</li>
         <el-select v-if="navTypes.length" size="mini" style="width:100px" v-model="navType" placeholder="请选择" @change="changeNav">
           <el-option
             v-for="item in navTypes"
@@ -118,24 +118,24 @@ export default {
   box-shadow: 0 0 4px #eee;
   border-radius: 2px;
 
-  .list-header{
+  .list__header{
     padding: 15px 25px;
     border-bottom: 1px solid #eee;
   }
 
-  .list-nav{
+  .list__nav{
     height: 28px;
     display: flex;
     align-items: center;
     
-    .list-nav-item{
+    .list__nav-item{
       display: inline-block;
       font-size: 14px;
       color: #909090;
       cursor: pointer;
 
       &:hover,
-      &.list-nav-item__active{
+      &.list__nav-item--active{
         color: $theme;
       }
 

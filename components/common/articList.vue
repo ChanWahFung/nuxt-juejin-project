@@ -1,6 +1,6 @@
 <template>
   <div class="artic-list">
-    <div v-for="item in list" :key="item.id" class="artic-item__border">
+    <div v-for="item in list" :key="item.id" class="artic-item--border">
       <artic-item :item="item.node"></artic-item>
     </div>
   </div>
@@ -33,7 +33,7 @@ export default {
 .artic-list {
   background-color: #fff;
 
-  .artic-item__border:not(:last-child){
+  .artic-item--border:not(:last-child){
     border-bottom: 1px solid #eee;
   }
 }

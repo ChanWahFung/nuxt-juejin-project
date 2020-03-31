@@ -1,12 +1,14 @@
 <template>
   <div class="user-item">
-    <img v-if="item.avatarLarge" class="user-item-avatar" :src="item.avatarLarge" />
-    <img v-else class="user-item-avatar" src="https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg" />
-    <div class="user-item-info">
-      <p class="user-item-username" v-html="highlight.username || item.username"></p>
+    <img v-if="item.avatarLarge" class="user-item__avatar" :src="item.avatarLarge" />
+    <img v-else class="user-item__avatar" src="https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg" />
+    <div class="user-item__info">
+      <p class="user-item__username" v-html="highlight.username || item.username"></p>
       <p>{{ item.postedPostsCount }}专栏 · {{ item.followersCount }}个关注者</p>
     </div>
-    <div class="user-item-follow follow-btn">关注</div>
+    <div class="user-item__btn">
+      <follow-btn :isFollow="item.viewerIsFollowing"></follow-btn>
+    </div>
   </div>
 </template>
 
@@ -35,7 +37,7 @@ export default {
     background: rgba(0,0,0,.01);
   }
 
-  .user-item-avatar {
+  .user-item__avatar {
     position: relative;
     width: 42px;
     height: 42px;
@@ -44,7 +46,7 @@ export default {
     overflow: hidden;
   }
 
-  .user-item-info{
+  .user-item__info{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -52,7 +54,7 @@ export default {
     font-size: 13px;
     color: #8a9aa9;
 
-    .user-item-username {
+    .user-item__username {
       font-size: 16px;
       font-weight: bold;
       color: #2e3135;
@@ -63,7 +65,7 @@ export default {
     }
   }
 
-  .user-item-follow{
+  .user-item__btn{
     margin-left: auto;
     align-self: center;
   }

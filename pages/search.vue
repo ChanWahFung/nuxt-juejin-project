@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <div class="list-header">
-      <ul class="list-types">
-        <li class="list-type-item list-item" :class="{'list-item__active': item.type == type }" v-for="item in types" :key="item.title" @click="changeType(item)">{{ item.title }}</li>
+    <div class="list__header">
+      <ul class="list__types">
+        <li class="list__type-item list-item" :class="{'list-item--active': item.type == type }" v-for="item in types" :key="item.title" @click="changeType(item)">{{ item.title }}</li>
       </ul>
-      <ul class="list-periods">
-        <li class="list-period-item list-item" :class="{'list-item__active': item.period == period }" v-for="item in periods" :key="item.title" @click="changePeriod(item)">{{ item.title }}</li>
+      <ul class="list__periods">
+        <li class="list__period-item list-item" :class="{'list-item--active': item.period == period }" v-for="item in periods" :key="item.title" @click="changePeriod(item)">{{ item.title }}</li>
       </ul>
     </div>
     <search-result :list="searchList"></search-result>
@@ -153,20 +153,20 @@ export default {
   box-shadow: 0 0 4px #eee;
   border-radius: 2px;
 
-  .list-header{
+  .list__header{
     display: flex;
     align-items: center;
     padding: 15px 25px;
     border-bottom: 1px solid #eee;
   }
 
-  .list-types{
+  .list__types{
     height: 28px;
     display: flex;
     align-items: center;
   }
 
-  .list-periods{
+  .list__periods{
     margin-left: auto;
     height: 28px;
     display: flex;
@@ -180,16 +180,16 @@ export default {
     cursor: pointer;
 
     &:hover,
-    &.list-item__active{
+    &.list-item--active{
       color: $theme;
     }
   }
 
-  .list-type-item{
+  .list__type-item{
     margin-right: 30px;
   }
 
-  .list-period-item{
+  .list__period-item{
       font-size: 12px;
 
       &:not(:last-child){

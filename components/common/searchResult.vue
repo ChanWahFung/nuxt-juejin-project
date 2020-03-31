@@ -1,6 +1,6 @@
 <template>
   <div class="search-result">
-    <div v-for="(item, index) in list" :key="index" class="artic-item__border">
+    <div v-for="(item, index) in list" :key="index" class="artic-item--border">
       <artic-item v-if="item.node.type === 'ArticleSearchResultItem'" :hasDesc="true" :item="item.node.entity" :highlight="item.node.highlight"></artic-item>
       <user-item v-else-if="item.node.type === 'UserSearchResultItem'" :item="item.node.entity" :highlight="item.node.highlight"></user-item>
       <tag-item v-else-if="item.node.type === 'TagSearchResultItem'" :item="item.node.entity" :highlight="item.node.highlight"></tag-item>
@@ -31,7 +31,7 @@ export default {
 .search-result{
   background: #fff;
 
-  .artic-item__border:not(:last-child){
+  .artic-item--border:not(:last-child){
     border-bottom: 1px solid #eee;
   }
 }
