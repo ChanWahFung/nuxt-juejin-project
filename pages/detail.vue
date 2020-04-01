@@ -63,16 +63,17 @@ export default {
       default: ''
     }
   },
+  validate ({ params }) {
+    if (params.id) {
+      return true
+    }
+    return false
+  },
   async asyncData ({ app, params }) {
     const articDetail = await app.$api.getDetail({
       type: 'entryView',
       postId: params.id
-    }).then(res => {
-      if (res.s === 1) {
-        return res.d
-      }
-      return {}
-    })
+    }).then(res => res.s === 1 ? res.d : {})
     const articInfo = await app.$api.getDetail({
       type: 'entry',
       postId: params.id

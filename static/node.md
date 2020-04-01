@@ -518,3 +518,19 @@ export default {
 }
 ```
 
+
+## 路由配置
+`nuxt.config.js`:
+配置`router`合并选项，更多配置查看[文档](https://www.nuxtjs.cn/api/configuration-router)
+```js
+router: {
+    extendRoutes (routes, resolve) {
+        routes.push({
+            name: 'detail',
+            path: '/detail/:id',
+            component: resolve(__dirname, 'pages/detail.vue'),
+            props: true
+        })
+    }
+}
+```

@@ -31,12 +31,7 @@ export default {
   },
   methods: {
     toTag(id) {
-      this.$router.push({
-        name: 'tag',
-        params: {
-          id
-        }
-      })
+      this.$router.push(`/tag/${id}`)
     }
   }
 }

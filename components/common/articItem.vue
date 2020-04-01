@@ -15,7 +15,7 @@
       <ul class="artic-item__action">
         <li class="action-item">
           <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-          {{ item.likeCount }}
+          {{ item.likeCount || item.collectionCount }}
         </li>
         <li class="action-item">
           <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
@@ -47,12 +47,7 @@ export default {
     toDetail(originalUrl) {
       if (!originalUrl) { return }
       if (originalUrl.includes('juejin')) {
-        this.$router.push({
-          name: 'detail',
-          params: {
-            id: originalUrl.split('/').pop()
-          }
-        })
+        this.$router.push(`/detail/${originalUrl.split('/').pop()}`)
       } else {
         const a = document.createElement("a")
         a.href = originalUrl

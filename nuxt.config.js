@@ -7,12 +7,12 @@ module.exports = {
   },
   router: {
     extendRoutes (routes, resolve) {
-      // routes.push({
-      //   name: 'detail',
-      //   path: '/detail/:id',
-      //   component: resolve(__dirname, 'pages/detail.vue'),
-      //   props: true
-      // })
+      routes.push({
+        name: 'detail',
+        path: '/detail/:id',
+        component: resolve(__dirname, 'pages/detail.vue'),
+        props: true
+      })
       routes.push({
         name: 'tag',
         path: '/tag/:id',

@@ -27,7 +27,7 @@ router.get('/entry', async(ctx, next) => {
       'X-Juejin-Token': config.token,
       'X-Juejin-Uid': config.uid
     },
-    body: {
+    params: {
       'src': 'web',
       'uid': config.uid,
       'device_id': config.deviceId,
