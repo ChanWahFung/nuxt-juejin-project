@@ -5,15 +5,19 @@ const requestPromise = util.promisify(request)
 
 module.exports = function (options){
   if(options.method === 'GET'){
-    let params = qs.stringify(options.params)
-    options.url = `${options.url}?${params}`
+    if(options.params){
+      let params = qs.stringify(options.params)
+      options.url = `${options.url}?${params}`
+    }
   }
   if(options.method === 'POST'){
     options.headers = {
       'content-type': 'application/json',
       ...options.headers,
     }
-    options.body = JSON.stringify(options.body)
+    if(options.body){
+      options.body = JSON.stringify(options.body)
+    }
   }
   return requestPromise(options)
     .then(res=> res.body)
