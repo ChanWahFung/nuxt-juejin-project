@@ -15,6 +15,7 @@
         </div>
       </div>
       <artic-list :list="articleList"></artic-list>
+      <div class="nodata-tip">暂无文章</div>
     </main>
   </div>
 </template>
@@ -73,6 +74,7 @@ export default {
       sort: 'rankIndex',
       page: 1,
       pageSize: 20,
+      isReachBottomFetching: false,  // 防止触底多次请求
     }
   },
   methods: {
@@ -86,17 +88,19 @@ export default {
         this.getTagEntry()
       }
     },
-    getTagEntry({ isLoadMore = false } = {}) {
-      this.$api.getTagEntry({
+    async getTagEntry({ isLoadMore = false } = {}) {
+      if (this.isReachBottomFetching && isLoadMore) {
+        return
+      }
+      this.isReachBottomFetching = true
+      let list = await this.$api.getTagEntry({
         page: this.page,
         pageSize: this.pageSize,
         tagId: this.tagInfo.id,
         sort: this.sort
-      }).then(res => {
-        if (res.s === 1) {
-          this.articleList = isLoadMore ? this.articleList.concat(res.d.entrylist) : res.d.entrylist
-        }
-      })
+      }).then(res => res.s === 1 ? res.d.entrylist : [])
+      this.articleList = isLoadMore ? this.articleList.concat(list) : list
+      this.isReachBottomFetching = false
     }
   }
 }
@@ -155,5 +159,11 @@ export default {
       }
     }
   }
+}
+.nodata-tip{
+  padding: 20px 0;
+  background: #fff;
+  text-align: center;
+  color: #999;
 }
 </style>

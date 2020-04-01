@@ -72,8 +72,7 @@ export default {
       navTypes: [],
       list: [],
       pageInfo: {},
-      reachBottomDistance: 50,
-      isReachBottom: false
+      isReachBottomFetching: false,  // 防止触底多次请求
     };
   },
   methods: {
@@ -95,6 +94,10 @@ export default {
       this.getArticList()
     },
     async getArticList({ isLoadMore = false } = {}){
+      if (this.isReachBottomFetching) {
+        return
+      }
+      this.isReachBottomFetching = true
       let params = {
         order: this.navType
       }
@@ -102,11 +105,10 @@ export default {
         params.after = this.pageInfo.endCursor || ''
       }
       let res = await this.$api.getIndexList(params);
-      console.log(res)
       res = res.data.articleFeed.items
       this.list = isLoadMore ? this.list.concat(res.edges) : res.edges
       this.pageInfo = res.pageInfo
-      return res
+      this.isReachBottomFetching = false
     }
   }
 };

@@ -2,10 +2,10 @@
   <div class="container">
     <div class="list__header">
       <ul class="list__types">
-        <li class="list__type-item list-item" :class="{'list-item--active': item.type == type }" v-for="item in types" :key="item.title" @click="changeType(item)">{{ item.title }}</li>
+        <li class="list__type-item list-item" :class="{'list-item--active': item.type == type }" v-for="item in types" :key="item.title" @click="search({type: item.type})">{{ item.title }}</li>
       </ul>
       <ul class="list__periods">
-        <li class="list__period-item list-item" :class="{'list-item--active': item.period == period }" v-for="item in periods" :key="item.title" @click="changePeriod(item)">{{ item.title }}</li>
+        <li class="list__period-item list-item" :class="{'list-item--active': item.period == period }" v-for="item in periods" :key="item.title" @click="search({period: item.period})">{{ item.title }}</li>
       </ul>
     </div>
     <search-result :list="searchList"></search-result>
@@ -86,7 +86,8 @@ export default {
           title: '三月内',
           period: 'm3'
         }
-      ]
+      ],
+      isReachBottomFetching: false,  // 防止触底多次请求
     }
   },
   computed: {
@@ -107,6 +108,10 @@ export default {
       }
     },  
     async getSearchList() {
+      if (this.isReachBottomFetching) {
+        return
+      }
+      this.isReachBottomFetching = true
       let res = await this.$api.searchList({
         after: this.pageInfo.endCursor,
         first: this.first,
@@ -118,24 +123,15 @@ export default {
         this.pageInfo = res.search.pageInfo
         this.searchList = this.searchList.concat(res.search.edges)
       }
+      this.isReachBottomFetching = false
     },
-    changeType(item) {
+    search(item) {
       this.$router.push({
         name: 'search',
         query: {
-          type: item.type,
+          type: item.type || this.type,
           keyword: this.keyword,
-          period: this.period
-        }
-      })
-    },
-    changePeriod(item) {
-      this.$router.push({
-        name: 'search',
-        query: {
-          type: this.type,
-          keyword: this.keyword,
-          period: item.period
+          period: item.period || this.period
         }
       })
     }
