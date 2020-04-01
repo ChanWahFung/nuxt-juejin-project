@@ -8,9 +8,11 @@
         <span class="comment-item__username">{{ data.userInfo.username }}</span>
         <level :level="data.userInfo.level"></level>
         <p style="margin-left: 5px">
-          <span class="comment-item__job-title">{{ data.userInfo.jobTitle }}</span>
-          <span v-if="data.userInfo.jobTitle && data.userInfo.company">@</span>
-          <span v-if="data.userInfo.company" class="comment-item__company">{{ data.userInfo.company }}</span>
+          <span>
+            {{ data.userInfo.jobTitle }}
+            {{data.userInfo.jobTitle && data.userInfo.company ? ' @ ' : ''}}
+            {{ data.userInfo.company }}
+          </span>
         </p>
       </div>
       <p class="comment-item__content">{{ data.content }}</p>
@@ -28,9 +30,11 @@
               <span class="comment-item__username">{{ item.userInfo.username }}</span>
               <level :level="item.userInfo.level"></level>
               <p style="margin-left: 5px">
-                <span class="comment-item__job-title">{{ item.userInfo.jobTitle }}</span>
-                <span v-if="item.userInfo.jobTitle && item.userInfo.company">@</span>
-                <span v-if="item.userInfo.company" class="comment-item__company">{{ item.userInfo.company }}</span>
+                <span>
+                  {{ item.userInfo.jobTitle }}
+                  {{ item.userInfo.jobTitle && item.userInfo.company ? ' @ ' : '' }}
+                  {{ item.userInfo.company }}
+                </span>
               </p>
             </div>
             <p class="comment-item__content">{{ item.content }}</p>

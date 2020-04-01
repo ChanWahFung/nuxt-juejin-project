@@ -3,7 +3,18 @@
     <img v-if="item.avatarLarge" class="user-item__avatar" :src="item.avatarLarge" />
     <img v-else class="user-item__avatar" src="https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg" />
     <div class="user-item__info">
-      <p class="user-item__username" v-html="highlight.username || item.username"></p>
+      <p class="user-item__userinfo">
+        <span class="user-item__username" v-html="highlight.username || item.username"></span>
+        <span v-if="item.level > 0" style="margin-right: 10px">
+          <level :level="item.level"></level>
+        </span>
+        <span v-if="highlight.jobTitle" v-html="highlight.jobTitle"></span>
+        <span v-else>
+          {{ item.jobTitle }}
+          {{ item.jobTitle&&item.company ? ' @ ' : '' }}
+          {{ item.company }}
+        </span>
+      </p>
       <p>{{ item.postedPostsCount }}专栏 · {{ item.followersCount }}个关注者</p>
     </div>
     <div class="user-item__btn">
@@ -44,6 +55,7 @@ export default {
     margin-right: 15px;
     border-radius: 50%;
     overflow: hidden;
+    object-fit: contain;
   }
 
   .user-item__info{
@@ -54,10 +66,18 @@ export default {
     font-size: 13px;
     color: #8a9aa9;
 
-    .user-item__username {
-      font-size: 16px;
-      font-weight: bold;
-      color: #2e3135;
+    .user-item__userinfo {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: #909090;
+
+      .user-item__username {
+        margin-right: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #2e3135;
+      }
 
       /deep/ em {
         color: #e8001c;

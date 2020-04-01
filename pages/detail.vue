@@ -33,9 +33,11 @@
           <div>
             <span class="author__name">{{ authorInfo.username }}</span>
             <level :level="authorInfo.level"></level>
-            <span>{{ authorInfo.jobTitle }}</span>
-            <span v-if="authorInfo.jobTitle && authorInfo.company">@</span>
-            <span>{{ authorInfo.company }}</span>
+            <span>
+              {{ authorInfo.jobTitle }}
+              {{ authorInfo.jobTitle && authorInfo.company ? ' @ ' : '' }}
+              {{ authorInfo.company }}
+            </span>
           </div>
           <div>
             <span>发布了 {{ authorInfo.postedPostsCount }} 篇专栏 · </span>
