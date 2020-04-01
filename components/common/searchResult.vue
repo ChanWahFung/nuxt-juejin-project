@@ -1,7 +1,7 @@
 <template>
   <div class="search-result">
     <div v-for="(item, index) in list" :key="index" class="artic-item--border">
-      <artic-item v-if="item.node.type === 'ArticleSearchResultItem'" :hasDesc="true" :item="item.node.entity" :highlight="item.node.highlight"></artic-item>
+      <artic-item v-if="item.node.type === 'ArticleSearchResultItem'" :has-desc="true" :item="item.node.entity" :highlight="item.node.highlight"></artic-item>
       <user-item v-else-if="item.node.type === 'UserSearchResultItem'" :item="item.node.entity" :highlight="item.node.highlight"></user-item>
       <tag-item v-else-if="item.node.type === 'TagSearchResultItem'" :item="item.node.entity" :highlight="item.node.highlight"></tag-item>
     </div>

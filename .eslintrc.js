@@ -30,6 +30,7 @@ module.exports = {
     'vue/attributes-order': 'off',
     'vue/order-in-components': 'off',
     'vue/html-self-closing': 'off',
+    'vue/no-v-html': 'off',
     'no-multi-spaces': 'off'
   }
 }
