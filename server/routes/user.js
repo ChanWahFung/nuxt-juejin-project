@@ -33,4 +33,17 @@ router.get('/notification', async (ctx, next)=>{
   ctx.body = await request(options);
 })
 
+router.get('/isCurrentUserFollowed', async (ctx, next)=>{
+  const options = {
+    url: 'https://follow-api-ms.juejin.im/v1/isCurrentUserFollowed',
+    method: "GET",
+    params: {
+      currentUid: ctx.query.currentUid,
+      targetUids: ctx.query.targetUids,
+      src: 'web',
+    }
+  };
+  ctx.body = await request(options);
+})
+
 module.exports = router

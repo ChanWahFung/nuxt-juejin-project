@@ -19,6 +19,12 @@ module.exports = {
         component: resolve(__dirname, 'pages/tag.vue'),
         props: true
       })
+      routes.push({
+        name: 'user',
+        path: '/user/:id',
+        component: resolve(__dirname, 'pages/user.vue'),
+        props: true
+      })
     }
   },
   /*

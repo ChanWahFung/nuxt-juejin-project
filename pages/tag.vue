@@ -24,6 +24,11 @@
 import reachBottom from '~/mixins/reachBottom'
 
 export default {
+  head(){
+    return {
+      title: `${this.$route.params.tagName} - 标签 - 掘金`
+    }
+  },
   layout: 'full',
   props: {
     tagName: {
@@ -39,7 +44,7 @@ export default {
   },
   async asyncData({ app, params }) {
     const tagInfo = await app.$api.getTagDetail({
-      tagName: params.tagName
+      tagName: encodeURIComponent(params.tagName)
     }).then(res => res.s === 1 ? res.d : {})
     const articleList = await app.$api.getTagEntry({
       page: 1,

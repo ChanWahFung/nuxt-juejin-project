@@ -3,10 +3,12 @@
     <div class="artic-item__info">
       <ul class="artic-item__meta">
         <li class="meta-item mate-item--post" v-if="item.type === 'post'">专栏</li>
-        <li class="meta-item">{{ item.user.username }}</li>
+        <li class="meta-item">
+          <span class="meta-item__username" @click.stop="$router.push('/user/'+item.user.id)">{{ item.user.username }}</span>
+        </li>
         <li class="meta-item">{{ item.createdAt | formatTime }}</li>
         <li class="meta-item">
-          <span v-for="(tag) in item.tags" :key="tag.id" class="label">{{ tag.title }}</span>
+          <span v-for="(tag) in item.tags" :key="tag.id" class="meta-item__tag" @click.stop="$router.push('/tag/'+tag.title)">{{ tag.title }}</span>
         </li>
       </ul>
       
@@ -108,9 +110,24 @@ export default {
     color: #b71ed7;
   }
 
-  .label {
+  .meta-item__username {
+    cursor: pointer;
+
+    &:hover{
+      color: $theme;
+    }
+  }
+
+  .meta-item__tag {
+    cursor: pointer;
+
+    &:hover{
+      color: $theme;
+    }
+
     &::after {
       content: " / ";
+      color: #b2bac2;
     }
 
     &:last-child::after {
