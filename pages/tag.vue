@@ -11,9 +11,7 @@
         <img class="list-header__icon" :src="tagInfo.icon" />
         <follow-btn :is-follow="tagInfo.isSubscribe"></follow-btn>
         <div class="list-header__nav">
-          <span>热门</span>
-          <span>最新</span>
-          <span>最热</span>
+          <span v-for="item in sortList" :key="item.sort" :class="{'nav--active': sort === item.sort}" @click="changeSort(item.sort)">{{ item.title }}</span>
         </div>
       </div>
       <artic-list :list="articleList"></artic-list>
@@ -22,27 +20,30 @@
 </template>
 
 <script>
+import reachBottom from '~/mixins/reachBottom'
+
 export default {
   layout: 'full',
   props: {
-    id: {
+    tagName: {
       type: String,
       default: ''
     }
   },
   validate ({ params }) {
-    if (params.id) {
+    if (params.tagName) {
       return true
     }
     return false
   },
   async asyncData({ app, params }) {
-    const tagInfo = await app.$api.getTagDetail()
-      .then(res => res.s === 1 ? res.d : {})
+    const tagInfo = await app.$api.getTagDetail({
+      tagName: params.tagName
+    }).then(res => res.s === 1 ? res.d : {})
     const articleList = await app.$api.getTagEntry({
       page: 1,
       pageSize: 20,
-      tagId: params.id,
+      tagId: tagInfo.id,
       sort: 'rankIndex'
     }).then(res => res.s === 1 ? res.d.entrylist : {})
     return {
@@ -50,15 +51,53 @@ export default {
       articleList
     }
   },
+  mixins: [reachBottom],
   data() {
     return {
       articleList: [],
-      tagInfo: null
+      tagInfo: null,
+      sortList: [
+        {
+          title: '热门',
+          sort: 'rankIndex'
+        },
+        {
+          title: '最新',
+          sort: 'createdAt'
+        },
+        {
+          title: '最热',
+          sort: 'hotIndex'
+        }
+      ],
+      sort: 'rankIndex',
+      page: 1,
+      pageSize: 20,
     }
   },
-  created() {
-  },
   methods: {
+    reachBottom() {
+      this.page++
+      this.getTagEntry({ isLoadMore: true })
+    },
+    changeSort(sort) {
+      if (this.sort !== sort) {
+        this.sort = sort
+        this.getTagEntry()
+      }
+    },
+    getTagEntry({ isLoadMore = false } = {}) {
+      this.$api.getTagEntry({
+        page: this.page,
+        pageSize: this.pageSize,
+        tagId: this.tagInfo.id,
+        sort: this.sort
+      }).then(res => {
+        if (res.s === 1) {
+          this.articleList = isLoadMore ? this.articleList.concat(res.d.entrylist) : res.d.entrylist
+        }
+      })
+    }
   }
 }
 </script>
@@ -101,9 +140,15 @@ export default {
 
   .list-header__nav{
     margin-left: auto;
+    font-size: 14px;
 
     span{
       color: #999;
+      cursor: pointer;
+
+      &.nav--active{
+        color: $theme;
+      }
 
       &:not(:last-child){
         margin-right: 20px;

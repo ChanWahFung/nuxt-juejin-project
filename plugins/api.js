@@ -64,6 +64,7 @@ export default ({ app: { $request } }, inject) => {
     },
     /**
      * 获取标签详情
+     * @param {string} tagName
      */
     getTagDetail(params = {}){
       return $request.get('/tag/detail', params)
@@ -73,7 +74,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} tagId - 标签id
      * @param {number} page - 页码
      * @param {number} pageSize - 页数
-     * @param {string} sort - rankIndex：热门；createdAt：最新；hotIndex
+     * @param {string} sort - rankIndex：热门；createdAt：最新；hotIndex：最热
      */
     getTagEntry(params = {}){
       return $request.get('/tag/entry', params)

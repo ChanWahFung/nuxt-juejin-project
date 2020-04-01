@@ -15,7 +15,7 @@ module.exports = {
       })
       routes.push({
         name: 'tag',
-        path: '/tag/:id',
+        path: '/tag/:tagName',
         component: resolve(__dirname, 'pages/tag.vue'),
         props: true
       })

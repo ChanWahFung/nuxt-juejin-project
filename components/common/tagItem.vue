@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-item" @click="toTag(item.id)">
+  <div class="tag-item" @click="toTag(item.title)">
     <img :src="item.icon" class="tag-item__avatar">
     <div class="tag-item__info">
       <p class="tag-item__title" v-html="highlight.title || item.title"></p>
@@ -30,8 +30,8 @@ export default {
   created() {
   },
   methods: {
-    toTag(id) {
-      this.$router.push(`/tag/${id}`)
+    toTag(tagName) {
+      this.$router.push(`/tag/${tagName}`)
     }
   }
 }

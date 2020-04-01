@@ -5,7 +5,7 @@ const config = require('../request/config')
 
 router.get('/detail', async(ctx, next) => {
   const options = {
-    url: 'https://gold-tag-ms.juejin.im/v1/tag/Vue.js',
+    url: 'https://gold-tag-ms.juejin.im/v1/tag/'+ctx.query.tagName,
     method: "GET",
     headers: {
       'X-Juejin-Src': 'web',

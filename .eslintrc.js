@@ -19,6 +19,7 @@ module.exports = {
     'space-before-function-paren': 'off',
     'indent': 'off',
     'no-tabs': 'off',
+    'comma-dangle': 'off',
     'eol-last': 'off',
     'arrow-parens': 'off',
     'no-console': 'off',
