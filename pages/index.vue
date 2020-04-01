@@ -77,6 +77,7 @@ export default {
   },
   methods: {
     reachBottom() {
+      console.log('index')
       if (this.pageInfo.hasNextPage) {
         this.getArticList({
           isLoadMore: true
