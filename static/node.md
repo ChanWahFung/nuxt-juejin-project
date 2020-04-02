@@ -520,17 +520,43 @@ export default {
 
 
 ## 路由配置
-`nuxt.config.js`:
-配置`router`合并选项，更多配置查看[文档](https://www.nuxtjs.cn/api/configuration-router)
+
+### 命名路由
+在`Vue`中是这样配置命名路由的
 ```js
-router: {
-    extendRoutes (routes, resolve) {
-        routes.push({
-            name: 'detail',
-            path: '/detail/:id',
-            component: resolve(__dirname, 'pages/detail.vue'),
-            props: true
-        })
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/users/:id',
+      name: 'user',
+      component: User
     }
+  ]
+})
+```
+而在`Nuxt.js`中，路由是`Nuxt`基于文件结构自动生成，想要配置命名路由，需要创建对应的以下划线作为前缀的 `Vue` 文件 或 目录
+
+以下面目录为例：
+```
+pages/
+--| users/
+-----| _id.vue
+--| index.vue
+```
+对应路由配置表为：
+```js
+{
+  routes: [
+    {
+      name: 'index',
+      path: '/',
+      component: 'pages/index.vue'
+    },
+    {
+      name: 'users-id',
+      path: '/users/:id?',
+      component: 'pages/users/_id.vue'
+    }
+  ]
 }
 ```

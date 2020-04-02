@@ -26,6 +26,7 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 'off',
     'no-trailing-spaces': 'off',
     'prefer-const': 'off',
+    'eqeqeq': 'off',
     'space-before-blocks': 'off',
     'vue/max-attributes-per-line': 'off',
     'vue/attributes-order': 'off',

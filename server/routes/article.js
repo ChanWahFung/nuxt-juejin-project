@@ -31,14 +31,33 @@ router.get('/indexList', async (ctx, next) => {
       'X-Legacy-Uid': config.uid
     },
     body: { 
-      "operationName": "", 
-      "query": "", 
-      "variables": { 
-        "first": ctx.query.first || 20, 
-        "after": ctx.query.after || '',
-        "order": ctx.query.order || "POPULAR"
+      operationName: "", 
+      query: "", 
+      variables: { 
+        first: ctx.query.first || 20, 
+        after: ctx.query.after || '',
+        order: ctx.query.order || "POPULAR"
       }, 
-      "extensions": { "query": { "id": "21207e9ddb1de777adeaca7a2fb38030" } } 
+      extensions: { query: { id: "21207e9ddb1de777adeaca7a2fb38030" } } 
+    }
+  };
+  ctx.body = await request(options)
+})
+
+router.get('/userPost', async (ctx, next) => {
+  const options = {
+    url: 'https://timeline-merger-ms.juejin.im/v1/get_entry_by_self',
+    method: "GET",
+    params: { 
+      src: "web",
+      uid: config.uid,
+      device_id: config.deviceId,
+      token: config.token,
+      targetUid: ctx.query.targetUid,
+      type: ctx.query.type || 'post',
+      limit: ctx.query.limit || 20,
+      before: ctx.query.before,
+      order: ctx.query.order || 'createdAt'
     }
   };
   ctx.body = await request(options)

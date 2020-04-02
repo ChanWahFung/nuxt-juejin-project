@@ -78,6 +78,24 @@ export default ({ app: { $request } }, inject) => {
      */
     getTagEntry(params = {}){
       return $request.get('/tag/entry', params)
+    },
+    /**
+     * 检查是否关注用户
+     * @param {staring} currentUid
+     * @param {string} targetUids
+     */
+    isCurrentUserFollowed(params = {}){
+      return $request.get('/user/isCurrentUserFollowed', params)
+    },
+    /**
+     * 获取用户专栏文章
+     * @param {string} targetUid 
+     * @param {string} before - 最后一条的createdAt
+     * @param {number} limit - 单次条数
+     * @param {string} order - 排序
+     */
+    getUserPost(params = {}){
+      return $request.get('/user/userPost', params)
     }
   })
 }

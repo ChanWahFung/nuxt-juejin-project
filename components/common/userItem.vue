@@ -1,5 +1,5 @@
 <template>
-  <div class="user-item">
+  <div class="user-item" @click="$router.push('/user/'+item.id)">
     <img v-if="item.avatarLarge" class="user-item__avatar" :src="item.avatarLarge" />
     <img v-else class="user-item__avatar" src="https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg" />
     <div class="user-item__info">
