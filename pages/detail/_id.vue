@@ -59,12 +59,6 @@ import { formatDate } from '~/utils'
 import commentItem from '~/components/business/commentItem.vue'
 
 export default {
-  props: {
-    id: {
-      type: String,
-      default: ''
-    }
-  },
   validate ({ params }) {
     if (params.id) {
       return true
@@ -83,7 +77,7 @@ export default {
       if (res.s === 1) {
         return {
           ...res.d,
-          create_date: formatDate('Y年M月D', res.d.createdAt)
+          create_date: formatDate('Y年MM月DD日', res.d.createdAt)
         }
       }
       return {}

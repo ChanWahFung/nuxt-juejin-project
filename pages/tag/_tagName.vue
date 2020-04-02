@@ -30,12 +30,6 @@ export default {
     }
   },
   layout: 'full',
-  props: {
-    tagName: {
-      type: String,
-      default: ''
-    }
-  },
   validate ({ params }) {
     if (params.tagName) {
       return true

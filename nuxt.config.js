@@ -5,28 +5,6 @@ module.exports = {
     port: 8000,
     host: '127.0.0.1'
   },
-  router: {
-    extendRoutes (routes, resolve) {
-      routes.push({
-        name: 'detail',
-        path: '/detail/:id',
-        component: resolve(__dirname, 'pages/detail.vue'),
-        props: true
-      })
-      routes.push({
-        name: 'tag',
-        path: '/tag/:tagName',
-        component: resolve(__dirname, 'pages/tag.vue'),
-        props: true
-      })
-      routes.push({
-        name: 'user',
-        path: '/user/:id',
-        component: resolve(__dirname, 'pages/user.vue'),
-        props: true
-      })
-    }
-  },
   /*
   ** Headers of the page
   */
