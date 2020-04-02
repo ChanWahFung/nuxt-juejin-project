@@ -3,7 +3,7 @@
     <div class="tag-info-box">
       <div class="tag-info">
         <div class="tag-title">{{ tagInfo.title }}</div>
-        <div class="tag-meta">{{ tagInfo.subscribersCount }} 关注，{{tagInfo.entryCount }} 文章</div>
+        <div class="tag-meta">{{ tagInfo.subscribersCount }} 关注，{{ tagInfo.entryCount }} 文章</div>
       </div>
     </div>
     <main class="main">

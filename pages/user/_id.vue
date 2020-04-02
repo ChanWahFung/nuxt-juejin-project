@@ -23,7 +23,13 @@
         </div>
       </div>
       <div class="user-post">
-        <post-item></post-item>
+        <div class="list-header">
+          <span class="list-header__title">专栏 {{userInfo.postedPostsCount}}</span>
+          <div>
+            <span class="order-item" :class="{'order-item--active': item.order == currentOrder}" v-for="item in orderOptions" :key="item.order" @click="changeOrder(item.order)">{{ item.title }}</span>
+          </div>
+        </div>
+        <post-item :item="item" v-for="item in postList" :key="item.id"></post-item>
       </div>
     </div>
     <div class="minor-area">
@@ -45,15 +51,15 @@
             </div>
           </template>
           <div class="honor-item">
-            <img class="honor-item__icon shadow" src="~/assets/images/honor-3.svg" />
+            <img class="honor-item__icon shadow" src="~/assets/images/honor-4.svg" />
             <span class="honor-item__title">获得点赞 {{ userInfo.totalCollectionsCount }}</span>
           </div>
           <div class="honor-item">
-            <img class="honor-item__icon shadow" src="~/assets/images/honor-3.svg" />
+            <img class="honor-item__icon shadow" src="~/assets/images/honor-5.svg" />
             <span class="honor-item__title">文章被阅读 {{ userInfo.totalViewsCount }}</span>
           </div>
           <div class="honor-item">
-            <img class="honor-item__icon shadow" src="~/assets/images/honor-3.svg" />
+            <img class="honor-item__icon shadow" src="~/assets/images/honor-6.svg" />
             <span class="honor-item__title">掘力值 {{ userInfo.juejinPower }}</span>
           </div>
         </div>
@@ -84,6 +90,7 @@
 <script>
 import postItem from '~/components/business/postItem'
 import { formatDate } from '~/utils'
+import reachBottom from '~/mixins/reachBottom'
 
 export default {
   head() {
@@ -106,7 +113,7 @@ export default {
       targetUid: params.id,
       limit: 20,
       order: 'createdAt'
-    }).then(res => res.s === 1 ? res.d.entery : [])
+    }).then(res => res.s === 1 ? res.d.entrylist : [])
     let isFollowed = await app.$api.isCurrentUserFollowed({
       currentUid: '5c455fe56fb9a049ef26e4e6',
       targetUids: params.id,
@@ -120,17 +127,52 @@ export default {
   components: {
     'post-item': postItem
   },
+  mixins: [reachBottom],
   data() {
     return {
       postList: [],
       userInfo: {},
-      isFollowed: false,
+      orderOptions: [
+        {
+          title: '热门',
+          order: 'rankIndex'
+        },
+        {
+          title: '最新',
+          order: 'createdAt'
+        }
+      ],
+      currentOrder: 'createdAt',
+      isFollowed: false
     }
   },
   created() {
   },
   methods: {
     formatDate,
+    reachBottom() {
+      this.getUserPost({ isLoadMore: true })
+    },
+    changeOrder(order) {
+      if (this.currentOrder !== order) {
+        this.currentOrder = order
+        this.getUserPost()
+      }
+    },
+    async getUserPost({ isLoadMore = false } = {}) {
+      let params = {
+        targetUid: this.$route.params.id,
+        limit: 20,
+        order: this.currentOrder
+      }
+      if (isLoadMore) {
+        params.before = isLoadMore ? this.postList[this.postList.length - 1].createdAt : ''
+      }
+      let res = await this.$api.getUserPost(params)
+      if (res.s === 1){
+        this.postList = isLoadMore ? this.postList.concat(res.d.entrylist) : res.d.entrylist
+      }
+    }
   }
 }
 </script>
@@ -138,6 +180,7 @@ export default {
 <style lang='scss' scoped>
 .user-view{
   display: flex;
+  margin-bottom: 80px;
 
   .major-area{
     flex: 1 1 auto;
@@ -146,17 +189,54 @@ export default {
   .minor-area{
     flex: 0 0 auto;
     width: 240px;
-    margin-left: 10px;
+    margin-left: 12px;
+  }
+}
+.user-post{
+  margin-top: 12px;
+  background: #fff;
+
+  .list-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 30px;
+
+    .list-header__title{
+      font-weight: bold;
+      font-size: 15px;
+      color: #000;
+    }
+
+    .order-item{
+      font-size: 14px;
+      color: #777;
+      cursor: pointer;
+
+      &:hover{
+        opacity: .95;
+      }
+
+      &:first-child::after{
+        content: '|';
+        display: inline-block;
+        margin: 0 10px;
+        color: #999;
+      }
+    }
+
+    .order-item--active{
+      color: #333;
+    }
   }
 }
 .user-block{
   display: flex;
-  padding: 25px;
+  padding: 30px;
   background: #fff;
   border-radius: 2px;
 
   .user-block__avatar{
-    margin-right: 20px;
+    margin-right: 30px;
 
     >img{
       width: 90px;
@@ -184,7 +264,7 @@ export default {
     color: #72777b;
 
     .info__username{
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
       color: #262626;
     }
@@ -214,7 +294,7 @@ export default {
 
   .honor-block__list{
     padding: 15px 10px;
-    color: #262626;
+    color: #000;
 
     .honor-item{
       display: flex;
@@ -228,7 +308,7 @@ export default {
     .honor-item__icon{
       width: 25px;
       height: 25px;
-      margin-right: 10px;
+      margin-right: 15px;
       border-radius: 50%;
     }
 
@@ -239,7 +319,7 @@ export default {
 }
 .follow-block{
   display: flex;
-  margin-top: 10px;
+  margin-top: 12px;
   background: #fff;
 
   .follow-item{

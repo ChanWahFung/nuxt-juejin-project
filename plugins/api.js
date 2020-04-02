@@ -92,10 +92,10 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} targetUid 
      * @param {string} before - 最后一条的createdAt
      * @param {number} limit - 单次条数
-     * @param {string} order - 排序
+     * @param {string} order - 排序 - rankIndex：热门、createdAt：最新
      */
     getUserPost(params = {}){
-      return $request.get('/user/userPost', params)
+      return $request.get('/article/userPost', params)
     }
   })
 }
