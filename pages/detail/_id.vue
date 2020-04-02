@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="main">
-      <div class="detail">
+      <div class="detail shadow">
         <div class="detail__header">
           <div class="detail__userInfo">
             <img class="detail__user__avatar" :src="articInfo.user.avatarLarge" alt="头像">
@@ -143,7 +143,6 @@ export default {
 .main{
   padding: 0 30px;
   background: #fff;
-  box-shadow: 0 0 4px #eee;
 }
 .detail{
   padding-top: 30px;
@@ -184,6 +183,13 @@ export default {
       margin: 22px 0;
     }
 
+    /deep/ h1{
+      padding-bottom: 12px;
+      font-size: 26px;
+      font-weight: 700;
+      border-bottom: 1px solid #ececec;
+    }
+
     /deep/ h2{
       padding-bottom: 12px;
       font-size: 24px;
@@ -220,6 +226,7 @@ export default {
     /deep/ a{
       color: #0269c8;
       border-bottom: 1px solid #d1e9ff;
+      word-break: break-all;
 
       &:hover{
         color: #007fff;
