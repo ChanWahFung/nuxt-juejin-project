@@ -13,7 +13,7 @@ export default {
       })
       // 解决置顶后导航栏不显示
       let target = this.$parent.$children.filter(item => item.$options.name === 'top-bar');
-      target[0] &&( target[0].wheelClass = 'show')
+      target[0] && (target[0].wheelClass = 'show')
     }
   }
 }

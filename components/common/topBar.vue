@@ -8,10 +8,14 @@
         <ul class="navs">
           <nuxt-link v-for="item in navs" :key="item.id" :to="item.link" tag="li" class="nav-item">{{ item.name }}</nuxt-link>
         </ul>
-        <div class="search-form">
-          <input class="search-input" type="text" maxlength="32" v-model="keyword" placeholder="搜索" @keydown.enter="sreachHandler" />
-          <img src="~/assets/images/search-icon.svg" class="search-icon" />
+        <div class="search-form" :class="[searchFormClass]">
+          <input class="search-input" type="text" @focus="searchFormClass = 'search-form--focus'" @blur="searchFormClass = ''" maxlength="32" v-model="keyword" placeholder="搜索" @keydown.enter="sreachHandler" />
+          <img v-show="searchFormClass" src="~/assets/images/search-icon-active.svg" class="search-icon" />
+          <img v-show="searchFormClass == ''" src="~/assets/images/search-icon.svg" class="search-icon" />
         </div>
+        <nuxt-link to="/notice" class="notice">
+          <img src="~/assets/images/notice.png" width="100%" height="100%">
+        </nuxt-link>
       </div>
     </div>
   </header>
@@ -46,7 +50,8 @@ export default {
       ],
       keyword: '',
       wheelClass: 'show',
-      scrollingElement: null
+      scrollingElement: null,
+      searchFormClass: ''
     }
   },
   mounted() {
@@ -120,7 +125,7 @@ export default {
     cursor: pointer;
 
     &:hover,
-    &.nuxt-link-active{
+    &.nuxt-link-exact-active{
       color: $theme;
     }
   }
@@ -133,6 +138,11 @@ export default {
   justify-content: space-between;
   border-radius: 2px;
   margin-left: auto;
+
+  &.search-form--focus{
+    border-color: $theme;
+    background: #fff;
+  }
 
   .search-input{
     border: none;
@@ -149,5 +159,10 @@ export default {
     padding: 0 8px;
     cursor: pointer;
   }
+}
+.notice{
+  width: 24px;
+  height: 24px;
+  margin-left: 30px;
 }
 </style>

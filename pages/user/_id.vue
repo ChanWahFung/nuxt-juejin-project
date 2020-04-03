@@ -3,7 +3,8 @@
     <div class="major-area">
       <div class="user-block shadow">
         <div class="user-block__avatar">
-          <img :src="userInfo.avatarLarge">
+          <img v-if="userInfo.avatarLarge" :src="userInfo.avatarLarge">
+          <img v-else src="~/assets/images/default-avatar.svg">
         </div>
         <div class="user-block__info">
           <div class="info__username">
