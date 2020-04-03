@@ -91,6 +91,7 @@
 import postItem from '~/components/business/postItem'
 import { formatDate } from '~/utils'
 import reachBottom from '~/mixins/reachBottom'
+import config from '~/server/request/config'
 
 export default {
   head() {
@@ -115,7 +116,7 @@ export default {
       order: 'createdAt'
     }).then(res => res.s === 1 ? res.d.entrylist : [])
     let isFollowed = await app.$api.isCurrentUserFollowed({
-      currentUid: '5c455fe56fb9a049ef26e4e6',
+      currentUid: config.uid,
       targetUids: params.id,
     }).then(res => res.s === 1 ? res.d[params.id] : false)
     return {

@@ -96,6 +96,28 @@ export default ({ app: { $request } }, inject) => {
      */
     getUserPost(params = {}){
       return $request.get('/article/userPost', params)
+    },
+    /**
+     * 获取推荐作者
+     * @param {number} limit - 条数
+     */
+    getRecommendCard(params = {}){
+      return $request.get('/user/recommendCard', params)
+    },
+    /**
+     * 获取相关文章
+     * @param {number} limit - 条数
+     * @param {string} entryId - 文章objectId
+     */
+    getRelatedEntry(params = {}){
+      return $request.get('/article/relatedEntry', params)
+    },
+    /**
+     * 根据标签id获取相关推荐文章
+     * @param {string} tagIds - 多个id以|分隔
+     */
+    getRecommendEntryByTagIds(params = {}){
+      return $request.get('/article/recommendEntryByTagIds', params)
     }
   })
 }

@@ -63,4 +63,35 @@ router.get('/userPost', async (ctx, next) => {
   ctx.body = await request(options)
 })
 
+router.get('/relatedEntry', async (ctx, next) => {
+  const options = {
+    url: 'https://timeline-merger-ms.juejin.im/v1/get_related_entry',
+    method: "GET",
+    params: { 
+      src: "web",
+      uid: config.uid,
+      device_id: config.deviceId,
+      token: config.token,
+      limit: ctx.query.limit || 5,
+      entryId: ctx.query.entryId
+    }
+  };
+  ctx.body = await request(options)
+})
+
+router.get('/recommendEntryByTagIds', async (ctx, next) => {
+  const options = {
+    url: 'ttps://post-storage-api-ms.juejin.im/v1/getRecommendEntryByTagIds',
+    method: "GET",
+    params: { 
+      src: "web",
+      uid: config.uid,
+      device_id: config.deviceId,
+      token: config.token,
+      tagIds: ctx.query.tagIds
+    }
+  };
+  ctx.body = await request(options)
+})
+
 module.exports = router
