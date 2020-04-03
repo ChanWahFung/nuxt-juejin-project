@@ -22,12 +22,12 @@
       </div>
       <div class="tags">
         <p class="tags__title">关注下面的标签，发现更多相似文章</p>
-        <div v-for="item in articInfo.tags" :key="item.id" class="tag">
+        <nuxt-link :to="'/tag/'+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag">
           <img class="tag__icon" :src="item.icon" />
-          <span class="tag-title">{{ item.title }}</span>
-        </div>
+          <span class="tag__title">{{ item.title }}</span>
+        </nuxt-link>
       </div>
-      <div v-if="authorInfo" class="author-info">
+      <div v-if="authorInfo" class="author-info" @click="$router.push('/user/'+authorInfo.uid)">
         <img class="author__avatar" :src="authorInfo.avatarLarge" />
         <div class="author-info__main">
           <div>
@@ -303,13 +303,14 @@ export default {
     margin: 0 20px 20px 0;
     padding: 2px;
     border: 1px solid #ddd;
+    text-decoration: none;
 
     .tag__icon{
       width: 21px;
       height: 21px;
     }
 
-    .tag-title{
+    .tag__title{
       padding: 0 5px;
       font-size: 12px;
       color: #999;
@@ -322,6 +323,7 @@ export default {
   padding: 15px;
   margin: 30px 0;
   background: #f4f4f4;
+  cursor: pointer;
 
   .author__avatar{
     position: relative;
