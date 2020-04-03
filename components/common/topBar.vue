@@ -1,7 +1,7 @@
 <template>
-  <header class="container">
-    <div class="wrapper">
-      <div class="main">
+  <header class="topbar__wrapper">
+    <div class="topbar" :class="['topbar--'+wheelClass]">
+      <div class="topbar__main">
         <nuxt-link to="/" class="logo">
           <img src="https://b-gold-cdn.xitu.io/v3/static/img/logo.a7995ad.svg" alt="掘金">
         </nuxt-link>
@@ -43,10 +43,24 @@ export default {
           link: '/d'
         }
       ],
-      keyword: ''
+      keyword: '',
+      wheelClass: 'show',
+      scrollingElement: null
     }
   },
   created() {
+    this.scrollingElement = document.scrollingElement
+    window.onwheel = (e)=>{
+      if (this.scrollingElement.scrollTop < 300) {
+        return
+      }
+      if (e.wheelDeltaY > 0 && this.wheelClass == 'hidden') {
+        this.wheelClass = 'show'
+      }
+      if (e.wheelDeltaY < 0 && this.wheelClass == 'show') {
+        this.wheelClass = 'hidden'
+      }
+    }
   },
   methods: {
     sreachHandler () {
@@ -62,21 +76,29 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.container{
+.topbar__wrapper{
   z-index: 9999;
   position: relative;
   background-color: #fff;
   height: 60px;
 }
-.wrapper{
+.topbar{
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   background: #fff;
   box-shadow: 0 0 4px #eee;
+  transition: all .2s;
+
+  &.topbar--show{
+    transform: translateY(0);
+  }
+  &.topbar--hidden{
+    transform: translateY(-100%);
+  }
 }
-.main{
+.topbar__main{
   display: flex;
   align-items: center;
   max-width: 960px;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <topBar />
+    <top-bar></top-bar>
     <main class="main">
       <nuxt />
     </main>
@@ -9,12 +9,7 @@
 </template>
 
 <script>
-import topBar from '../components/topBar'
-
 export default {
-  components: {
-    topBar
-  }
 }
 </script>
 

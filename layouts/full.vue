@@ -1,17 +1,12 @@
 <template>
   <div>
-    <topBar />
+    <top-bar></top-bar>
     <nuxt />
   </div>
 </template>
 
 <script>
-import topBar from '../components/topBar'
-
 export default {
-  components: {
-    topBar
-  }
 }
 </script>
 
