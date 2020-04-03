@@ -46,4 +46,27 @@ router.get('/isCurrentUserFollowed', async (ctx, next)=>{
   ctx.body = await request(options);
 })
 
+router.get('/recommendCard', async (ctx, next)=>{
+  const options = {
+    url: 'https://web-api.juejin.im/query',
+    method: "POST",
+    headers: {
+      'X-Agent': 'Juejin/Web',
+      'X-Legacy-Device-Id': config.deviceId,
+      'X-Legacy-Token': config.token,
+      'X-Legacy-Uid': config.uid
+    },
+    body: {
+      operationName: "",
+      query: "",
+      variables: {
+        limit: ctx.query.limit || 10, 
+        excluded: []
+      },
+      extensions: {query: {id: "b031bf7f8b17b1a173a38807136cc20e"}},
+    }
+  };
+  ctx.body = await request(options);
+})
+
 module.exports = router
