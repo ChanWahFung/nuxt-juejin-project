@@ -13,8 +13,7 @@
             </h1>
           </div>
           <div class="info__position">
-            <span>{{ userInfo.jobTitle }}</span>
-            <span> | {{ userInfo.company }}</span>
+            <span>{{ userInfo.jobTitle }}{{ userInfo.jobTitle && userInfo.company ? ' | ' : ''}}{{ userInfo.company }}</span>
           </div>
           <div class="info__intro">{{ userInfo.selfDescription }}</div>
         </div>
@@ -24,7 +23,7 @@
       </div>
       <div class="user-post">
         <div class="list-header">
-          <span class="list-header__title">专栏 {{userInfo.postedPostsCount}}</span>
+          <span class="list-header__title">专栏 {{ userInfo.postedPostsCount }}</span>
           <div>
             <span class="order-item" :class="{'order-item--active': item.order == currentOrder}" v-for="item in orderOptions" :key="item.order" @click="changeOrder(item.order)">{{ item.title }}</span>
           </div>

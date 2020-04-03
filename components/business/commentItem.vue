@@ -10,7 +10,7 @@
         <p style="margin-left: 5px">
           <span>
             {{ data.userInfo.jobTitle }}
-            {{data.userInfo.jobTitle && data.userInfo.company ? ' @ ' : ''}}
+            {{ data.userInfo.jobTitle && data.userInfo.company ? ' @ ' : '' }}
             {{ data.userInfo.company }}
           </span>
         </p>
