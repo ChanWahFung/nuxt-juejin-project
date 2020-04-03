@@ -19,6 +19,7 @@
 
 <script>
 export default {
+  name: 'top-bar',
   data() {
     return {
       navs: [
@@ -48,9 +49,9 @@ export default {
       scrollingElement: null
     }
   },
-  created() {
+  mounted() {
     this.scrollingElement = document.scrollingElement
-    window.onwheel = (e)=>{
+    window.onwheel = (e) => {
       if (this.scrollingElement.scrollTop < 300) {
         return
       }
@@ -79,7 +80,6 @@ export default {
 .topbar__wrapper{
   z-index: 9999;
   position: relative;
-  background-color: #fff;
   height: 60px;
 }
 .topbar{
