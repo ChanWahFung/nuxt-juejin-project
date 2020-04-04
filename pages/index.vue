@@ -28,12 +28,12 @@
               {{ item.author.username }}
               <level :level="item.author.level"></level>
             </div>
-            <div>
+            <div class="ellipsis">
               {{ item.author.jobTitle }}
               {{ item.author.jobTitle && item.author.company ? '@' : '' }}
               {{ item.author.company }}
             </div>
-            <div>{{ item.description }}</div>
+            <div class="ellipsis">{{ item.description }}</div>
           </div>
         </nuxt-link>
       </div>
@@ -215,6 +215,7 @@ export default {
     font-size: 12px;
     color: #909090;
     line-height: 1.5;
+    overflow: hidden;
     
     .author__name{
       font-size: 15px;

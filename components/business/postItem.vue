@@ -1,7 +1,9 @@
 <template>
   <div class="post-item">
     <div class="post-item__user">
-      <img class="user__avatar" :src="item.user.avatarLarge">
+      <div class="user__avatar">
+        <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
+      </div>
       <span>{{ item.user.username }} · {{ item.createdAt | formatTime }}</span>
     </div>
     <nuxt-link tag="div" :to="'/detail/'+item.originalUrl.split('/').pop()" class="post-item__cover" v-if="item.screenshot" :style="{'background-image': `url(${item.screenshot})`}"></nuxt-link>
