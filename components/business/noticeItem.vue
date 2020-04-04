@@ -1,8 +1,7 @@
 <template>
   <div class="notice-item shadow">
     <nuxt-link v-if="item.users[0]" :to="`/user/${item.users[0].uid}`" class="notice-item__avatar">
-      <img v-if="item.users[0].avatarLarge" :src="item.users[0].avatarLarge" width="100%" height="100%">
-      <img v-else src="~/assets/images/default-avatar.svg" width="100%" height="100%">
+      <user-avatar :url="item.users[0].avatarLarge" :round="true"></user-avatar>
     </nuxt-link>
     <div class="notice-item__info">
       <nuxt-link class="info__username" v-if="item.users[0]" :to="`/user/${item.users[0].uid}`">{{ item.users[0].username }}</nuxt-link>

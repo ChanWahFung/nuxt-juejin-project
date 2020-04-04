@@ -1,19 +1,43 @@
 <template>
-  <div class="container">
-    <div class="list__header">
-      <ul class="list__nav">
-        <li class="list__nav-item" :class="{'list__nav-item--active': item.id == navId}" v-for="item in navs" :key="item.title" @click="changeNav(item)">{{ item.title }}</li>
-        <el-select v-if="navTypes.length" size="mini" style="width:100px" v-model="navType" placeholder="请选择" @change="changeNav">
-          <el-option
-            v-for="item in navTypes"
-            :key="item.title"
-            :label="item.title"
-            :value="item.type">
-          </el-option>
-        </el-select>
-      </ul>
+  <div class="index-container">
+    <div class="index-main shadow">
+      <div class="list__header">
+        <ul class="list__nav">
+          <li class="list__nav-item" :class="{'list__nav-item--active': item.id == navId}" v-for="item in navs" :key="item.title" @click="changeNav(item)">{{ item.title }}</li>
+          <el-select v-if="navTypes.length" size="mini" style="width:100px" v-model="navType" placeholder="请选择" @change="changeNav">
+            <el-option
+              v-for="item in navTypes"
+              :key="item.title"
+              :label="item.title"
+              :value="item.type">
+            </el-option>
+          </el-select>
+        </ul>
+      </div>
+      <artic-list :list="list"></artic-list>
     </div>
-    <artic-list :list="list"></artic-list>
+    <div class="index-side">
+      <div class="author-block shadow">
+        <div class="author-block__title">🎖️ 作者榜</div>
+        <nuxt-link tag="div" :to="'/user/'+item.author.id" class="author-item" v-for="item in recommendAuthors" :key="item.id">
+          <div class="author__avatar">
+           <user-avatar :url="item.author.avatarLarge" :round="true"></user-avatar>
+          </div>
+          <div class="author__info">
+            <div class="author__name">
+              {{ item.author.username }}
+              <level :level="item.author.level"></level>
+            </div>
+            <div>
+              {{ item.author.jobTitle }}
+              {{ item.author.jobTitle && item.author.company ? '@' : '' }}
+              {{ item.author.company }}
+            </div>
+            <div>{{ item.description }}</div>
+          </div>
+        </nuxt-link>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,9 +48,13 @@ export default {
   async asyncData({ app }) {
     let res = await app.$api.getIndexList();
     res = res.data.articleFeed.items
+    let recommendAuthors = await app.$api.getRecommendCard({ 
+      limit: 3
+    }).then(res => res.data.recommendationCard.items)
     return {
       list: res.edges,
-      pageInfo: res.pageInfo
+      pageInfo: res.pageInfo,
+      recommendAuthors
     };
   },
   mixins: [reachBottom],
@@ -72,6 +100,7 @@ export default {
       navTypes: [],
       list: [],
       pageInfo: {},
+      recommendAuthors: [],
       isReachBottomFetching: false,  // 防止触底多次请求
     };
   },
@@ -115,39 +144,81 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container{
-  background: #fff;
-  box-shadow: 0 0 4px #eee;
-  border-radius: 2px;
+.index-container{
+  display: flex;
 
-  .list__header{
-    padding: 15px 25px;
+  .index-main{
+    margin-right: 20px;
+    background: #fff;
+    border-radius: 2px;
+  }
+}
+.list__header{
+  padding: 15px 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.list__nav{
+  height: 28px;
+  display: flex;
+  align-items: center;
+  
+  .list__nav-item{
+    display: inline-block;
+    font-size: 14px;
+    color: #909090;
+    cursor: pointer;
+
+    &:hover,
+    &.list__nav-item--active{
+      color: $theme;
+    }
+
+    &:not(:last-child){
+      &::after{
+        content: '|';
+        margin: 10px;
+        color: #eee;
+      }
+    }
+  }
+}
+
+.author-block{
+  width: 280px;
+  background: #fff;
+
+  .author-block__title{
+    padding: 15px;
+    font-size: 15px;
     border-bottom: 1px solid #eee;
   }
 
-  .list__nav{
-    height: 28px;
+  .author-item{
     display: flex;
-    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+
+    &:hover{
+      background: hsla(0,0%,84.7%,.1);
+    }
+  }
+
+  .author__avatar{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .author__info{
+    font-size: 12px;
+    color: #909090;
+    line-height: 1.5;
     
-    .list__nav-item{
-      display: inline-block;
-      font-size: 14px;
-      color: #909090;
-      cursor: pointer;
-
-      &:hover,
-      &.list__nav-item--active{
-        color: $theme;
-      }
-
-      &:not(:last-child){
-        &::after{
-          content: '|';
-          margin: 10px;
-          color: #eee;
-        }
-      }
+    .author__name{
+      font-size: 15px;
+      color: #262626;
     }
   }
 }

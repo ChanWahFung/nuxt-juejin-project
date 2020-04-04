@@ -1,7 +1,7 @@
 <template>
   <div class="comment-item">
     <div class="comment-item__avatar">
-      <img :src="data.userInfo.avatarLarge" width="100%" height="100%" />
+      <user-avatar :url="data.userInfo.avatarLarge" :round="true"></user-avatar>
     </div>
     <div class="comment-item__main">
       <div class="comment-item__userinfo">
@@ -22,8 +22,7 @@
       <div class="comment-item__reply-area">
         <div class="reply-item" v-for="item in data.topComment" :key="item.id">
           <div class="comment-item__avatar">
-            <img v-if="item.userInfo.avatarLarge" :src="item.userInfo.avatarLarge" width="100%" height="100%" />
-            <img v-else class="user-item-avatar" src="https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg" />
+            <user-avatar :url="item.userInfo.avatarLarge" :round="true"></user-avatar>
           </div>
           <div class="comment-item__main">
             <div class="comment-item__userinfo">

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="search-container">
     <div class="list__header">
       <ul class="list__types">
         <li class="list__type-item list-item" :class="{'list-item--active': item.type == type }" v-for="item in types" :key="item.title" @click="search({type: item.type})">{{ item.title }}</li>
@@ -140,7 +140,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.container{
+.search-container{
   background: #fff;
   box-shadow: 0 0 4px #eee;
   border-radius: 2px;

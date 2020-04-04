@@ -1,11 +1,13 @@
 <template>
-  <div class="container">
-    <div class="main">
+  <div>
+    <div class="detail-main main">
       <div class="detail shadow">
         <div class="detail__header">
           <div class="detail__userInfo">
-            <img class="detail__user__avatar" :src="articInfo.user.avatarLarge" alt="头像">
-            <div class="detail__user__name">
+            <div class="detail__user__avatar" @click="toUser">
+              <user-avatar :url="articInfo.user.avatarLarge" :round="true"></user-avatar>
+            </div>
+            <div class="detail__user__name" @click="toUser">
               <span style="margin-right: 10px">{{ articInfo.user.username }}</span>
               <level :level="articInfo.user.level"></level>
             </div>
@@ -27,8 +29,10 @@
           <span class="tag__title">{{ item.title }}</span>
         </nuxt-link>
       </div>
-      <div v-if="authorInfo" class="author-info" @click="$router.push('/user/'+authorInfo.uid)">
-        <img class="author__avatar" :src="authorInfo.avatarLarge" />
+      <div v-if="authorInfo" class="author-info" @click="toUser">
+        <div class="author__avatar">
+          <user-avatar :url="authorInfo.avatarLarge" :round="true"></user-avatar>
+        </div>
         <div class="author-info__main">
           <div>
             <span class="author__name">{{ authorInfo.username }}</span>
@@ -134,13 +138,16 @@ export default {
           this.comments = res.d.comments
         }
       })
+    },
+    toUser() {
+      this.$router.push('/user/' + this.authorInfo.uid)
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.main{
+.detail-main{
   padding: 0 30px;
   background: #fff;
 }
@@ -255,6 +262,7 @@ export default {
     height: 40px;
     background: #f4f4f4;
     border-radius: 50%;
+    cursor: pointer;
   }
 
   .detail__user__name{
@@ -262,6 +270,7 @@ export default {
     align-items: center;
     font-weight: 700;
     color: #333;
+    cursor: pointer;
   }
 
   .detail__user__meta{
@@ -326,22 +335,9 @@ export default {
   cursor: pointer;
 
   .author__avatar{
-    position: relative;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-
-    &::after{
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/default-avatar.e30559a.svg);
-      background-size: 100%;
-    }
   }
 
   .author-info__main{
