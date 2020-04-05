@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="detail-main main">
+  <div class="detail-container">
+    <div class="detail-main">
       <div class="detail shadow">
         <div class="detail__header">
           <div class="detail__userInfo">
@@ -55,12 +55,16 @@
         <comment-item v-for="item in comments" :key="item.id" :data="item"></comment-item>
       </div>
     </div>
+    <div class="detail-side">
+      <about-author :info="authorInfo"></about-author>
+    </div>
   </div>
 </template>
 
 <script>
 import { formatDate } from '~/utils'
 import commentItem from '~/components/business/commentItem.vue'
+import aboutAuthor from '~/components/business/aboutAuthor.vue'
 
 export default {
   validate ({ params }) {
@@ -95,7 +99,6 @@ export default {
         if (res.s === 1) {
           return res.d[articInfo.user.objectId]
         }
-        return null
       })
     }
     return {
@@ -105,13 +108,14 @@ export default {
     }
   },
   components: {
-    'comment-item': commentItem
+    'comment-item': commentItem,
+    'about-author': aboutAuthor
   },
   data () {
     return {
       articDetail: {},
       articInfo: {},
-      authorInfo: null,
+      authorInfo: {},
       commentCount: 0,
       comments: []
     }
@@ -147,10 +151,20 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.detail-container{
+  display: flex;
+}
+
 .detail-main{
   padding: 0 30px;
+  margin-right: 20px;
   background: #fff;
 }
+
+.detail-side{
+  width: 240px;
+}
+
 .detail{
   padding-top: 30px;
   border-radius: 2px;
@@ -356,4 +370,5 @@ export default {
     }
   }
 }
+
 </style>

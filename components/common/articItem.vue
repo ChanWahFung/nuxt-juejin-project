@@ -11,8 +11,7 @@
           <span v-for="(tag) in item.tags" :key="tag.id" class="meta-item__tag" @click.stop="$router.push('/tag/'+tag.title)">{{ tag.title }}</span>
         </li>
       </ul>
-      
-      <p class="artic-item__title" v-html="highlight.title || item.title"></p>
+      <p class="artic-item__title ellipsis " v-html="highlight.title || item.title"></p>
       <p v-if="hasDesc" class="artic-item__desc" v-html="highlight.description || highlight.text || item.content"></p>
       <ul class="artic-item__action">
         <li class="action-item">
@@ -47,16 +46,11 @@ export default {
   },
   methods: {
     toDetail(originalUrl) {
-      if (!originalUrl) { return }
-      if (originalUrl.includes('juejin')) {
-        this.$router.push(`/detail/${originalUrl.split('/').pop()}`)
-      } else {
-        const a = document.createElement("a")
-        a.href = originalUrl
-        a.target = "_blank"
-        a.rel = "noopener noreferrer"
-        a.click()
+      if (!originalUrl) { 
+        return 
       }
+      let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
+      window.open(href, '_blank', 'noopener noreferrer')
     }
   }
 }

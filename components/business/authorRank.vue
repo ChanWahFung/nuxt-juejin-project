@@ -36,6 +36,7 @@ export default {
 .author-block{
   width: 280px;
   background: #fff;
+  border-radius: 2px;
 
   .author-block__title{
     padding: 15px;
@@ -54,6 +55,7 @@ export default {
   }
 
   .author__avatar{
+    flex: 0 0 auto;
     width: 46px;
     height: 46px;
     border-radius: 50%;
@@ -61,6 +63,7 @@ export default {
   }
 
   .author__info{
+    flex: 1 1 auto;
     font-size: 12px;
     color: #909090;
     line-height: 1.5;
