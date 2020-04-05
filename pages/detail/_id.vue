@@ -1,58 +1,65 @@
 <template>
   <div class="detail-container">
-    <div class="detail-main shadow">
-      <div class="detail">
-        <div class="detail__header">
-          <div class="detail__userInfo">
-            <div class="detail__user__avatar" @click="toUser">
-              <user-avatar :url="articInfo.user.avatarLarge" :round="true"></user-avatar>
+    <div class="detail-main">
+      <div class="detail-block shadow">
+        <div class="detail">
+          <div class="detail__header">
+            <div class="detail__userInfo">
+              <div class="detail__user__avatar" @click="toUser">
+                <user-avatar :url="articInfo.user.avatarLarge" :round="true"></user-avatar>
+              </div>
+              <div class="detail__user__name" @click="toUser">
+                <span style="margin-right: 10px">{{ articInfo.user.username }}</span>
+                <level :level="articInfo.user.level"></level>
+              </div>
+              <div class="detail__user__meta">
+                <span class="meta__time">{{ articInfo.create_date }}</span>
+                <span>阅读{{ articInfo.viewsCount }}</span>
+              </div>
             </div>
-            <div class="detail__user__name" @click="toUser">
-              <span style="margin-right: 10px">{{ articInfo.user.username }}</span>
-              <level :level="articInfo.user.level"></level>
+            <follow-btn></follow-btn>
+          </div>
+          <div v-if="articInfo.screenshot" class="detail__cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
+          <h1 class="detail__title">{{ articInfo.title }}</h1>
+          <div class="detail__content" v-html="articDetail.content"></div>
+        </div>
+        <div class="tags">
+          <p class="tags__title">关注下面的标签，发现更多相似文章</p>
+          <nuxt-link :to="'/tag/'+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag">
+            <img class="tag__icon" :src="item.icon" />
+            <span class="tag__title">{{ item.title }}</span>
+          </nuxt-link>
+        </div>
+        <div v-if="authorInfo" class="author-info" @click="toUser">
+          <div class="author__avatar">
+            <user-avatar :url="authorInfo.avatarLarge" :round="true"></user-avatar>
+          </div>
+          <div class="author-info__main">
+            <div>
+              <span class="author__name">{{ authorInfo.username }}</span>
+              <level :level="authorInfo.level"></level>
+              <span>
+                {{ authorInfo.jobTitle }}
+                {{ authorInfo.jobTitle && authorInfo.company ? ' @ ' : '' }}
+                {{ authorInfo.company }}
+              </span>
             </div>
-            <div class="detail__user__meta">
-              <span class="meta__time">{{ articInfo.create_date }}</span>
-              <span>阅读{{ articInfo.viewsCount }}</span>
+            <div>
+              <span>发布了 {{ authorInfo.postedPostsCount }} 篇专栏 · </span>
+              <span>获取点赞 {{ authorInfo.totalCollectionsCount }} · </span>
+              <span>获取阅读 {{ authorInfo.totalViewsCount }}</span>
             </div>
           </div>
-          <follow-btn></follow-btn>
         </div>
-        <div v-if="articInfo.screenshot" class="detail__cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
-        <h1 class="detail__title">{{ articInfo.title }}</h1>
-        <div class="detail__content" v-html="articDetail.content"></div>
-      </div>
-      <div class="tags">
-        <p class="tags__title">关注下面的标签，发现更多相似文章</p>
-        <nuxt-link :to="'/tag/'+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag">
-          <img class="tag__icon" :src="item.icon" />
-          <span class="tag__title">{{ item.title }}</span>
-        </nuxt-link>
-      </div>
-      <div v-if="authorInfo" class="author-info" @click="toUser">
-        <div class="author__avatar">
-          <user-avatar :url="authorInfo.avatarLarge" :round="true"></user-avatar>
-        </div>
-        <div class="author-info__main">
-          <div>
-            <span class="author__name">{{ authorInfo.username }}</span>
-            <level :level="authorInfo.level"></level>
-            <span>
-              {{ authorInfo.jobTitle }}
-              {{ authorInfo.jobTitle && authorInfo.company ? ' @ ' : '' }}
-              {{ authorInfo.company }}
-            </span>
-          </div>
-          <div>
-            <span>发布了 {{ authorInfo.postedPostsCount }} 篇专栏 · </span>
-            <span>获取点赞 {{ authorInfo.totalCollectionsCount }} · </span>
-            <span>获取阅读 {{ authorInfo.totalViewsCount }}</span>
-          </div>
+        <div class="comment-area">
+          <p class="comment-area__title">评论</p>
+          <comment-item v-for="item in comments" :key="item.id" :data="item"></comment-item>
+          <div v-if="comments.length !== commentCount" class="comment__more-btn" @click="getMoreComment">查看更多</div>
         </div>
       </div>
-      <div class="comment-area">
-        <p class="comment-area__title">评论</p>
-        <comment-item v-for="item in comments" :key="item.id" :data="item"></comment-item>
+      <div class="detail-recommend shadow">
+        <div class="recommend-title">相关推荐</div>
+        <artic-list :list="recommendArticles"></artic-list>
       </div>
     </div>
     <div class="detail-side">
@@ -64,6 +71,7 @@
 
 <script>
 import { formatDate } from '~/utils'
+import reachBottom from '~/mixins/reachBottom'
 import commentItem from '~/components/business/commentItem.vue'
 import aboutAuthor from '~/components/business/aboutAuthor.vue'
 import aboutArticle from '~/components/business/aboutArticle.vue'
@@ -119,13 +127,16 @@ export default {
     'about-author': aboutAuthor,
     'about-article': aboutArticle
   },
+  mixins: [reachBottom],
   data () {
     return {
       articDetail: {},
       articInfo: {},
       authorInfo: {},
       aboutArticles: [],
+      recommendArticles: [],
       commentCount: 0,
+      tagIds: '',
       comments: []
     }
   },
@@ -137,18 +148,47 @@ export default {
       ]
     }
   },
-  created () {
-    this.getCommentList()
+  mounted () {
+    this.getCommentList({
+      pageSize: 5
+    })
+    if (this.articInfo.tags) {
+      this.tagIds = this.articInfo.tags.map(item => item.id)
+    }
   },
   methods: {
     formatDate,
-    getCommentList() {
+    reachBottom(){
+      this.getRecommendEntryByTagIds()
+    },
+    getMoreComment() {
+      this.getCommentList({
+        pageSize: 20
+      })
+    },
+    getCommentList({ pageSize }) {
+      let last = this.comments.slice(-1)[0]
+      let createdAt = last ? last.createdAt : ''
       this.$api.getCommentList({
-        entryId: this.articDetail.entryId
+        entryId: this.articDetail.entryId,
+        createdAt,
+        pageSize
       }).then(res => {
         if (res.s === 1) {
           this.commentCount = res.d.count
-          this.comments = res.d.comments
+          this.comments = this.comments.concat(res.d.comments)
+        }
+      })
+    },
+    getRecommendEntryByTagIds(){
+      let last = this.recommendArticles.slice(-1)
+      let before = last ? last.rankIndex : ''
+      this.$api.getRecommendEntryByTagIds({
+        tagIds: this.tagIds.join('|'),
+        before,
+      }).then(res => {
+        if (res.s === 1) {
+          this.recommendArticles = this.recommendArticles.concat(res.d.entrylist)
         }
       })
     },
@@ -162,17 +202,31 @@ export default {
 <style lang='scss' scoped>
 .detail-container{
   display: flex;
-}
 
-.detail-main{
-  width: 700px;
-  padding: 0 30px;
-  margin-right: 20px;
-  background: #fff;
-}
+  .detail-main{
+    width: 700px;
+    margin-right: 20px;
 
-.detail-side{
-  width: 240px;
+    .detail-block{
+      padding: 0 25px;
+      background: #fff;
+    }
+
+    .detail-recommend{
+      margin-top: 20px;
+      background: #fff;
+
+      .recommend-title{
+        padding: 20px 25px;
+        font-weight: bold;
+        border-bottom: 1px solid #eee;
+      }
+    }
+  }
+
+  .detail-side{
+    width: 240px;
+  }
 }
 
 .detail{
@@ -315,6 +369,18 @@ export default {
     padding-bottom: 20px;
     color: #777;
     text-align: center;
+  }
+
+  .comment__more-btn{
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #406599;
+    cursor: pointer;
+
+    &:hover{
+      opacity: .8;
+    }
   }
 }
 

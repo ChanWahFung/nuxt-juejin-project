@@ -31,9 +31,9 @@ export default ({ app: { $request } }, inject) => {
     /**
      * 获取文章评论
      * @param {string} entryId - 在文章详情内获取
-     * @param {string} createdAt
+     * @param {string} createdAt - 最后一条的createdAt，下一页时传入
      * @param {string} rankType - new
-     * @param {number} pageSize - 评论条数
+     * @param {number} pageSize - 条数
      */
     getCommentList (params = {}) {
       return $request.get('/comment/entry', params)
@@ -115,6 +115,7 @@ export default ({ app: { $request } }, inject) => {
     /**
      * 根据标签id获取相关推荐文章
      * @param {string} tagIds - 多个id以|分隔
+     * @param {number} before - 最后一条的rankIndex，下一页时传入
      */
     getRecommendEntryByTagIds(params = {}){
       return $request.get('/article/recommendEntryByTagIds', params)

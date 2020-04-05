@@ -81,14 +81,15 @@ router.get('/relatedEntry', async (ctx, next) => {
 
 router.get('/recommendEntryByTagIds', async (ctx, next) => {
   const options = {
-    url: 'ttps://post-storage-api-ms.juejin.im/v1/getRecommendEntryByTagIds',
+    url: 'https://post-storage-api-ms.juejin.im/v1/getRecommendEntryByTagIds',
     method: "GET",
     params: { 
       src: "web",
       uid: config.uid,
       device_id: config.deviceId,
       token: config.token,
-      tagIds: ctx.query.tagIds
+      tagIds: ctx.query.tagIds,
+      before: ctx.query.before || ''
     }
   };
   ctx.body = await request(options)

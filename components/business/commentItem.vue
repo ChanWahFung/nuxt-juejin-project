@@ -1,11 +1,11 @@
 <template>
   <div class="comment-item">
-    <div class="comment-item__avatar">
+    <div class="comment-item__avatar" @click="toUser(data.userId)">
       <user-avatar :url="data.userInfo.avatarLarge" :round="true"></user-avatar>
     </div>
     <div class="comment-item__main">
       <div class="comment-item__userinfo">
-        <span class="comment-item__username">{{ data.userInfo.username }}</span>
+        <span class="comment-item__username" @click="toUser(data.userId)">{{ data.userInfo.username }}</span>
         <level :level="data.userInfo.level"></level>
         <p style="margin-left: 5px">
           <span>
@@ -19,14 +19,14 @@
       <div class="comment-item__meta">
         <span class="comment-item__meta__time">{{ data.createdAt | formatTime }}</span>
       </div>
-      <div class="comment-item__reply-area">
+      <div v-if="data.topComment.length" class="comment-item__reply-area">
         <div class="reply-item" v-for="item in data.topComment" :key="item.id">
-          <div class="comment-item__avatar">
+          <div class="comment-item__avatar" @click="toUser(item.userId)">
             <user-avatar :url="item.userInfo.avatarLarge" :round="true"></user-avatar>
           </div>
           <div class="comment-item__main">
             <div class="comment-item__userinfo">
-              <span class="comment-item__username">{{ item.userInfo.username }}</span>
+              <span class="comment-item__username" @click="toUser(item.userId)">{{ item.userInfo.username }}</span>
               <level :level="item.userInfo.level"></level>
               <p style="margin-left: 5px">
                 <span>
@@ -55,13 +55,10 @@ export default {
       default: () => {}
     }
   },
-  data() {
-    return {
-    }
-  },
-  created() {
-  },
   methods: {
+    toUser(id) {
+      this.$router.push('/user/' + id)
+    },
   }
 }
 </script>
@@ -80,6 +77,7 @@ export default {
     height: 32px;
     border-radius: 50%;
     overflow: hidden;
+    cursor: pointer;
   }
 
   &>.comment-item__main{
@@ -103,6 +101,7 @@ export default {
     .comment-item__username{
       color: #333;
       margin-right: 5px;
+      cursor: pointer;
     }
   }
 
