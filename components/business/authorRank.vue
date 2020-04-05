@@ -1,7 +1,7 @@
-<template functional>
+<template>
   <div class="author-block shadow">
     <div class="author-block__title">🎖️ 作者榜</div>
-    <nuxt-link tag="div" :to="'/user/'+item.author.id" class="author-item" v-for="item in props.list" :key="item.id">
+    <nuxt-link tag="div" :to="'/user/'+item.author.id" class="author-item" v-for="item in list" :key="item.id">
       <div class="author__avatar">
         <user-avatar :url="item.author.avatarLarge" :round="true"></user-avatar>
       </div>
@@ -20,6 +20,17 @@
     </nuxt-link>
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    list: {
+      type: Array,
+      default: () => []
+    }
+  }
+}
+</script>
 
 <style lang='scss' scoped>
 .author-block{
