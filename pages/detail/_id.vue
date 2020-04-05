@@ -57,6 +57,7 @@
     </div>
     <div class="detail-side">
       <about-author :info="authorInfo"></about-author>
+      <about-article :list="aboutArticles"></about-article>
     </div>
   </div>
 </template>
@@ -65,6 +66,7 @@
 import { formatDate } from '~/utils'
 import commentItem from '~/components/business/commentItem.vue'
 import aboutAuthor from '~/components/business/aboutAuthor.vue'
+import aboutArticle from '~/components/business/aboutArticle.vue'
 
 export default {
   validate ({ params }) {
@@ -90,6 +92,10 @@ export default {
       }
       return {}
     })
+    const aboutArticles = await app.$api.getRelatedEntry({
+      limit: 5,
+      entryId: articInfo.objectId
+    }).then(res => res.s === 1 ? res.d.entrylist : [])
     let authorInfo = null
     if (articInfo.user) {
       authorInfo = await app.$api.getMultiUser({
@@ -104,18 +110,21 @@ export default {
     return {
       articDetail,
       articInfo,
-      authorInfo
+      authorInfo,
+      aboutArticles
     }
   },
   components: {
     'comment-item': commentItem,
-    'about-author': aboutAuthor
+    'about-author': aboutAuthor,
+    'about-article': aboutArticle
   },
   data () {
     return {
       articDetail: {},
       articInfo: {},
       authorInfo: {},
+      aboutArticles: [],
       commentCount: 0,
       comments: []
     }

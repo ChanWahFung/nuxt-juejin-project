@@ -2,7 +2,7 @@
   <div class="about-author shadow" v-if="info">
     <div class="about-author__title">关于作者</div>
     <div class="author__main">
-      <div class="author__info-block">
+      <nuxt-link tag="div" :to="'/user/'+info.uid" class="author__info-block">
         <div class="author__avatar">
           <user-avatar :url="info.avatarLarge" :round="true"></user-avatar>
         </div>
@@ -17,7 +17,7 @@
             {{ info.company }}
           </div>
         </div>
-      </div>
+      </nuxt-link>
       <div class="author__meta">
         <div class="honor-item">
           <img class="honor-item__icon shadow" src="~/assets/images/honor-4.svg" />
@@ -85,6 +85,7 @@ export default {
   
   .author__info-block{
     display: flex;
+    cursor: pointer;
 
     .author__avatar{
       flex: 0 0 auto;
