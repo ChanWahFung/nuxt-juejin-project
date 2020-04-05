@@ -34,7 +34,6 @@ export default {
 
 <style lang='scss' scoped>
 .author-block{
-  width: 280px;
   background: #fff;
   border-radius: 2px;
 

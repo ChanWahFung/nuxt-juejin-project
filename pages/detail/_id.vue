@@ -1,7 +1,7 @@
 <template>
   <div class="detail-container">
-    <div class="detail-main">
-      <div class="detail shadow">
+    <div class="detail-main shadow">
+      <div class="detail">
         <div class="detail__header">
           <div class="detail__userInfo">
             <div class="detail__user__avatar" @click="toUser">
@@ -156,6 +156,7 @@ export default {
 }
 
 .detail-main{
+  width: 700px;
   padding: 0 30px;
   margin-right: 20px;
   background: #fff;

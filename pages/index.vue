@@ -133,9 +133,14 @@ export default {
   display: flex;
 
   .index-main{
+    width: 700px;
     margin-right: 20px;
     background: #fff;
     border-radius: 2px;
+  }
+
+  .index-side{
+    width: 240px;
   }
 }
 .list__header{
