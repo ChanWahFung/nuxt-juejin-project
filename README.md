@@ -14,6 +14,16 @@
 
 # 使用
 
+创建 `server/request/config.js`, 填入你在掘金的用户信息，用户信息可以打开掘金网站查看接口中的`header`或`query`
+
+```js
+module.exports = {
+  uid: '',
+  deviceId: ''
+  token: ''
+}
+```
+
 ``` bash
 # install dependencies
 $ npm install
