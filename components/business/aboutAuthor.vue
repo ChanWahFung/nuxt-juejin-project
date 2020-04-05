@@ -95,7 +95,10 @@ export default {
 
     .author__info{
       flex: 1 1 auto;
-      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      line-height: 1.2;
       overflow: hidden;
 
       .author__username{
@@ -104,7 +107,7 @@ export default {
       }
 
       .author__job{
-        font-size: 14px;
+        font-size: 15px;
         color: #909090;
       }
     }
