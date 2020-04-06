@@ -33,19 +33,7 @@ export default {
         },
         {
           name: '沸点',
-          link: '/a'
-        },
-        {
-          name: '话题',
-          link: '/b'
-        },
-        {
-          name: '小册',
-          link: '/c'
-        },
-        {
-          name: '活动',
-          link: '/d'
+          link: '/pins'
         }
       ],
       keyword: '',
@@ -67,6 +55,10 @@ export default {
         this.wheelClass = 'hidden'
       }
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    next()
+    console.log(to)
   },
   methods: {
     sreachHandler () {
