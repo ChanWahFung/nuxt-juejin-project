@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../request')
+const validator = require('../middleware/validator')
 const config = require('../request/config')
 
 router.get('/detail', async (ctx,next)=>{
@@ -19,29 +20,43 @@ router.get('/detail', async (ctx,next)=>{
   ctx.body = await request(options);
 })
 
-router.get('/indexList', async (ctx, next) => {
-  ctx.set('Cache-Control', 'max-age=60')
-  const options = {
-    url: 'https://web-api.juejin.im/query',
-    method: "POST",
-    headers: {
-      'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': config.deviceId,
-      'X-Legacy-Token': config.token,
-      'X-Legacy-Uid': config.uid
-    },
-    body: { 
-      operationName: "", 
-      query: "", 
-      variables: { 
-        first: ctx.query.first || 20, 
-        after: ctx.query.after || '',
-        order: ctx.query.order || "POPULAR"
-      }, 
-      extensions: { query: { id: "21207e9ddb1de777adeaca7a2fb38030" } } 
+router.get('/indexList', validator({
+  first: { type: 'string', required: true },
+  after: { type: 'string' },
+  order: {
+    type: 'enum',
+    required: true,
+    enum: ['POPULAR', 'NEWEST', 'THREE_DAYS_HOTTEST', 'WEEKLY_HOTTEST', 'MONTHLY_HOTTEST', 'HOTTEST']
+  }
+}), async (ctx, next) => {
+  if (ctx.$errors) {
+    ctx.body = {
+      errors: ctx.$errors
     }
-  };
-  ctx.body = await request(options)
+  } else {
+    // ctx.set('Cache-Control', 'max-age=60')
+    const options = {
+      url: 'https://web-api.juejin.im/query',
+      method: "POST",
+      headers: {
+        'X-Agent': 'Juejin/Web',
+        'X-Legacy-Device-Id': config.deviceId,
+        'X-Legacy-Token': config.token,
+        'X-Legacy-Uid': config.uid
+      },
+      body: { 
+        operationName: "", 
+        query: "", 
+        variables: { 
+          first: ctx.query.first, 
+          after: ctx.query.after,
+          order: ctx.query.order
+        }, 
+        extensions: { query: { id: "21207e9ddb1de777adeaca7a2fb38030" } } 
+      }
+    };
+    ctx.body = await request(options)
+  }
 })
 
 router.get('/userPost', async (ctx, next) => {

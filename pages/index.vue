@@ -28,14 +28,19 @@ import authorRank from '~/components/business/authorRank'
 
 export default {
   async asyncData({ app }) {
-    let res = await app.$api.getIndexList();
-    res = res.data.articleFeed.items
+    let indexList = await app.$api.getIndexList({
+      first: 20,
+      order: 'POPULAR'
+    });
+    if (!indexList.errors) {
+      indexList = indexList.data.articleFeed.items
+    } 
     let recommendAuthors = await app.$api.getRecommendCard({ 
       limit: 3
     }).then(res => res.data.recommendationCard.items)
     return {
-      list: res.edges,
-      pageInfo: res.pageInfo,
+      list: indexList.edges,
+      pageInfo: indexList.pageInfo,
       recommendAuthors
     };
   },
@@ -113,16 +118,19 @@ export default {
       }
       this.isReachBottomFetching = true
       let params = {
+        first: 20,
         order: this.navType
       }
       if (isLoadMore) {
         params.after = this.pageInfo.endCursor || ''
       }
       let res = await this.$api.getIndexList(params);
-      res = res.data.articleFeed.items
-      this.list = isLoadMore ? this.list.concat(res.edges) : res.edges
-      this.pageInfo = res.pageInfo
-      this.isReachBottomFetching = false
+      if (!res.$errors) {
+        res = res.data.articleFeed.items
+        this.list = isLoadMore ? this.list.concat(res.edges) : res.edges
+        this.pageInfo = res.pageInfo
+        this.isReachBottomFetching = false
+      } 
     }
   }
 };
