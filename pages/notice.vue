@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="notice-item--wrapper" v-for="item in notices" :key="item.id">
-      <notice-item v-if="item.type != 'follow'" :item="item"></notice-item>
+      <user-follow-item v-if="item.type === 'follow'" :item="item"></user-follow-item>
+      <notice-item v-else :item="item"></notice-item>
     </div>
   </div>
 </template>
@@ -9,6 +10,7 @@
 <script>
 import reachBottom from '~/mixins/reachBottom'
 import noticeItem from '~/components/business/noticeItem'
+import userFollowItem from '~/components/business/userFollowItem'
 
 export default {
   head() {
@@ -24,7 +26,8 @@ export default {
   },
   mixins: [reachBottom],
   components: {
-    'notice-item': noticeItem
+    'notice-item': noticeItem,
+    'user-follow-item': userFollowItem
   },
   data() {
     return {
