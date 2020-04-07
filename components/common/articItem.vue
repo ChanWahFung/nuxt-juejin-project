@@ -14,8 +14,9 @@
       <p class="artic-item__title ellipsis " v-html="highlight.title || item.title"></p>
       <p v-if="hasDesc" class="artic-item__desc" v-html="highlight.description || highlight.text || item.content"></p>
       <ul class="artic-item__action">
-        <li class="action-item">
-          <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
+        <li class="action-item" :class="{active: item.isCollected || item.viewerHasLiked}">
+          <img v-if="item.isCollected || item.viewerHasLiked" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
+          <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
           {{ item.likeCount || item.collectionCount }}
         </li>
         <li class="action-item">
@@ -179,6 +180,10 @@ export default {
 
     .action-item__icon{
       margin-right: 3px;
+    }
+
+    &.active{
+      color: $success;
     }
 
     &:last-child {

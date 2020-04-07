@@ -15,8 +15,9 @@
     </p>
     <div class="post-item__mate">
       <ul class="meta__action">
-        <li class="meta-item">
-          <img class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
+        <li class="meta-item" :class="{active: item.isCollected}">
+          <img v-if="item.isCollected" class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
+          <img v-else class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
           {{ item.collectionCount }}
         </li>
         <li class="meta-item">
@@ -119,6 +120,10 @@ export default {
 
       .meta-item__icon{
         margin-right: 3px;
+      }
+
+      &.active{
+        color: $success;
       }
 
       &:last-child {
