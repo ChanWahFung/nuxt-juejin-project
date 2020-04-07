@@ -106,15 +106,18 @@ export default {
     return false
   },
   async asyncData({ app, params }) {
+    // 用户信息
     let userInfo = await app.$api.getMultiUser({
       ids: params.id,
       cols: ''
     }).then(res => res.s === 1 ? res.d[params.id] : {})
+    // 专栏
     let postList = await app.$api.getUserPost({
       targetUid: params.id,
       limit: 20,
       order: 'createdAt'
     }).then(res => res.s === 1 ? res.d.entrylist : [])
+    // 关注状态
     let isFollowed = await app.$api.isCurrentUserFollowed({
       currentUid: config.uid,
       targetUids: params.id,

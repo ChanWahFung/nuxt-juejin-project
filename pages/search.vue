@@ -106,7 +106,7 @@ export default {
       if (this.pageInfo.hasNextPage) {
         this.getSearchList()
       }
-    },  
+    }, 
     async getSearchList() {
       if (this.isReachBottomFetching) {
         return

@@ -28,6 +28,7 @@ import authorRank from '~/components/business/authorRank'
 
 export default {
   async asyncData({ app }) {
+    // 文章列表
     let indexList = await app.$api.getIndexList({
       first: 20,
       order: 'POPULAR'
@@ -35,9 +36,10 @@ export default {
     if (!indexList.errors) {
       indexList = indexList.data.articleFeed.items
     } 
+    // 推荐作者
     let recommendAuthors = await app.$api.getRecommendCard({ 
       limit: 3
-    }).then(res => res.data.recommendationCard.items)
+    }).then(res => res.data ? res.data.recommendationCard.items : [])
     return {
       list: indexList.edges,
       pageInfo: indexList.pageInfo,

@@ -37,13 +37,15 @@ export default {
     return false
   },
   async asyncData({ app, params }) {
+    // 标签详情
     const tagInfo = await app.$api.getTagDetail({
       tagName: encodeURIComponent(params.tagName)
     }).then(res => res.s === 1 ? res.d : {})
+    // 标签下的文章
     const articleList = await app.$api.getTagEntry({
+      tagId: tagInfo.id,
       page: 1,
       pageSize: 20,
-      tagId: tagInfo.id,
       sort: 'rankIndex'
     }).then(res => res.s === 1 ? res.d.entrylist : {})
     return {
@@ -93,9 +95,9 @@ export default {
       }
       this.isReachBottomFetching = true
       let list = await this.$api.getTagEntry({
+        tagId: this.tagInfo.id,
         page: this.page,
         pageSize: this.pageSize,
-        tagId: this.tagInfo.id,
         sort: this.sort
       }).then(res => res.s === 1 ? res.d.entrylist : [])
       this.articleList = isLoadMore ? this.articleList.concat(list) : list

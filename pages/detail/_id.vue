@@ -84,10 +84,12 @@ export default {
     return false
   },
   async asyncData ({ app, params }) {
+    // 内容
     const articDetail = await app.$api.getDetail({
       type: 'entryView',
       postId: params.id
     }).then(res => res.s === 1 ? res.d : {})
+    // 文章信息
     const articInfo = await app.$api.getDetail({
       type: 'entry',
       postId: params.id
@@ -100,12 +102,14 @@ export default {
       }
       return {}
     })
+    // 相关文章
     const aboutArticles = await app.$api.getRelatedEntry({
       limit: 5,
       entryId: articInfo.objectId
     }).then(res => res.s === 1 ? res.d.entrylist : [])
     let authorInfo = null
     if (articInfo.user) {
+      // 用户信息
       authorInfo = await app.$api.getMultiUser({
         ids: articInfo.user.objectId,
         cols: ''
@@ -149,6 +153,10 @@ export default {
     }
   },
   mounted () {
+    this.$api.getRelatedEntry({
+      limit: 'a',
+      entryId: this.articInfo.objectId
+    })
     this.getCommentList({
       pageSize: 5
     })
@@ -171,6 +179,7 @@ export default {
       let createdAt = last ? last.createdAt : ''
       this.$api.getCommentList({
         entryId: this.articDetail.entryId,
+        rankType: 'new',
         createdAt,
         pageSize
       }).then(res => {
@@ -180,6 +189,7 @@ export default {
         }
       })
     },
+    // 推荐文章
     getRecommendEntryByTagIds(){
       let last = this.recommendArticles.slice(-1)
       let before = last ? last.rankIndex : ''
@@ -288,7 +298,8 @@ export default {
       letter-spacing: .6px;
     }
 
-    /deep/ ol{
+    /deep/ ol,
+    /deep/ ul{
       padding-left: 28px;
       list-style: initial;
       list-style-type: decimal;
