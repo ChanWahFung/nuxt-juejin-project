@@ -170,7 +170,8 @@ export default {
         order: this.currentOrder
       }
       if (isLoadMore) {
-        params.before = isLoadMore ? this.postList[this.postList.length - 1].createdAt : ''
+        let last = this.postList[this.postList.length - 1]
+        params.before = isLoadMore && last ? last.createdAt : ''
       }
       let res = await this.$api.getUserPost(params)
       if (res.s === 1){
