@@ -41,7 +41,7 @@ export default {
           return '赞了你的沸点'
 
         case 'comment':
-          return '回复了你的评论'
+          return '评论了'
 
         case 'pin-reply':
           return '回复了你在沸点里的评论'
@@ -68,7 +68,7 @@ export default {
           return item.pin.content
 
         case 'comment':
-          return item.comment.content
+          return item.entry.title
 
         case 'pin-reply':
           return item.pinComment.content
@@ -86,7 +86,7 @@ export default {
     reply(item) {
       switch (item.type) {
         case 'comment':
-          return item.reply.content
+          return item.comment.content
 
         case 'pin-reply':
           return item.pinReply.content
