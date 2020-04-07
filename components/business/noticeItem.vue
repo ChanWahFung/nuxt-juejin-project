@@ -17,7 +17,7 @@
       <p class="info__reply" v-if="item.type == 'comment' || item.type == 'pin-reply' || item.type == 'pin-comment'">{{ item | reply }}</p>
       <p class="info__entry">
         <span class="info__type">{{ item.type | type }}：</span>
-        <span class="info__content">{{ item | content }}</span>
+        <span class="info__content" @click="toDetail(item.entry.originalUrl)">{{ item | content }}</span>
       </p>
     </div>
   </div>
@@ -100,6 +100,13 @@ export default {
     }   
   },
   methods: {
+    toDetail(originalUrl) {
+      if (!originalUrl) { 
+        return 
+      }
+      let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
+      window.open(href, '_blank', 'noopener noreferrer')
+    }
   }
 }
 </script>
