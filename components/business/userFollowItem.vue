@@ -2,10 +2,10 @@
   <div class="user-follow-item shadow">
     <div class="follow__count">{{ item.count }}个新的关注者</div>
     <div class="user-item" v-for="user in item.users" :key="user.uid">
-      <div class="user__avatar">
+      <div class="user__avatar" @click="toUser(user.uid)">
         <user-avatar :url="user.avatarLarge" :round="true"></user-avatar>
       </div>
-      <div class="user__info">
+      <div class="user__info"  @click="toUser(user.uid)">
         <span class="user__name">{{ user.username }}</span>
         <span class="user__job">
           {{ user.jobTitle }}
@@ -25,7 +25,12 @@ export default {
       type: Object,
       default: () => ({})
     }
-  }
+  },
+  methods: {
+    toUser(uid) {
+      this.$router.push('/user/' + uid)
+    }
+  },
 }
 </script>
 
@@ -50,7 +55,7 @@ export default {
     .user__avatar{
       width: 50px;
       height: 50px;
-      margin-right: 10px;
+      margin-right: 10px;cursor: pointer;
     }
 
     .user__info{
@@ -59,6 +64,7 @@ export default {
       justify-content: space-between;
       line-height: 1.3;
       margin-right: auto;
+      cursor: pointer;
 
       .user__name{
         font-weight: bold;
