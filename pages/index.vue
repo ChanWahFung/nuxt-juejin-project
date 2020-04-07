@@ -5,11 +5,7 @@
         <ul class="list__nav">
           <li class="list__nav-item" :class="{'list__nav-item--active': item.id == navId}" v-for="item in navs" :key="item.title" @click="changeNav(item)">{{ item.title }}</li>
           <el-select v-if="navTypes.length" size="mini" style="width:100px" v-model="navType" placeholder="请选择" @change="changeNav">
-            <el-option
-              v-for="item in navTypes"
-              :key="item.title"
-              :label="item.title"
-              :value="item.type">
+            <el-option v-for="item in navTypes" :key="item.title" :label="item.title" :value="item.type">
             </el-option>
           </el-select>
         </ul>
@@ -38,7 +34,7 @@ export default {
     } 
     // 推荐作者
     let recommendAuthors = await app.$api.getRecommendCard({ 
-      limit: 3
+      limit: 5
     }).then(res => res.data ? res.data.recommendationCard.items : [])
     return {
       list: indexList.edges,

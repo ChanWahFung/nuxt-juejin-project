@@ -14,7 +14,7 @@
             </h1>
           </div>
           <div class="info__position">
-            <span>{{ userInfo.jobTitle }}{{ userInfo.jobTitle && userInfo.company ? ' | ' : ''}}{{ userInfo.company }}</span>
+            <span>{{ userInfo.jobTitle }}{{ userInfo.jobTitle && userInfo.company ? ' | ' : '' }}{{ userInfo.company }}</span>
           </div>
           <div class="info__intro">{{ userInfo.selfDescription }}</div>
         </div>

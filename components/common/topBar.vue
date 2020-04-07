@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'top-bar',
+  name: 'TopBar',
   data() {
     return {
       navs: [
@@ -56,9 +56,12 @@ export default {
       }
     }
   },
-  beforeRouteUpdate(to, from, next) {
-    next()
-    console.log(to)
+  watch: {
+    '$route.path' (newVal, oldVal) {
+      if (newVal != oldVal) {
+        this.wheelClass = 'show'
+      }
+    }
   },
   methods: {
     sreachHandler () {

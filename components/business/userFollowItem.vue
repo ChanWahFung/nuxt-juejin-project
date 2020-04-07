@@ -5,7 +5,7 @@
       <div class="user__avatar" @click="toUser(user.uid)">
         <user-avatar :url="user.avatarLarge" :round="true"></user-avatar>
       </div>
-      <div class="user__info"  @click="toUser(user.uid)">
+      <div class="user__info" @click="toUser(user.uid)">
         <span class="user__name">{{ user.username }}</span>
         <span class="user__job">
           {{ user.jobTitle }}
