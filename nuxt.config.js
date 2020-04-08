@@ -1,9 +1,25 @@
 
 module.exports = {
   mode: 'universal',
+  /*
+  ** Server configuration
+  */
   server: {
     port: 8000,
     host: '127.0.0.1'
+  },
+  /*
+  ** Router configuration
+  */
+  router: {
+    extendRoutes (routes, resolve) {
+      routes.push({
+        path: '/',
+        redirect: {
+          name: 'timeline'
+        }
+      })
+    }
   },
   /*
   ** Headers of the page

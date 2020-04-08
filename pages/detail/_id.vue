@@ -154,6 +154,7 @@ export default {
     }
   },
   mounted () {
+    this.createCatalog()
     this.$api.getRelatedEntry({
       limit: 'a',
       entryId: this.articInfo.objectId
@@ -164,9 +165,6 @@ export default {
     if (this.articInfo.tags) {
       this.tagIds = this.articInfo.tags.map(item => item.id)
     }
-    this.$nextTick(() => {
-      this.createCatalog()
-    })
   },
   methods: {
     formatDate,
@@ -209,6 +207,7 @@ export default {
     toUser() {
       this.$router.push('/user/' + this.authorInfo.uid)
     },
+    // 生成目录树数据
     createCatalog() {
       let catalog = []
       function Item(id, title, level){
