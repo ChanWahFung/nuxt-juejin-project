@@ -65,6 +65,7 @@
     <div class="detail-side">
       <about-author :info="authorInfo"></about-author>
       <about-article :list="aboutArticles"></about-article>
+      <catalog :data="catalogData"></catalog>
     </div>
   </div>
 </template>
@@ -75,6 +76,7 @@ import reachBottom from '~/mixins/reachBottom'
 import commentItem from '~/components/business/commentItem.vue'
 import aboutAuthor from '~/components/business/aboutAuthor.vue'
 import aboutArticle from '~/components/business/aboutArticle.vue'
+import catalog from '~/components/business/catalog.vue'
 
 export default {
   validate ({ params }) {
@@ -129,7 +131,8 @@ export default {
   components: {
     'comment-item': commentItem,
     'about-author': aboutAuthor,
-    'about-article': aboutArticle
+    'about-article': aboutArticle,
+    catalog
   },
   mixins: [reachBottom],
   data () {
@@ -142,7 +145,7 @@ export default {
       commentCount: 0,
       tagIds: '',
       comments: [],
-      catalog: []
+      catalogData: []
     }
   },
   head () {
@@ -238,6 +241,7 @@ export default {
         lastC2.children.push(item)
       }
       document.querySelectorAll('.detail__content .heading').forEach((item, index) => {
+        item.setAttribute('id', `heading-${index}`)
         if (item.tagName == 'H1') {
           addC1(new Item(`heading-${index}`, item.textContent, 'c1'))
         } else if (item.tagName == 'H2') {
@@ -246,7 +250,7 @@ export default {
           addC3(new Item(`heading-${index}`, item.textContent, 'c3'))
         }
       })
-      this.catalog = catalog
+      this.catalogData = catalog
     }
   }
 }
