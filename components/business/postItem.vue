@@ -6,12 +6,12 @@
       </div>
       <span>{{ item.user.username }} · {{ item.createdAt | formatTime }}</span>
     </div>
-    <nuxt-link tag="div" :to="'/detail/'+item.originalUrl.split('/').pop()" class="post-item__cover" v-if="item.screenshot" :style="{'background-image': `url(${item.screenshot})`}"></nuxt-link>
+    <div class="post-item__cover" v-if="item.screenshot" :style="{'background-image': `url(${item.screenshot})`}" @click="toDetail(item.originalUrl)"></div>
     <h1 class="post-item__title">
-      <nuxt-link tag="span" :to="'/detail/'+item.originalUrl.split('/').pop()">{{ item.title }}</nuxt-link>
+      <span @click="toDetail(item.originalUrl)">{{ item.title }}</span>
     </h1>
     <p class="post-item__content">
-      <nuxt-link tag="span" :to="'/detail/'+item.originalUrl.split('/').pop()">{{ item.content }}</nuxt-link>
+      <span @click="toDetail(item.originalUrl)">{{ item.content }}</span>
     </p>
     <div class="post-item__mate">
       <ul class="meta__action">
@@ -25,7 +25,7 @@
           {{ item.commentsCount }}
         </li>
       </ul>
-      <nuxt-link :to="'/detail/'+item.originalUrl.split('/').pop()" class="read-original">阅读原文</nuxt-link>
+      <div class="read-original" @click="toDetail(item.originalUrl)">阅读原文</div>
     </div>
   </div>
 </template>
@@ -41,7 +41,16 @@ export default {
   data() {
     return {
     }
-  }
+  },
+  methods: {
+    toDetail(originalUrl) {
+      if (!originalUrl) { 
+        return 
+      }
+      let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
+      window.open(href, '_blank', 'noopener noreferrer')
+    }
+  },
 }
 </script>
 
@@ -135,7 +144,7 @@ export default {
   .read-original{
     font-size: 12px;
     color: #999;
-    text-decoration: none;
+    cursor: pointer;
   }
 }
 </style>
