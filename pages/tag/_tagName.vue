@@ -47,7 +47,7 @@ export default {
       page: 1,
       pageSize: 20,
       sort: 'rankIndex'
-    }).then(res => res.s === 1 ? res.d.entrylist : {})
+    }).then(res => res.s === 1 ? res.d : {})
     return {
       tagInfo,
       articleList
@@ -99,7 +99,7 @@ export default {
         page: this.page,
         pageSize: this.pageSize,
         sort: this.sort
-      }).then(res => res.s === 1 ? res.d.entrylist : [])
+      }).then(res => res.s === 1 ? res.d : [])
       this.articleList = isLoadMore ? this.articleList.concat(list) : list
       this.isReachBottomFetching = false
     }

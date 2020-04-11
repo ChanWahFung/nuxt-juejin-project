@@ -24,35 +24,39 @@ router.get('/entry', validator({
   keyword: { type: 'string', required: true },
   period: { type: 'enum', required: true, enum: ['ALL', 'D1', 'W1', 'M3'] }
 }), async (ctx, next) => {
-  if (ctx.$errors) {
+  const options = {
+    url: 'https://web-api.juejin.im/query',
+    method: "POST",
+    headers: {
+      'X-Agent': 'Juejin/Web',
+      'X-Legacy-Device-Id': config.deviceId,
+      'X-Legacy-Token': config.token,
+      'X-Legacy-Uid': config.uid
+    },
+    body: { 
+      "operationName": "",
+      "query": "",
+      "variables": {
+        type: ctx.query.type || 'ALL',
+        query: ctx.query.keyword,
+        after: ctx.query.after || '',
+        period: ctx.query.period || 'ALL',
+        first: ctx.query.first || 20
+      },
+      "extensions": { "query": { "id": "a53db5867466eddc50d16a38cfeb0890" } } 
+    }
+  };
+  let res = await request(options)
+  try {
+    ctx.body = {
+      s: res.data.search ? 1 : 0,
+      d: res.data.search
+    }
+  } catch (error) {
     ctx.body = {
       s: 0,
-      errors: ctx.$errors
+      d: {}
     }
-  } else {
-    const options = {
-      url: 'https://web-api.juejin.im/query',
-      method: "POST",
-      headers: {
-        'X-Agent': 'Juejin/Web',
-        'X-Legacy-Device-Id': config.deviceId,
-        'X-Legacy-Token': config.token,
-        'X-Legacy-Uid': config.uid
-      },
-      body: { 
-        "operationName": "",
-        "query": "",
-        "variables": {
-          type: ctx.query.type || 'ALL',
-          query: ctx.query.keyword,
-          after: ctx.query.after || '',
-          period: ctx.query.period || 'ALL',
-          first: ctx.query.first || 20
-        },
-        "extensions": { "query": { "id": "a53db5867466eddc50d16a38cfeb0890" } } 
-      }
-    };
-    ctx.body = await request(options)
   }
 })
 

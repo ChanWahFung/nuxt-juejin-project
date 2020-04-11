@@ -11,24 +11,17 @@ const config = require('../request/config')
 router.get('/detail', validator({
   tagName: { type: 'string', required: true }
 }), async(ctx, next) => {
-  if (ctx.$errors) {
-    ctx.body = {
-      s: 0,
-      errors: ctx.$errors
+  const options = {
+    url: 'https://gold-tag-ms.juejin.im/v1/tag/'+ctx.query.tagName,
+    method: "GET",
+    headers: {
+      'X-Juejin-Src': 'web',
+      'X-Juejin-Client': config.deviceId,
+      'X-Juejin-Token': config.token,
+      'X-Juejin-Uid': config.uid
     }
-  } else {
-    const options = {
-      url: 'https://gold-tag-ms.juejin.im/v1/tag/'+ctx.query.tagName,
-      method: "GET",
-      headers: {
-        'X-Juejin-Src': 'web',
-        'X-Juejin-Client': config.deviceId,
-        'X-Juejin-Token': config.token,
-        'X-Juejin-Uid': config.uid
-      }
-    };
-    ctx.body = await request(options)
-  }
+  };
+  ctx.body = await request(options)
 })
 
 /**
@@ -58,33 +51,30 @@ router.get('/entry', validator({
     enum: ['rankIndex', 'createdAt', 'hotIndex']
   }
 }), async(ctx, next) => {
-  if (ctx.$errors) {
-    ctx.body = {
-      s: 0,
-      errors: ctx.$errors
+  const options = {
+    url: 'https://timeline-merger-ms.juejin.im/v1/get_tag_entry',
+    method: "GET",
+    headers: {
+      'X-Juejin-Src': 'web',
+      'X-Juejin-Client': config.deviceId,
+      'X-Juejin-Token': config.token,
+      'X-Juejin-Uid': config.uid
+    },
+    params: {
+      'src': 'web',
+      'uid': config.uid,
+      'device_id': config.deviceId,
+      'token': config.token,
+      'tagId': ctx.query.tagId,
+      'page': ctx.query.page || 0,
+      'pageSize': ctx.query.pageSize || 20,
+      'sort': ctx.query.sort || 'rankIndex',
     }
-  } else {
-    const options = {
-      url: 'https://timeline-merger-ms.juejin.im/v1/get_tag_entry',
-      method: "GET",
-      headers: {
-        'X-Juejin-Src': 'web',
-        'X-Juejin-Client': config.deviceId,
-        'X-Juejin-Token': config.token,
-        'X-Juejin-Uid': config.uid
-      },
-      params: {
-        'src': 'web',
-        'uid': config.uid,
-        'device_id': config.deviceId,
-        'token': config.token,
-        'tagId': ctx.query.tagId,
-        'page': ctx.query.page || 0,
-        'pageSize': ctx.query.pageSize || 20,
-        'sort': ctx.query.sort || 'rankIndex',
-      }
-    };
-    ctx.body = await request(options)
+  };
+  let res = await request(options)
+  ctx.body = {
+    s: res.s,
+    d: res.d.entrylist
   }
 })
 

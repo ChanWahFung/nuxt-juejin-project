@@ -16,9 +16,16 @@ module.exports = function (descriptor) {
         params[key] = ctx.request.body[key] || ''
       }
     })
-    ctx.$errors = await validator.validate(params)
+    const errors = await validator.validate(params)
       .then(() => null)
       .catch(err => err.errors)
-    await next()
+    if (errors) {
+      ctx.body = {
+        s: 0,
+        errors
+      }
+    } else {
+      await next()
+    }
   }
 }

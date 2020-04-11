@@ -22,29 +22,22 @@ router.get('/entry', validator({
     message: 'pageSize 需传入正整数'
   }
 }), async (ctx, next) => {
-  if (ctx.$errors) {
-    ctx.body = {
-      s: 0,
-      errors: ctx.$errors
+  const options = {
+    url: 'https://comment-wrapper-ms.juejin.im/v1/comments/entry/'+ctx.query.entryId,
+    method: "GET",
+    headers: {
+      'X-Juejin-Src': 'web',
+      'X-Juejin-Client': config.deviceId,
+      'X-Juejin-Token': config.token,
+      'X-Juejin-Uid': config.uid,
+    },
+    params: { 
+      createdAt: ctx.query.createdAt || '',
+      rankType: ctx.query.rankType || 'new',
+      pageSize: ctx.query.pageSize || '5',
     }
-  } else {
-    const options = {
-      url: 'https://comment-wrapper-ms.juejin.im/v1/comments/entry/'+ctx.query.entryId,
-      method: "GET",
-      headers: {
-        'X-Juejin-Src': 'web',
-        'X-Juejin-Client': config.deviceId,
-        'X-Juejin-Token': config.token,
-        'X-Juejin-Uid': config.uid,
-      },
-      params: { 
-        createdAt: ctx.query.createdAt || '',
-        rankType: ctx.query.rankType || 'new',
-        pageSize: ctx.query.pageSize || '5',
-      }
-    };
-    ctx.body = await request(options);
-  }
+  };
+  ctx.body = await request(options);
 })
 
 /**

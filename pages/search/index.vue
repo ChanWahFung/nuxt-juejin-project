@@ -37,12 +37,10 @@ export default {
       type: query.type ? query.type.toUpperCase() : 'ALL',
       keyword: query.keyword,
       period: query.period ? query.period.toUpperCase() : 'ALL'
-    }).then(res => res.data || {})
-    if (res.search) {
-      return {
-        pageInfo: res.search.pageInfo,
-        searchList: res.search.edges
-      }
+    }).then(res => res.s == 1 ? res.d : {})
+    return {
+      pageInfo: res.pageInfo || {},
+      searchList: res.edges || []
     }
   },
   mixins: [reachBottom],
@@ -118,11 +116,9 @@ export default {
         type: this.type.toUpperCase(),
         keyword: this.keyword,
         period: this.period.toUpperCase()
-      }).then(res => res.data || {})
-      if (res.search) {
-        this.pageInfo = res.search.pageInfo
-        this.searchList = this.searchList.concat(res.search.edges)
-      }
+      }).then(res => res.s == 1 ? res.d : {})
+      this.pageInfo = res.pageInfo || {}
+      this.searchList = this.searchList.concat(res.edges || [])
       this.isReachBottomFetching = false
     },
     search(item) {

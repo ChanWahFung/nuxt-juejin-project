@@ -100,7 +100,7 @@ export default {
     }
   },
   validate ({ params }) {
-    if (params.id) {
+    if (params.id && params.id != 'undefined') {
       return true
     }
     return false
@@ -116,7 +116,7 @@ export default {
       targetUid: params.id,
       limit: 20,
       order: 'createdAt'
-    }).then(res => res.s === 1 ? res.d.entrylist : [])
+    }).then(res => res.s === 1 ? res.d : [])
     // 关注状态
     let isFollowed = await app.$api.isCurrentUserFollowed({
       currentUid: config.uid,
@@ -175,7 +175,7 @@ export default {
       }
       let res = await this.$api.getUserPost(params)
       if (res.s === 1){
-        this.postList = isLoadMore ? this.postList.concat(res.d.entrylist) : res.d.entrylist
+        this.postList = isLoadMore ? this.postList.concat(res.d) : res.d
       }
     }
   }

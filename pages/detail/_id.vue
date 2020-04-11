@@ -53,7 +53,7 @@
         </div>
         <div class="comment-area">
           <p class="comment-area__title">评论</p>
-          <comment-item v-for="item in comments" :key="item.id" :data="item"></comment-item>
+          <comment-item v-for="(item, index) in comments" :key="item.id" :entry-id="articDetail.entryId" v-model="comments[index]"></comment-item>
           <div v-if="comments.length !== commentCount" class="comment__more-btn" @click="getMoreComment">查看更多</div>
         </div>
       </div>
@@ -108,7 +108,7 @@ export default {
     const aboutArticles = await app.$api.getRelatedEntry({
       limit: 5,
       entryId: articInfo.objectId
-    }).then(res => res.s === 1 ? res.d.entrylist : [])
+    }).then(res => res.s === 1 ? res.d : [])
     let authorInfo = null
     if (articInfo.user) {
       // 用户信息
@@ -203,7 +203,7 @@ export default {
         before,
       }).then(res => {
         if (res.s === 1) {
-          this.recommendArticles = this.recommendArticles.concat(res.d.entrylist)
+          this.recommendArticles = this.recommendArticles.concat(res.d)
         }
       })
     },
@@ -225,18 +225,20 @@ export default {
       }
       // 二级目录
       function addC2(item){
-        const lastC1 = catalog[catalog.length - 1]
+        let lastC1 = catalog[catalog.length - 1]
         if (!lastC1) {
-          catalog[0] = new Item('', '', 'c1')
+          addC1(item)
+          return
         }
         lastC1.children.push(item)
       }
       // 三级目录
       function addC3(item){
         const lastC1 = catalog[catalog.length - 1]
-        const lastC2 = lastC1.children[lastC1.children.length - 1]
+        let lastC2 = lastC1.children[lastC1.children.length - 1]
         if (!lastC2) {
-          lastC1.children[0] = new Item('', '', 'c2')
+          addC2(item)
+          return
         }
         lastC2.children.push(item)
       }
@@ -326,17 +328,24 @@ export default {
     }
 
     /deep/ h1{
-      padding-bottom: 12px;
+      margin-top: 40px;
+      margin-bottom: 12px;
       font-size: 26px;
       font-weight: 700;
-      border-bottom: 1px solid #ececec;
     }
 
     /deep/ h2{
-      padding-bottom: 12px;
+      margin-top: 24px;
+      margin-bottom: 12px;
       font-size: 24px;
       font-weight: 700;
-      border-bottom: 1px solid #ececec;
+    }
+
+    /deep/ h3{
+       margin-top: 15px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 700;
     }
 
     /deep/ code{

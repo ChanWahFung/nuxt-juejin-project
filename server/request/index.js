@@ -20,6 +20,6 @@ module.exports = function (options){
     }
   }
   return requestPromise(options)
-    .then(res=> res.body)
+    .then(res=> JSON.parse(res.body))
     .catch(err=> err)
 }

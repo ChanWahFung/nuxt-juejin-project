@@ -25,20 +25,20 @@ import authorRank from '~/components/business/authorRank'
 export default {
   async asyncData({ app }) {
     // 文章列表
-    let indexList = await app.$api.getIndexList({
+    let indexData = await app.$api.getIndexList({
       first: 20,
       order: 'POPULAR'
     });
-    if (!indexList.errors) {
-      indexList = indexList.data.articleFeed.items
+    if (indexData.s == 1) {
+      indexData = indexData.d
     } 
     // 推荐作者
     let recommendAuthors = await app.$api.getRecommendCard({ 
       limit: 5
-    }).then(res => res.data ? res.data.recommendationCard.items : [])
+    }).then(res => res.s == 1 ? res.d : [])
     return {
-      list: indexList.edges,
-      pageInfo: indexList.pageInfo,
+      list: indexData.edges || [],
+      pageInfo: indexData.pageInfo || {},
       recommendAuthors
     };
   },
@@ -123,12 +123,11 @@ export default {
         params.after = this.pageInfo.endCursor || ''
       }
       let res = await this.$api.getIndexList(params);
-      if (!res.$errors) {
-        res = res.data.articleFeed.items
-        this.list = isLoadMore ? this.list.concat(res.edges) : res.edges
-        this.pageInfo = res.pageInfo
+      if (res.s == 1) {
+        this.list = isLoadMore ? this.list.concat(res.d.edges) : res.d.edges
+        this.pageInfo = res.d.pageInfo
         this.isReachBottomFetching = false
-      } 
+      }
     }
   }
 };

@@ -11,26 +11,19 @@ const config = require('../request/config')
 router.get('/multiUser', validator({
   ids: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  if (ctx.$errors) {
-    ctx.body = {
-      s: 0,
-      errors: ctx.$errors
+  const options = {
+    url: 'https://lccro-api-ms.juejin.im/v1/get_multi_user',
+    method: "GET",
+    params: {
+      uid: config.uid,
+      device_id: config.deviceId,
+      token: config.token,
+      src: 'web',
+      ids: ctx.query.ids,
+      cols: ''
     }
-  } else {
-    const options = {
-      url: 'https://lccro-api-ms.juejin.im/v1/get_multi_user',
-      method: "GET",
-      params: {
-        uid: config.uid,
-        device_id: config.deviceId,
-        token: config.token,
-        src: 'web',
-        ids: ctx.query.ids,
-        cols: ''
-      }
-    };
-    ctx.body = await request(options);
-  }
+  };
+  ctx.body = await request(options);
 })
 
 /**
@@ -40,24 +33,17 @@ router.get('/multiUser', validator({
 router.get('/notification', validator({
   before: { type: 'string' }
 }), async (ctx, next)=>{
-  if (ctx.$errors) {
-    ctx.body = {
-      s: 0,
-      errors: ctx.$errors
+  const options = {
+    url: 'https://ufp-api-ms.juejin.im/v1/getUserNotification',
+    method: "GET",
+    params: {
+      uid: config.uid,
+      token: config.token,
+      src: 'web',
+      before: ctx.query.before || ''
     }
-  } else {
-    const options = {
-      url: 'https://ufp-api-ms.juejin.im/v1/getUserNotification',
-      method: "GET",
-      params: {
-        uid: config.uid,
-        token: config.token,
-        src: 'web',
-        before: ctx.query.before || ''
-      }
-    };
-    ctx.body = await request(options);
-  }
+  };
+  ctx.body = await request(options);
 })
 
 /**
@@ -69,23 +55,16 @@ router.get('/isCurrentUserFollowed', validator({
   currentUid: { type: 'string', required: true },
   targetUids: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  if (ctx.$errors) {
-    ctx.body = {
-      s: 0,
-      errors: ctx.$errors
+  const options = {
+    url: 'https://follow-api-ms.juejin.im/v1/isCurrentUserFollowed',
+    method: "GET",
+    params: {
+      currentUid: ctx.query.currentUid,
+      targetUids: ctx.query.targetUids,
+      src: 'web',
     }
-  } else {
-    const options = {
-      url: 'https://follow-api-ms.juejin.im/v1/isCurrentUserFollowed',
-      method: "GET",
-      params: {
-        currentUid: ctx.query.currentUid,
-        targetUids: ctx.query.targetUids,
-        src: 'web',
-      }
-    };
-    ctx.body = await request(options);
-  }
+  };
+  ctx.body = await request(options);
 })
 
 /**
@@ -100,32 +79,36 @@ router.get('/recommendCard', validator({
     message: 'limit 需传入正整数'
   }
 }), async (ctx, next)=>{
-  if (ctx.$errors) {
-    ctx.body = {
-      s: 0,
-      errors: ctx.$errors
-    }
-  } else {
-    const options = {
-      url: 'https://web-api.juejin.im/query',
-      method: "POST",
-      headers: {
-        'X-Agent': 'Juejin/Web',
-        'X-Legacy-Device-Id': config.deviceId,
-        'X-Legacy-Token': config.token,
-        'X-Legacy-Uid': config.uid
+  const options = {
+    url: 'https://web-api.juejin.im/query',
+    method: "POST",
+    headers: {
+      'X-Agent': 'Juejin/Web',
+      'X-Legacy-Device-Id': config.deviceId,
+      'X-Legacy-Token': config.token,
+      'X-Legacy-Uid': config.uid
+    },
+    body: {
+      operationName: "",
+      query: "",
+      variables: {
+        limit: ctx.query.limit || 10, 
+        excluded: []
       },
-      body: {
-        operationName: "",
-        query: "",
-        variables: {
-          limit: ctx.query.limit || 10, 
-          excluded: []
-        },
-        extensions: {query: {id: "b031bf7f8b17b1a173a38807136cc20e"}},
-      }
-    };
-    ctx.body = await request(options);
+      extensions: {query: {id: "b031bf7f8b17b1a173a38807136cc20e"}},
+    }
+  };
+  let res = await request(options);
+  try {
+    ctx.body = {
+      s: res.data.recommendationCard.items ? 1 : 0,
+      d: res.data.recommendationCard.items
+    } 
+  } catch (error) {
+    ctx,body = {
+      s: 0,
+      d: []
+    }
   }
 })
 
