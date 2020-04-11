@@ -54,7 +54,7 @@
         <div class="comment-area">
           <p class="comment-area__title">评论</p>
           <comment-item v-for="(item, index) in comments" :key="item.id" :entry-id="articDetail.entryId" v-model="comments[index]"></comment-item>
-          <div v-if="comments.length !== commentCount" class="comment__more-btn" @click="getMoreComment">查看更多</div>
+          <div v-if="hasComments" class="comment__more-btn" @click="getMoreComment">查看更多</div>
         </div>
       </div>
       <div class="detail-recommend shadow">
@@ -142,7 +142,7 @@ export default {
       authorInfo: {},
       aboutArticles: [],
       recommendArticles: [],
-      commentCount: 0,
+      hasComments: true, // 是否还有评论数据
       tagIds: '',
       comments: [],
       catalogData: []
@@ -191,6 +191,9 @@ export default {
         if (res.s === 1) {
           this.commentCount = res.d.count
           this.comments = this.comments.concat(res.d.comments)
+          if (res.d.comments.length === 0) {
+            this.hasComments = false
+          }
         }
       })
     },

@@ -4,7 +4,7 @@
       <ul class="artic-item__meta">
         <li class="meta-item mate-item--post" v-if="item.type === 'post'">专栏</li>
         <li class="meta-item">
-          <span class="meta-item__username" @click.stop="$router.push('/user/'+item.user.id)">{{ item.user.username }}</span>
+          <span class="meta-item__username" @click.stop="$router.push('/user/'+(item.user.id || item.user.objectId))">{{ item.user.username }}</span>
         </li>
         <li class="meta-item">{{ item.createdAt | formatTime }}</li>
         <li class="meta-item">

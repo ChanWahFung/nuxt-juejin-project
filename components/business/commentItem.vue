@@ -42,6 +42,7 @@
             </div>
           </div>
         </div>
+        <div v-if="data.replyCount > data.topComment.length" class="reply__more" @click="getReplyMore">加载更多</div>
       </div>
     </div>
   </div>
@@ -49,16 +50,46 @@
 
 <script>
 export default {
+  model: {
+    prop: 'data',
+    event: 'updateData'
+  },
   props: {
+    entryId: {
+      type: String,
+      default: ''
+    },
     data: {
       type: Object,
-      default: () => {}
+      default: () => ({})
+    }
+  },
+  data() {
+    return {
+      pageNum: 1,
+      pageSize: 5
     }
   },
   methods: {
     toUser(id) {
       this.$router.push('/user/' + id)
     },
+    getReplyMore() {
+      if (this.entryId) {
+        this.$api.getReplyList({
+          entryId: this.entryId,
+          commentId: this.data.id,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize
+        }).then(res => {
+          if (res.s === 1) {
+            let data = JSON.parse(JSON.stringify(this.data))
+            data.topComment = this.pageNum == 1 ? res.d.comments : data.topComment.concat(res.d.comments)
+            this.$emit('updateData', data)
+          }
+        })
+      }
+    }
   }
 }
 </script>
@@ -141,6 +172,18 @@ export default {
       .comment-item__main{
         border-bottom: 1px solid #f4f4f4;
       }
+    }
+  }
+
+  .reply__more{
+    padding: 10px;
+    font-size: 13px;
+    color: #406599;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover{
+      opacity: .8;
     }
   }
 }
