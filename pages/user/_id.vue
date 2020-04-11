@@ -29,7 +29,7 @@
             <span class="order-item" :class="{'order-item--active': item.order == currentOrder}" v-for="item in orderOptions" :key="item.order" @click="changeOrder(item.order)">{{ item.title }}</span>
           </div>
         </div>
-        <post-item :item="item" v-for="item in postList" :key="item.id"></post-item>
+        <post-item v-for="(item, index) in postList" :key="item.id" v-model="postList[index]"></post-item>
       </div>
     </div>
     <div class="minor-area">

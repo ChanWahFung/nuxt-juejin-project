@@ -25,7 +25,7 @@ function useMiddleware(){
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 1800,
     credentials: true,
-    allowMethods: ['GET', 'POST'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
   })) 
   app.use(etag())

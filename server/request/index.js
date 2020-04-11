@@ -4,6 +4,7 @@ const qs = require('querystring')
 const requestPromise = util.promisify(request)
 
 module.exports = function (options){
+  options.method = options.method.toUpperCase()
   if(options.method === 'GET'){
     if(options.params){
       let params = qs.stringify(options.params)
@@ -11,10 +12,7 @@ module.exports = function (options){
     }
   }
   if(options.method === 'POST'){
-    options.headers = {
-      'content-type': 'application/json',
-      ...options.headers,
-    }
+    options.headers['Content-Type'] = 'application/json'
     if(options.body){
       options.body = JSON.stringify(options.body)
     }

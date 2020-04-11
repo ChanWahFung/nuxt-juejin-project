@@ -119,6 +119,14 @@ export default ({ app: { $request } }, inject) => {
      */
     getRecommendEntryByTagIds(params = {}){
       return $request.get('/article/recommendEntryByTagIds', params)
+    },
+    /**
+     * 点赞文章
+     * @param {string} entryId - 文章objectId
+     */
+    articleLike(data){
+      let method = data.isCollected ? 'put' : 'delete'
+      return $request[method]('/article/like', data)
     }
   })
 }

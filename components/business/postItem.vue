@@ -15,7 +15,7 @@
     </p>
     <div class="post-item__mate">
       <ul class="meta__action">
-        <li class="meta-item" :class="{active: item.isCollected}">
+        <li class="meta-item" :class="{active: item.isCollected}" @click.stop="articleLike">
           <img v-if="item.isCollected" class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
           <img v-else class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
           {{ item.collectionCount }}
@@ -32,6 +32,10 @@
 
 <script>
 export default {
+  model: {
+    prop: 'item',
+    event: 'updateItem'
+  },
   props: {
     item: {
       type: Object,
@@ -40,6 +44,7 @@ export default {
   },
   data() {
     return {
+      likeLoading: false
     }
   },
   methods: {
@@ -49,6 +54,27 @@ export default {
       }
       let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
       window.open(href, '_blank', 'noopener noreferrer')
+    },
+    async articleLike() {
+      if (this.likeLoading) {
+        return
+      }
+      let objectId = this.item.objectId
+      if (objectId) {
+        this.likeLoading = true
+        let res = await this.$api.articleLike({
+          entryId: objectId,
+          isCollected: !this.item.isCollected
+        })
+        if (res.s === 1) {
+          this.$emit('updateItem', {
+            ...this.item, 
+            isCollected: !this.item.isCollected,
+            collectionCount: this.item.isCollected ? Number(this.item.isCollected) - 1 : Number(this.item.isCollected) + 1 
+          })
+        }
+        this.likeLoading = false
+      }
     }
   },
 }
@@ -126,6 +152,7 @@ export default {
       height: 26px;
       padding: 0 10px;
       border: 1px solid #edeeef;
+      cursor: pointer;
 
       .meta-item__icon{
         margin-right: 3px;

@@ -6,6 +6,27 @@ export default ({ app: { $axios } }, inject) => {
         url,
         params
       })
-    }
+    },
+    post (url, data) {
+      return $axios({
+        method: 'post',
+        url,
+        data
+      })
+    },
+    put (url, data) {
+      return $axios({
+        method: 'put',
+        url,
+        data
+      })
+    },
+    delete (url, data) {
+      return $axios({
+        method: 'delete',
+        url,
+        data
+      })
+    },
   })
 }
