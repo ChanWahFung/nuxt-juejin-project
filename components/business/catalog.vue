@@ -34,7 +34,24 @@ export default {
       currentCatalogId: ''
     }
   },
+  mounted() {
+    this.catalogSticky()
+  },
   methods: {
+    // 控制目录吸顶
+    catalogSticky() {
+      let catalog = document.querySelector(".catalog");
+      let observer = new IntersectionObserver(entries => {
+        console.log(entries)
+        entries.forEach(item => {
+          let tips = item.isIntersecting ? "进入了父元素的内部" : "离开了父元素的内部";
+          console.log(tips);
+        });
+      }, {
+        threshold: [1]
+      });
+      observer.observe(catalog); // 监听一个box
+    }
   }
 }
 </script>

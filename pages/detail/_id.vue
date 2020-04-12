@@ -216,9 +216,10 @@ export default {
     // 生成目录树数据
     createCatalog() {
       let catalog = []
-      function Item(id, title, level){
+      function Item(id, item, level){
         this.id = id
-        this.title = title
+        this.title = item.textContent
+        this.tag = item.tagName
         this.level = level
         this.children = []
       }
@@ -230,7 +231,7 @@ export default {
       function addC2(item){
         let lastC1 = catalog[catalog.length - 1]
         if (!lastC1) {
-          addC1(item)
+          addC1({ ...item, level: 'c1' })
           return
         }
         lastC1.children.push(item)
@@ -238,9 +239,13 @@ export default {
       // 三级目录
       function addC3(item){
         const lastC1 = catalog[catalog.length - 1]
+        if (!lastC1) {
+          addC1({ ...item, level: 'c1' })
+          return
+        }
         let lastC2 = lastC1.children[lastC1.children.length - 1]
         if (!lastC2) {
-          addC2(item)
+          addC2({ ...item, level: 'c2' })
           return
         }
         lastC2.children.push(item)
@@ -248,12 +253,19 @@ export default {
       document.querySelectorAll('.detail__content .heading').forEach((item, index) => {
         item.setAttribute('id', `heading-${index}`)
         if (item.tagName == 'H1') {
-          addC1(new Item(`heading-${index}`, item.textContent, 'c1'))
+          addC1(new Item(`heading-${index}`, item, 'c1'))
         } else if (item.tagName == 'H2') {
-          addC2(new Item(`heading-${index}`, item.textContent, 'c2'))
+          addC2(new Item(`heading-${index}`, item, 'c2'))
         } else if (item.tagName == 'H3') {
-          addC3(new Item(`heading-${index}`, item.textContent, 'c3'))
+          addC3(new Item(`heading-${index}`, item, 'c3'))
         }
+        // if (!catalog[0]) {
+        //   catalog[0] = new Item(`heading-${index}`, item, 'c1'))
+        //   return
+        // }
+        // if (item.tagName) {
+        //   catalog[catalog.length] = new Item(`heading-${index}`, item, 'c1'))
+        // }
       })
       this.catalogData = catalog
     }
