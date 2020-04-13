@@ -14,7 +14,11 @@
           <img v-show="searchFormClass == ''" src="~/assets/images/search-icon.svg" class="search-icon" />
         </div>
         <nuxt-link to="/notice" class="notice">
-          <img src="~/assets/images/notice.png" width="100%" height="100%">
+          <div class="notice__icon"></div>
+          <span class="notice__count" v-if="noticeCount > 0">{{ noticeCount }}</span>
+        </nuxt-link>
+        <nuxt-link to="/notice" class="mime">
+
         </nuxt-link>
       </div>
     </div>
@@ -41,7 +45,8 @@ export default {
       keyword: '',
       wheelClass: 'show',
       scrollingElement: null,
-      searchFormClass: ''
+      searchFormClass: '',
+      noticeCount: 0
     }
   },
   mounted() {
@@ -164,8 +169,38 @@ export default {
   }
 }
 .notice{
+  position: relative;
   width: 24px;
   height: 24px;
   margin-left: 30px;
+
+  .notice__icon{
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
+    background-image: url(../../assets/images/notice.png);
+  }
+
+  .notice__count{
+    position: absolute;
+    left: 50%;
+    bottom: 43%;
+    margin: 0;
+    padding: 5px 8px;
+    font-size: 12px;
+    line-height: 1;
+    text-align: center;
+    color: #f1f1f1;
+    background-color: $theme;
+    border-radius: 36px;
+    border: 2px solid #fff;
+    word-break: normal;
+  }
+
+  &.nuxt-link-exact-active{
+    .notice__icon{
+      background-image: url(../../assets/images/notice-active.png);
+    }
+  }
 }
 </style>
