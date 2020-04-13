@@ -15,17 +15,20 @@
     </p>
     <div class="post-item__mate">
       <ul class="meta__action">
-        <li class="meta-item" :class="{active: item.isCollected}" @click.stop="articleLike">
-          <img v-if="item.isCollected" class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
-          <img v-else class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
+        <li class="action-item" :class="{active: item.isCollected}" @click.stop="articleLike">
+          <img v-if="item.isCollected" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
+          <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
           {{ item.collectionCount }}
         </li>
-        <li class="meta-item">
-          <img class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
+        <li class="action-item">
+          <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
           {{ item.commentsCount }}
         </li>
       </ul>
-      <div class="read-original" @click="toDetail(item.originalUrl)">阅读原文</div>
+      <div class="meta__info">
+        <span class="meta__count">阅读 {{ item.viewsCount }}</span>
+        <span class="meta__original" @click="toDetail(item.originalUrl)">阅读原文</span>
+      </div>
     </div>
   </div>
 </template>
@@ -146,7 +149,7 @@ export default {
     font-size: 13px;
     color: #b2bac2;
 
-    .meta-item {
+    .action-item {
       display: flex;
       align-items: center;
       height: 26px;
@@ -154,7 +157,7 @@ export default {
       border: 1px solid #edeeef;
       cursor: pointer;
 
-      .meta-item__icon{
+      .action-item__icon{
         margin-right: 3px;
       }
 
@@ -168,10 +171,22 @@ export default {
     }
   }
 
-  .read-original{
+  .meta__info{
     font-size: 12px;
-    color: #999;
-    cursor: pointer;
+    color: rgba(24,37,50,.3);
+
+    >span:hover{
+      color: #8b8b8b;
+    }
+
+    .meta__count{
+      margin-right: 15px;
+    }
+
+    .meta__original{
+      cursor: pointer;
+    }
   }
+
 }
 </style>
