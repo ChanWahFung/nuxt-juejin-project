@@ -7,7 +7,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
      */
     getIndexList (params = {}) {
-      return $request.get('/article/indexList', params)
+      return $request.get('/v1/article/indexList', params)
     },
     /**
      * 搜索
@@ -18,7 +18,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} period - ALL：全部、D1：一天内、W1：一周内、M3：三个月内
      */
     searchList (params = {}) {
-      return $request.get('/search/entry', params)
+      return $request.get('/v1/search/entry', params)
     },
     /**
      * 获取详情页信息
@@ -26,7 +26,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} postId - 文章id 
      */
     getDetail (params = {}) {
-      return $request.get('/article/detail', params)
+      return $request.get('/v1/article/detail', params)
     },
     /**
      * 获取文章评论
@@ -36,7 +36,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getCommentList (params = {}) {
-      return $request.get('/comment/entry', params)
+      return $request.get('/v1/comment/entry', params)
     },
     /**
      * 获取回复列表
@@ -46,28 +46,28 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 页数
      */
     getReplyList (params = {}){
-      return $request.get('/comment/reply', params)
+      return $request.get('/v1/comment/reply', params)
     },
     /**
      * 获取用户信息
      * @param {string} ids - 需要获取的用户id（多个以|分割）
      */
     getMultiUser(params = {}){
-      return $request.get('/user/multiUser', params)
+      return $request.get('/v1/user/multiUser', params)
     },
     /**
      * 获取用户消息
      * @param {string} before - 最后一条消息的 beforeAtString
      */
     getUserNotification(params = {}){
-      return $request.get('/user/notification', params)
+      return $request.get('/v1/user/notification', params)
     },
     /**
      * 获取标签详情
      * @param {string} tagName
      */
     getTagDetail(params = {}){
-      return $request.get('/tag/detail', params)
+      return $request.get('/v1/tag/detail', params)
     },
     /**
      * 获取对应标签的文章列表
@@ -77,7 +77,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} sort - rankIndex：热门；createdAt：最新；hotIndex：最热
      */
     getTagEntry(params = {}){
-      return $request.get('/tag/entry', params)
+      return $request.get('/v1/tag/entry', params)
     },
     /**
      * 检查是否关注用户
@@ -85,7 +85,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} targetUids
      */
     isCurrentUserFollowed(params = {}){
-      return $request.get('/user/isCurrentUserFollowed', params)
+      return $request.get('/v1/user/isCurrentUserFollowed', params)
     },
     /**
      * 获取用户专栏文章
@@ -95,14 +95,14 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} order - 排序 - rankIndex：热门、createdAt：最新
      */
     getUserPost(params = {}){
-      return $request.get('/article/userPost', params)
+      return $request.get('/v1/article/userPost', params)
     },
     /**
      * 获取推荐作者
      * @param {number} limit - 条数
      */
     getRecommendCard(params = {}){
-      return $request.get('/user/recommendCard', params)
+      return $request.get('/v1/user/recommendCard', params)
     },
     /**
      * 获取相关文章
@@ -110,7 +110,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} entryId - 文章objectId
      */
     getRelatedEntry(params = {}){
-      return $request.get('/article/relatedEntry', params)
+      return $request.get('/v1/article/relatedEntry', params)
     },
     /**
      * 根据标签id获取相关推荐文章
@@ -118,7 +118,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} before - 最后一条的rankIndex，下一页时传入
      */
     getRecommendEntryByTagIds(params = {}){
-      return $request.get('/article/recommendEntryByTagIds', params)
+      return $request.get('/v1/article/recommendEntryByTagIds', params)
     },
     /**
      * 点赞文章
@@ -126,7 +126,7 @@ export default ({ app: { $request } }, inject) => {
      */
     articleLike(data){
       let method = data.isCollected ? 'put' : 'delete'
-      return $request[method]('/article/like', data)
+      return $request[method]('/article/like', { entryId: data.entryId })
     }
   })
 }

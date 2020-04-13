@@ -5,6 +5,7 @@ const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 const conditional = require('koa-conditional-get');
 const etag = require('koa-etag');
+const errorHandler = require('./middleware/errorHandler');
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
@@ -32,13 +33,22 @@ function useMiddleware(){
   app.use(conditional())
 }
 
-function useRouter(){
+function useRouter(path){
+  path = path || __dirname + '/routes'
   //注册路由
-  let urls = fs.readdirSync(__dirname + '/routes')
+  let urls = fs.readdirSync(path)
   urls.forEach((element) => {
-    let module = require(__dirname + '/routes/' + element)
-    //routes里的文件名作为 路由名
-    router.use('/' + element.replace('.js', ''), module.routes())
+    const elementPath = path + '/' + element
+    const stat = fs.lstatSync(elementPath);
+    const isDir = stat.isDirectory();
+    if (isDir) { // 文件夹递归注册路由
+      useRouter(elementPath)
+    } else {
+      let module = require(elementPath)
+      let routeRrefix = path.split('/routes')[1] || ''
+      //routes里的文件名作为 路由名
+      router.use(routeRrefix + '/' + element.replace('.js', ''), module.routes())
+    }
   })
   //使用路由
   app.use(router.routes()).use(router.allowedMethods())
@@ -67,7 +77,7 @@ async function start () {
     ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
     nuxt.render(ctx.req, ctx.res)
   })
-  
+  app.on('error', errorHandler)
   app.listen(port, host)
   consola.ready({
     message: `Server listening on http://${host}:${port}`,

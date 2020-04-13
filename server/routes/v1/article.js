@@ -1,8 +1,8 @@
 const Router = require('koa-router')
 const router = new Router()
-const request = require('../request')
-const validator = require('../middleware/validator')
-const config = require('../request/config')
+const request = require('../../request')
+const validator = require('../../middleware/validator')
+const config = require('../../request/config')
 
 /**
  * 获取详情页信息
@@ -184,7 +184,7 @@ router.get('/recommendEntryByTagIds', validator({
   }
 })
 
-function like(method){
+function like(ctx, method){
   const options = {
     url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.request.body.entryId,
     method,
@@ -205,7 +205,7 @@ function like(method){
 router.put('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  ctx.body = like('PUT')
+  ctx.body = await like(ctx, 'PUT')
 })
 
 /**

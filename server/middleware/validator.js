@@ -12,7 +12,11 @@ module.exports = function (descriptor) {
     Object.keys(descriptor).forEach(key => {
       if (ctx.method === 'GET') {
         params[key] = ctx.query[key] || ''
-      } else if (ctx.method === 'POST') {
+      } else if (
+        ctx.method === 'POST' ||
+        ctx.method === 'PUT' ||
+        ctx.method === 'DELETE'
+      ) {
         params[key] = ctx.request.body[key] || ''
       }
     })

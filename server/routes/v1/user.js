@@ -1,8 +1,8 @@
 const Router = require('koa-router')
 const router = new Router()
-const request = require('../request')
-const validator = require('../middleware/validator')
-const config = require('../request/config')
+const request = require('../../request')
+const validator = require('../../middleware/validator')
+const config = require('../../request/config')
 
 /**
  * 获取用户信息
@@ -110,6 +110,22 @@ router.get('/recommendCard', validator({
       d: []
     }
   }
+})
+
+/**
+ * 获取未读消息
+ */
+router.get('/getUserNotificationNum', async (ctx, next)=>{
+  const options = {
+    url: 'https://ufp-api-ms.juejin.im/v1/getUserNotificationNum',
+    method: "GET",
+    params: {
+      uid: config.uid,
+      token: config.token,
+      src: 'web'
+    }
+  };
+  ctx.body = await request(options);
 })
 
 module.exports = router

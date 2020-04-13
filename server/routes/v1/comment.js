@@ -1,8 +1,8 @@
 const Router = require('koa-router')
 const router = new Router()
-const request = require('../request')
-const validator = require('../middleware/validator')
-const config = require('../request/config')
+const request = require('../../request')
+const validator = require('../../middleware/validator')
+const config = require('../../request/config')
 
 /**
  * 获取文章评论
