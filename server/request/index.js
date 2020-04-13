@@ -11,13 +11,22 @@ module.exports = function (options){
       options.url = `${options.url}?${params}`
     }
   }
-  if(options.method === 'POST'){
+  if(
+    options.method === 'POST' ||
+    options.method === 'PUT' ||
+    options.method === 'DELETE'
+  ){
     options.headers['Content-Type'] = 'application/json'
     if(options.body){
       options.body = JSON.stringify(options.body)
     }
   }
   return requestPromise(options)
-    .then(res=> JSON.parse(res.body))
+    .then(res=> ({
+      statusCode: res.statusCode,
+      statusMessage: res.statusMessage,
+      headers: res.headers,
+      body: res.headers['content-type'].includes('application/json') ? JSON.parse(res.body) : res.body
+    }))
     .catch(err=> err)
 }

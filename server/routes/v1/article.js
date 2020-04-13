@@ -25,7 +25,8 @@ router.get('/detail', validator({
       postId: ctx.query.postId
     }
   };
-  ctx.body = await request(options);
+  let { body:res } = await request(options);
+  ctx.body = res
 })
 
 /**
@@ -69,7 +70,7 @@ router.get('/indexList', validator({
       extensions: { query: { id: "21207e9ddb1de777adeaca7a2fb38030" } } 
     }
   };
-  let res = await request(options)
+  let { body:res } = await request(options)
   try {
     ctx.body = {
       s: res.data.articleFeed.items ? 1 : 0,
@@ -116,7 +117,7 @@ router.get('/userPost', validator({
       order: ctx.query.order || 'createdAt'
     }
   };
-  let res = await request(options)
+  let { body:res } = await request(options)
   ctx.body = {
     s: res.s,
     d: res.d.entrylist
@@ -149,7 +150,7 @@ router.get('/relatedEntry', validator({
       entryId: ctx.query.entryId
     }
   };
-  let res = await request(options)
+  let { body:res } = await request(options)
   ctx.body = {
     s: res.s,
     d: res.d.entrylist
@@ -177,7 +178,7 @@ router.get('/recommendEntryByTagIds', validator({
       before: ctx.query.before || ''
     }
   };
-  let res = await request(options)
+  let { body:res } = await request(options)
   ctx.body = {
     s: res.s,
     d: res.d.entrylist
@@ -205,7 +206,10 @@ function like(ctx, method){
 router.put('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  ctx.body = await like(ctx, 'PUT')
+  let { body:res, statusCode, headers } = await like(ctx, 'PUT')
+  ctx.status = statusCode
+  ctx.set('Content-Type', headers['content-type'])
+  ctx.body = res
 })
 
 /**
@@ -215,7 +219,10 @@ router.put('/like', validator({
 router.delete('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  ctx.body = like('DELETE')
+  let { body:res, statusCode, headers } = await like(ctx, 'DELETE')
+  ctx.status = statusCode
+  ctx.set('Content-Type', headers['content-type'])
+  ctx.body = res
 })
 
 module.exports = router

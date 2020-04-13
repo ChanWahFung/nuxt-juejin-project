@@ -24,9 +24,9 @@ function useMiddleware(){
       return '*';//cors
     },
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-    maxAge: 1800,
+    maxAge: 86400,
     credentials: true,
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
   })) 
   app.use(etag())

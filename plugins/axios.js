@@ -4,6 +4,9 @@ export default function ({ app: { $axios } }) {
 		return config
 	})
 	$axios.interceptors.response.use(response => {
+		if (/^[4|5]/.test(response.status)) {
+			return Promise.reject(response.statusText)
+		}
 		return response.data
 	})
 }

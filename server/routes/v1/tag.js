@@ -21,7 +21,8 @@ router.get('/detail', validator({
       'X-Juejin-Uid': config.uid
     }
   };
-  ctx.body = await request(options)
+  let { body:res } = await request(options)
+  ctx.body = res
 })
 
 /**
@@ -71,7 +72,7 @@ router.get('/entry', validator({
       'sort': ctx.query.sort || 'rankIndex',
     }
   };
-  let res = await request(options)
+  let { body:res } = await request(options)
   ctx.body = {
     s: res.s,
     d: res.d.entrylist

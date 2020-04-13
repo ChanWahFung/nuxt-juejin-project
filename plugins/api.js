@@ -126,7 +126,7 @@ export default ({ app: { $request } }, inject) => {
      */
     articleLike(data){
       let method = data.isCollected ? 'put' : 'delete'
-      return $request[method]('/article/like', { entryId: data.entryId })
+      return $request[method]('/v1/article/like', { entryId: data.entryId })
     }
   })
 }

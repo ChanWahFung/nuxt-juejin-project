@@ -23,7 +23,8 @@ router.get('/multiUser', validator({
       cols: ''
     }
   };
-  ctx.body = await request(options);
+  let { body:res } = await request(options)
+  ctx.body = res;
 })
 
 /**
@@ -43,7 +44,8 @@ router.get('/notification', validator({
       before: ctx.query.before || ''
     }
   };
-  ctx.body = await request(options);
+  let { body:res } = await request(options)
+  ctx.body = res;
 })
 
 /**
@@ -64,7 +66,8 @@ router.get('/isCurrentUserFollowed', validator({
       src: 'web',
     }
   };
-  ctx.body = await request(options);
+  let { body:res } = await request(options)
+  ctx.body = res;
 })
 
 /**
@@ -98,7 +101,7 @@ router.get('/recommendCard', validator({
       extensions: {query: {id: "b031bf7f8b17b1a173a38807136cc20e"}},
     }
   };
-  let res = await request(options);
+  let { body:res } = await request(options)
   try {
     ctx.body = {
       s: res.data.recommendationCard.items ? 1 : 0,
@@ -125,7 +128,8 @@ router.get('/getUserNotificationNum', async (ctx, next)=>{
       src: 'web'
     }
   };
-  ctx.body = await request(options);
+  let { body:res } = await request(options)
+  ctx.body = res;
 })
 
 module.exports = router

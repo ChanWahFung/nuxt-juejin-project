@@ -46,7 +46,7 @@ router.get('/entry', validator({
       "extensions": { "query": { "id": "a53db5867466eddc50d16a38cfeb0890" } } 
     }
   };
-  let res = await request(options)
+  let { body:res } = await request(options)
   try {
     ctx.body = {
       s: res.data.search ? 1 : 0,
