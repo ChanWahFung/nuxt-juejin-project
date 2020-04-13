@@ -2,7 +2,7 @@
   <header class="topbar__wrapper">
     <div class="topbar" :class="['topbar--'+wheelClass]">
       <div class="topbar__main">
-        <nuxt-link to="/" class="logo">
+        <nuxt-link to="/timeline" class="logo">
           <img src="https://b-gold-cdn.xitu.io/v3/static/img/logo.a7995ad.svg" alt="掘金">
         </nuxt-link>
         <ul class="navs">
@@ -16,9 +16,6 @@
         <nuxt-link to="/notice" class="notice">
           <div class="notice__icon"></div>
           <span class="notice__count" v-if="noticeCount > 0">{{ noticeCount }}</span>
-        </nuxt-link>
-        <nuxt-link to="/notice" class="mime">
-
         </nuxt-link>
       </div>
     </div>
@@ -35,7 +32,7 @@ export default {
       navs: [
         {
           name: '首页',
-          link: '/'
+          link: '/timeline'
         },
         {
           name: '沸点',
@@ -197,7 +194,8 @@ export default {
     word-break: normal;
   }
 
-  &.nuxt-link-exact-active{
+  &.nuxt-link-exact-active,
+  &:hover{
     .notice__icon{
       background-image: url(../../assets/images/notice-active.png);
     }

@@ -73,7 +73,7 @@ export default {
           this.$emit('updateItem', {
             ...this.item, 
             isCollected: !this.item.isCollected,
-            collectionCount: this.item.isCollected ? Number(this.item.isCollected) - 1 : Number(this.item.isCollected) + 1 
+            collectionCount: this.item.isCollected ? Number(this.item.collectionCount) - 1 : Number(this.item.collectionCount) + 1 
           })
         }
         this.likeLoading = false
