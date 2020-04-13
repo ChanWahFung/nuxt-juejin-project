@@ -65,7 +65,7 @@
     <div class="detail-side">
       <about-author :info="authorInfo"></about-author>
       <about-article :list="aboutArticles"></about-article>
-      <catalog :data="catalogData"></catalog>
+      <catalog></catalog>
     </div>
   </div>
 </template>
@@ -144,8 +144,7 @@ export default {
       recommendArticles: [],
       hasComments: true, // 是否还有评论数据
       tagIds: '',
-      comments: [],
-      catalogData: []
+      comments: []
     }
   },
   head () {
@@ -157,7 +156,6 @@ export default {
     }
   },
   mounted () {
-    this.createCatalog()
     this.$api.getRelatedEntry({
       limit: 'a',
       entryId: this.articInfo.objectId
@@ -212,62 +210,6 @@ export default {
     },
     toUser() {
       this.$router.push('/user/' + this.authorInfo.uid)
-    },
-    // 生成目录树数据
-    createCatalog() {
-      let catalog = []
-      function Item(id, item, level){
-        this.id = id
-        this.title = item.textContent
-        this.tag = item.tagName
-        this.level = level
-        this.children = []
-      }
-      // 一级目录
-      function addC1(item){
-        catalog.push(item)
-      }
-      // 二级目录
-      function addC2(item){
-        let lastC1 = catalog[catalog.length - 1]
-        if (!lastC1) {
-          addC1({ ...item, level: 'c1' })
-          return
-        }
-        lastC1.children.push(item)
-      }
-      // 三级目录
-      function addC3(item){
-        const lastC1 = catalog[catalog.length - 1]
-        if (!lastC1) {
-          addC1({ ...item, level: 'c1' })
-          return
-        }
-        let lastC2 = lastC1.children[lastC1.children.length - 1]
-        if (!lastC2) {
-          addC2({ ...item, level: 'c2' })
-          return
-        }
-        lastC2.children.push(item)
-      }
-      document.querySelectorAll('.detail__content .heading').forEach((item, index) => {
-        item.setAttribute('id', `heading-${index}`)
-        if (item.tagName == 'H1') {
-          addC1(new Item(`heading-${index}`, item, 'c1'))
-        } else if (item.tagName == 'H2') {
-          addC2(new Item(`heading-${index}`, item, 'c2'))
-        } else if (item.tagName == 'H3') {
-          addC3(new Item(`heading-${index}`, item, 'c3'))
-        }
-        // if (!catalog[0]) {
-        //   catalog[0] = new Item(`heading-${index}`, item, 'c1'))
-        //   return
-        // }
-        // if (item.tagName) {
-        //   catalog[catalog.length] = new Item(`heading-${index}`, item, 'c1'))
-        // }
-      })
-      this.catalogData = catalog
     }
   }
 }
@@ -357,9 +299,23 @@ export default {
     }
 
     /deep/ h3{
-       margin-top: 15px;
+      margin-top: 15px;
       margin-bottom: 12px;
       font-size: 18px;
+      font-weight: 700;
+    }
+
+    /deep/ h4{
+      margin-top: 15px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /deep/ h5{
+      margin-top: 5px;
+      margin-bottom: 5px;
+      font-size: 14px;
       font-weight: 700;
     }
 

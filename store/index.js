@@ -1,9 +1,9 @@
-import detail from './modules/detail'
-
 export const state = () => ({
-  test: 123
+  isTopbarBlock: true
 })
 
-export const modules = {
-  detail
+export const mutations = {
+  updateTopbarBlock(state, payload){
+    state.isTopbarBlock = payload
+  }
 }

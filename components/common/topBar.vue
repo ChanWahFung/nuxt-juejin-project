@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'TopBar',
   data() {
@@ -50,9 +52,11 @@ export default {
       }
       if (e.wheelDeltaY > 0 && this.wheelClass == 'hidden') {
         this.wheelClass = 'show'
+        this.updateTopbarBlock(true)
       }
       if (e.wheelDeltaY < 0 && this.wheelClass == 'show') {
         this.wheelClass = 'hidden'
+        this.updateTopbarBlock(false)
       }
     }
   },
@@ -60,10 +64,14 @@ export default {
     '$route.path' (newVal, oldVal) {
       if (newVal != oldVal) {
         this.wheelClass = 'show'
+        this.updateTopbarBlock(true)
       }
     }
   },
   methods: {
+    ...mapMutations([
+      'updateTopbarBlock'
+    ]),
     sreachHandler () {
       this.$router.push({
         name: 'search',
