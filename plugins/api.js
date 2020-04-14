@@ -126,7 +126,7 @@ export default ({ app: { $request } }, inject) => {
      */
     articleLike(data){
       let method = data.isCollected ? 'put' : 'delete'
-      return $request[method]('/v1/article/like', { entryId: data.entryId })
+      return $request[method]('/v1/user/like', { entryId: data.entryId })
     },
     /**
      * 获取未读消息数量

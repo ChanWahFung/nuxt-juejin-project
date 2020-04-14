@@ -115,6 +115,47 @@ router.get('/recommendCard', validator({
   }
 })
 
+// like逻辑共用
+function like(ctx, method){
+  const options = {
+    url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.request.body.entryId,
+    method,
+    headers: {
+      'X-Juejin-Src': 'web',
+      'X-Juejin-Client': config.deviceId,
+      'X-Juejin-Token': config.token,
+      'X-Juejin-Uid': config.uid
+    }
+  };
+  return request(options)
+}
+
+/**
+ * 点赞 - 文章
+ * @param {string} entryId - 文章objectId
+ */
+router.put('/like', validator({
+  entryId: { type: 'string', required: true }
+}), async (ctx, next) => {
+  let { body:res, statusCode, headers } = await like(ctx, 'PUT')
+  ctx.status = statusCode
+  ctx.set('Content-Type', headers['content-type'])
+  ctx.body = res
+})
+
+/**
+ * 取消点赞 - 文章
+ * @param {string} entryId - 文章objectId
+ */
+router.delete('/like', validator({
+  entryId: { type: 'string', required: true }
+}), async (ctx, next) => {
+  let { body:res, statusCode, headers } = await like(ctx, 'DELETE')
+  ctx.status = statusCode
+  ctx.set('Content-Type', headers['content-type'])
+  ctx.body = res
+})
+
 /**
  * 获取未读消息数量
  */
