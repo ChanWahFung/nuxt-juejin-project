@@ -100,7 +100,7 @@ export default {
       let res = await this.$api.getUserNotificationNum()
       if (res.s === 1) {
         this.noticeNum = res.d.notification_num
-        document.title = `${this.noticeNum > 0 ? `（${this.noticeNumTip}）`: ''}${document.title}`
+        document.title = `${this.noticeNum > 0 ? `(${this.noticeNumTip}) `: ''}${document.title}`
       }
     },
   }
