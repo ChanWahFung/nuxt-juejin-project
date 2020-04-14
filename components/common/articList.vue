@@ -1,7 +1,12 @@
 <template>
   <div class="artic-list">
-    <div v-for="item in list" :key="item.id" class="artic-item--border">
-      <artic-item :item="item.node || item"></artic-item>
+    <div v-for="(item, index) in list" :key="item.id" class="artic-item--border">
+      <template v-if="list[index].node">
+        <artic-item v-model="list[index].node"></artic-item>
+      </template>
+      <template v-else-if="list[index]">
+        <artic-item v-model="list[index]"></artic-item>
+      </template>
     </div>
   </div>
 </template>

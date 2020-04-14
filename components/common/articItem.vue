@@ -14,10 +14,10 @@
       <p class="artic-item__title ellipsis " v-html="highlight.title || item.title"></p>
       <p v-if="hasDesc" class="artic-item__desc" v-html="highlight.description || highlight.text || item.content"></p>
       <ul class="artic-item__action">
-        <li class="action-item" :class="{active: item.isCollected || item.viewerHasLiked}">
-          <img v-if="item.isCollected || item.viewerHasLiked" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
+        <li class="action-item" :class="{active: item[likeField]}" @click.stop="articleLike">
+          <img v-if="item[likeField]" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
           <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-          {{ item.likeCount || item.collectionCount }}
+          {{ item[likeCountField] }}
         </li>
         <li class="action-item">
           <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
@@ -31,6 +31,10 @@
 
 <script>
 export default {
+  model: {
+    prop: 'item',
+    event: 'updateItem'
+  },
   props: {
     item: {
       type: Object,
@@ -45,6 +49,17 @@ export default {
       default: () => ({})
     }
   },
+  computed: {
+    // 点赞状态和点赞数字段不一致  此处筛选出对应字段
+    likeField() {
+      let fields = ['isCollected', 'viewerHasLiked', 'liked']
+      return fields.filter(key => this.item[key] == undefined ? false : key)[0]
+    },
+    likeCountField() {
+      let fields = ['collectionCount', 'likeCount']
+      return fields.filter(key => this.item[key] == undefined ? false : key)[0]
+    }
+  },
   methods: {
     toDetail(originalUrl) {
       if (!originalUrl) { 
@@ -52,6 +67,23 @@ export default {
       }
       let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
       window.open(href, '_blank', 'noopener noreferrer')
+    },
+    async articleLike() {
+      let id = this.item.id
+      if (id && this.likeField && this.likeCountField) {
+        let res = await this.$api.articleLike({
+          entryId: id,
+          isCollected: !this.item[this.likeField]
+        })
+        // 更新视图点赞状态
+        if (res.s === 1) {
+          this.$emit('updateItem', {
+            ...this.item, 
+            [this.likeField]: !this.item[this.likeField],
+            [this.likeCountField]: this.item[this.likeField] ? Number(this.item[this.likeCountField]) - 1 : Number(this.item[this.likeCountField]) + 1 
+          })
+        }
+      }
     }
   }
 }

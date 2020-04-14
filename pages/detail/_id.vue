@@ -157,7 +157,7 @@ export default {
   },
   mounted () {
     this.$api.getRelatedEntry({
-      limit: 'a',
+      limit: 5,
       entryId: this.articInfo.objectId
     })
     this.getCommentList({
