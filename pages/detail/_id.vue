@@ -17,7 +17,7 @@
                 <span>阅读{{ articInfo.viewsCount }}</span>
               </div>
             </div>
-            <follow-btn></follow-btn>
+            <follow-btn v-model="isFollowed" :followee-id="authorInfo.uid"></follow-btn>
           </div>
           <div v-if="articInfo.screenshot" class="detail__cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
           <h1 class="detail__title">{{ articInfo.title }}</h1>
@@ -73,6 +73,7 @@
 <script>
 import { formatDate } from '~/utils'
 import reachBottom from '~/mixins/reachBottom'
+import commonRequest from '~/mixins/commonRequest'
 import commentItem from '~/components/business/commentItem.vue'
 import aboutAuthor from '~/components/business/aboutAuthor.vue'
 import aboutArticle from '~/components/business/aboutArticle.vue'
@@ -134,7 +135,7 @@ export default {
     'about-article': aboutArticle,
     catalog
   },
-  mixins: [reachBottom],
+  mixins: [reachBottom, commonRequest],
   data () {
     return {
       articDetail: {},
@@ -144,6 +145,7 @@ export default {
       recommendArticles: [],
       hasComments: true, // 是否还有评论数据
       tagIds: '',
+      isFollowed: false,
       comments: []
     }
   },
@@ -166,6 +168,7 @@ export default {
     if (this.articInfo.tags) {
       this.tagIds = this.articInfo.tags.map(item => item.id)
     }
+    this.isCurrentUserFollowed(this.authorInfo.uid).then(res => (this.isFollowed = res))
   },
   methods: {
     formatDate,

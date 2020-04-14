@@ -115,7 +115,7 @@ router.get('/recommendCard', validator({
   }
 })
 
-// like逻辑共用
+// 点赞逻辑共用
 function like(ctx, method){
   const options = {
     url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.request.body.entryId,
@@ -156,12 +156,10 @@ router.delete('/like', validator({
   ctx.body = res
 })
 
-/**
- * 获取未读消息数量
- */
-router.get('/getUserNotificationNum', async (ctx, next)=>{
+// 未读消息状态逻辑共有
+function userNotificationNum(url){
   const options = {
-    url: 'https://ufp-api-ms.juejin.im/v1/getUserNotificationNum',
+    url: 'https://ufp-api-ms.juejin.im/v1/'+url,
     method: "GET",
     params: {
       uid: config.uid,
@@ -169,7 +167,14 @@ router.get('/getUserNotificationNum', async (ctx, next)=>{
       src: 'web'
     }
   };
-  let { body:res } = await request(options)
+  return request(options)
+}
+
+/**
+ * 获取未读消息数量
+ */
+router.get('/getUserNotificationNum', async (ctx, next)=>{
+  let { body:res } = await userNotificationNum('getUserNotificationNum')
   ctx.body = res;
 })
 
@@ -177,16 +182,50 @@ router.get('/getUserNotificationNum', async (ctx, next)=>{
  * 设置未读消息数量
  */
 router.get('/setUserNotificationNum', async (ctx, next)=>{
+  let { body:res } = await userNotificationNum('setUserNotificationNum')
+  ctx.body = res;
+})
+
+
+// 关注逻辑共有
+function follow(ctx, url){
   const options = {
-    url: 'https://ufp-api-ms.juejin.im/v1/setUserNotificationNum',
+    url: 'https://follow-api-ms.juejin.im/v1/'+url,
     method: "GET",
     params: {
-      uid: config.uid,
+      follower: ctx.query.follower,
+      followee: ctx.query.followee,
+      device_id: config.deviceId,
       token: config.token,
       src: 'web'
     }
   };
-  let { body:res } = await request(options)
+  return request(options)
+}
+
+/**
+ * 关注
+ * @param {string} follower - 关注者id
+ * @param {string} followee - 被关注者id
+ */
+router.get('/follow', validator({
+  follower: { type: 'string', required: true },
+  followee: { type: 'string', required: true }
+}), async (ctx, next)=>{
+  let { body:res } = await follow(ctx, 'follow')
+  ctx.body = res;
+})
+
+/**
+ * 取消关注
+ * @param {string} follower - 关注者id
+ * @param {string} followee - 被关注者id
+ */
+router.get('/unfollow', validator({
+  follower: { type: 'string', required: true },
+  followee: { type: 'string', required: true }
+}), async (ctx, next)=>{
+  let { body:res } = await follow(ctx, 'unfollow')
   ctx.body = res;
 })
 

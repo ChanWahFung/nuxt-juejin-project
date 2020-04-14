@@ -70,8 +70,8 @@ export default {
   watch: {
     '$route.path': {
       handler: function (newVal, oldVal) {
+        this.getUserNotificationNum()
         if (newVal != oldVal) {
-          this.getUserNotificationNum()
           // 当前页面为消息页时 更新未读消息状态
           if (newVal.includes('/notice')) {
             this.$api.setUserNotificationNum()
@@ -100,7 +100,7 @@ export default {
       let res = await this.$api.getUserNotificationNum()
       if (res.s === 1) {
         this.noticeNum = res.d.notification_num
-        document.title = `${this.noticeNum > 0 ? `(${this.noticeNumTip}) `: ''}${document.title}`
+        document.title = `${this.noticeNum > 0 ? `(${this.noticeNumTip}) ` : ''}${document.title}`
       }
     },
   }

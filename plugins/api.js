@@ -139,6 +139,18 @@ export default ({ app: { $request } }, inject) => {
      */
     setUserNotificationNum(){
       return $request.get('/v1/user/setUserNotificationNum')
-    }
+    },
+    /**
+     * 关注
+     */
+    follow(params = {}){
+      return $request.get('/v1/user/follow', params)
+    },
+    /**
+     * 取消关注
+     */
+    unfollow(params = {}){
+      return $request.get('/v1/user/unfollow', params)
+    },
   })
 }

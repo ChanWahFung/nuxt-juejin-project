@@ -1,6 +1,41 @@
-<template functional>
-  <div class="follow-btn" :class="{'follow-btn--active': props.isFollow}">{{ props.isFollow ? '已关注' : '关注' }}</div>
+<template>
+  <div class="follow-btn" :class="{'follow-btn--active': isFollow}" @click.stop="toggleFollow">{{ isFollow ? '已关注' : '关注' }}</div>
 </template>
+
+<script>
+import config from '../../server/request/config'
+
+export default {
+  model: {
+    prop: 'isFollow',
+    event: 'updateIsFollow'
+  },
+  props: {
+    isFollow: {
+      type: Boolean,
+      default: false
+    },
+    followeeId: {
+      type: String
+    }
+  },
+  methods: {
+    async toggleFollow(){
+      if (!this.followeeId) {
+        return
+      }
+      let action = this.isFollow ? 'unfollow' : 'follow'
+      let res = await this.$api[action]({
+        follower: config.uid,
+        followee: this.followeeId
+      })
+      if (res.s === 1) {
+        this.$emit('updateIsFollow', !this.isFollow)
+      }
+    }
+  }
+}
+</script>
 
 <style lang='scss' scoped>
 .follow-btn{
@@ -12,6 +47,7 @@
   color: $success;
   border: 1px solid $success;
   border-radius: 2px;
+  cursor: pointer;
 
   &.follow-btn--active{
     background: $success;

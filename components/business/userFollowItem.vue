@@ -13,7 +13,7 @@
           {{ user.company }}
         </span>
       </div>
-      <follow-btn></follow-btn>
+      <follow-btn v-model="user.isFollowerFollowed" :followee-id="user.uid"></follow-btn>
     </div>
   </div>
 </template>

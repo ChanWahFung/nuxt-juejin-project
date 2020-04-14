@@ -19,7 +19,7 @@
           <div class="info__intro">{{ userInfo.selfDescription }}</div>
         </div>
         <div class="user-block__action">
-          <follow-btn :is-follow="isFollowed"></follow-btn>
+          <follow-btn v-model="isFollowed" :followee-id="userInfo.uid"></follow-btn>
         </div>
       </div>
       <div class="user-post">
@@ -91,7 +91,7 @@
 import postItem from '~/components/business/postItem'
 import { formatDate } from '~/utils'
 import reachBottom from '~/mixins/reachBottom'
-import config from '~/server/request/config'
+import commonRequest from '~/mixins/commonRequest'
 
 export default {
   head() {
@@ -117,21 +117,15 @@ export default {
       limit: 20,
       order: 'createdAt'
     }).then(res => res.s === 1 ? res.d : [])
-    // 关注状态
-    let isFollowed = await app.$api.isCurrentUserFollowed({
-      currentUid: config.uid,
-      targetUids: params.id,
-    }).then(res => res.s === 1 ? res.d[params.id] : false)
     return {
       userInfo,
-      isFollowed,
       postList
     }
   },
   components: {
     'post-item': postItem
   },
-  mixins: [reachBottom],
+  mixins: [reachBottom, commonRequest],
   data() {
     return {
       postList: [],
@@ -150,7 +144,8 @@ export default {
       isFollowed: false
     }
   },
-  created() {
+  mounted() {
+    this.isCurrentUserFollowed(this.userInfo.uid).then(res => (this.isFollowed = res))
   },
   methods: {
     formatDate,
