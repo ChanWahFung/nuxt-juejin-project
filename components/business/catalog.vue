@@ -106,7 +106,7 @@ export default {
         if (item.tagName == 'H1') {
           addC1(catalogItem)
         } else if (item.tagName == 'H2') {
-          if (catalog[catalog.length - 1].tag === 'H1') {
+          if (lastC1.tag === 'H1') {
             addC2(catalogItem)
           } else {
             addC1(catalogItem)
@@ -114,7 +114,7 @@ export default {
         } else if (item.tagName == 'H3') {
           if (lastC1.tag === 'H1' && lastC2 && lastC2.tag === 'H2') {
             addC3(catalogItem)
-          } else if (lastC1.tag === 'H2') {
+          } else if (lastC1.tag === 'H1' || lastC1.tag === 'H2') {
             addC2(catalogItem)
           } else {
             addC1(catalogItem)
