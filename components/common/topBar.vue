@@ -15,7 +15,7 @@
         </div>
         <nuxt-link to="/notice" class="notice">
           <div class="notice__icon"></div>
-          <span class="notice__count" v-if="noticeNum > 0">{{ noticeNum }}</span>
+          <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
         </nuxt-link>
       </div>
     </div>
@@ -62,6 +62,11 @@ export default {
       }
     }
   },
+  computed: {
+    noticeNumTip(){
+      return this.noticeNum > 99 ? '99+' : this.noticeNum
+    }
+  },
   watch: {
     '$route.path': {
       handler: function (newVal, oldVal) {
@@ -94,7 +99,8 @@ export default {
     async getUserNotificationNum(){
       let res = await this.$api.getUserNotificationNum()
       if (res.s === 1) {
-        this.noticeNum = res.d.notification_num || 0
+        this.noticeNum = res.d.notification_num
+        document.title = `${this.noticeNum > 0 ? `（${this.noticeNumTip}）`: ''}${document.title}`
       }
     },
   }
