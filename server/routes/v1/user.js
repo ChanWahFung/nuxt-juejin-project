@@ -116,11 +116,28 @@ router.get('/recommendCard', validator({
 })
 
 /**
- * 获取未读消息
+ * 获取未读消息数量
  */
 router.get('/getUserNotificationNum', async (ctx, next)=>{
   const options = {
     url: 'https://ufp-api-ms.juejin.im/v1/getUserNotificationNum',
+    method: "GET",
+    params: {
+      uid: config.uid,
+      token: config.token,
+      src: 'web'
+    }
+  };
+  let { body:res } = await request(options)
+  ctx.body = res;
+})
+
+/**
+ * 设置未读消息数量
+ */
+router.get('/setUserNotificationNum', async (ctx, next)=>{
+  const options = {
+    url: 'https://ufp-api-ms.juejin.im/v1/setUserNotificationNum',
     method: "GET",
     params: {
       uid: config.uid,

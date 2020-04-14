@@ -15,7 +15,7 @@
         </div>
         <nuxt-link to="/notice" class="notice">
           <div class="notice__icon"></div>
-          <span class="notice__count" v-if="noticeCount > 0">{{ noticeCount }}</span>
+          <span class="notice__count" v-if="noticeNum > 0">{{ noticeNum }}</span>
         </nuxt-link>
       </div>
     </div>
@@ -43,7 +43,7 @@ export default {
       wheelClass: 'show',
       scrollingElement: null,
       searchFormClass: '',
-      noticeCount: 0
+      noticeNum: 0
     }
   },
   mounted() {
@@ -63,11 +63,20 @@ export default {
     }
   },
   watch: {
-    '$route.path' (newVal, oldVal) {
-      if (newVal != oldVal) {
-        this.wheelClass = 'show'
-        this.updateTopbarBlock(true)
-      }
+    '$route.path': {
+      handler: function (newVal, oldVal) {
+        if (newVal != oldVal) {
+          this.getUserNotificationNum()
+          // 当前页面为消息页时 更新未读消息状态
+          if (newVal.includes('/notice')) {
+            this.$api.setUserNotificationNum()
+            this.getUserNotificationNum()
+          }
+          this.wheelClass = 'show'
+          this.updateTopbarBlock(true)
+        }
+      },
+      immediate: true
     }
   },
   methods: {
@@ -81,7 +90,13 @@ export default {
           keyword: this.keyword
         }
       })
-    }
+    },
+    async getUserNotificationNum(){
+      let res = await this.$api.getUserNotificationNum()
+      if (res.s === 1) {
+        this.noticeNum = res.d.notification_num || 0
+      }
+    },
   }
 }
 </script>

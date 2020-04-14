@@ -5,6 +5,11 @@ export default ({ app: { $axios } }, inject) => {
         method: 'get',
         url,
         params
+      }).catch(err => {
+        console.error(err)
+        return {
+          s: 0
+        }
       })
     },
     post (url, data) {
@@ -12,6 +17,11 @@ export default ({ app: { $axios } }, inject) => {
         method: 'post',
         url,
         data
+      }).catch(err => {
+        console.error(err)
+        return {
+          s: 0
+        }
       })
     },
     put (url, data) {
@@ -19,6 +29,11 @@ export default ({ app: { $axios } }, inject) => {
         method: 'put',
         url,
         data
+      }).catch(err => {
+        console.error(err)
+        return {
+          s: 0
+        }
       })
     },
     delete (url, data) {
@@ -26,6 +41,11 @@ export default ({ app: { $axios } }, inject) => {
         method: 'delete',
         url,
         data
+      }).catch(err => {
+        console.error(err)
+        return {
+          s: 0
+        }
       })
     },
   })
