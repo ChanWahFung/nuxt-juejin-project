@@ -16,7 +16,10 @@ export default ({ app: { $axios } }, inject) => {
       return $axios({
         method: 'post',
         url,
-        data
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
       }).catch(err => {
         console.error(err)
         return {
@@ -28,7 +31,10 @@ export default ({ app: { $axios } }, inject) => {
       return $axios({
         method: 'put',
         url,
-        data
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
       }).catch(err => {
         console.error(err)
         return {
@@ -40,7 +46,10 @@ export default ({ app: { $axios } }, inject) => {
       return $axios({
         method: 'delete',
         url,
-        data
+        data,
+        headers: {
+          'content-type': 'application/json'
+        }
       }).catch(err => {
         console.error(err)
         return {

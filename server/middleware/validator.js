@@ -11,13 +11,13 @@ module.exports = function (descriptor) {
     let params = {}
     Object.keys(descriptor).forEach(key => {
       if (ctx.method === 'GET') {
-        params[key] = ctx.query[key] || ''
+        params[key] = ctx.query[key]
       } else if (
         ctx.method === 'POST' ||
         ctx.method === 'PUT' ||
         ctx.method === 'DELETE'
       ) {
-        params[key] = ctx.request.body[key] || ''
+        params[key] = ctx.request.body[key]
       }
     })
     const errors = await validator.validate(params)

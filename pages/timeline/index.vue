@@ -1,5 +1,6 @@
 <template>
   <div class="index-container">
+    <index-nav-list></index-nav-list>
     <div class="index-main shadow">
       <div class="list__header">
         <ul class="list__nav">
@@ -19,8 +20,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import reachBottom from '~/mixins/reachBottom'
 import authorRank from '~/components/business/authorRank'
+import indexNavList from '~/components/business/indexNavList'
 
 export default {
   async asyncData({ app }) {
@@ -28,10 +31,7 @@ export default {
     let indexData = await app.$api.getIndexList({
       first: 20,
       order: 'POPULAR'
-    });
-    if (indexData.s == 1) {
-      indexData = indexData.d
-    } 
+    }).then(res => res.s == 1 ? res.d : {})
     // 推荐作者
     let recommendAuthors = await app.$api.getRecommendCard({ 
       limit: 5
@@ -44,7 +44,8 @@ export default {
   },
   mixins: [reachBottom],
   components: {
-    'author-rank': authorRank
+    'author-rank': authorRank,
+    'index-nav-list': indexNavList
   },
   data() {
     return {
@@ -91,6 +92,16 @@ export default {
       recommendAuthors: [],
       isReachBottomFetching: false,  // 防止触底多次请求
     };
+  },
+  computed: {
+    ...mapState([
+      'isTopbarBlock'
+    ])
+  },
+  watch: {
+    isTopbarBlock(n, o){
+      
+    }
   },
   methods: {
     reachBottom() {

@@ -10,7 +10,7 @@ const config = require('../../request/config')
  * @param {string} postId - 文章id 
  */
 router.get('/detail', validator({
-  type: { type: 'enum', enum: ['entry', 'entryView'] },
+  type: { type: 'enum', enum: ['entry', 'entryView'], required: true },
   postId: { type: 'string', required: true }
 }), async (ctx, next)=>{
   const options = {
@@ -35,7 +35,7 @@ router.get('/detail', validator({
  * @param {string} after - 分页标识，加载下一页传入
  * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
  */
-router.get('/indexList', validator({
+router.post('/indexList', validator({
   first: { 
     type: 'string', 
     required: true,
@@ -43,13 +43,16 @@ router.get('/indexList', validator({
     message: 'first 需传入正整数'
   },
   after: { type: 'string' },
+  category: { type: 'string' },
   order: {
     type: 'enum',
     required: true,
     enum: ['POPULAR', 'NEWEST', 'THREE_DAYS_HOTTEST', 'WEEKLY_HOTTEST', 'MONTHLY_HOTTEST', 'HOTTEST']
-  }
+  },
+  tags: { type: 'array' }
 }), async (ctx, next) => {
   ctx.set('Cache-Control', 'max-age=60')
+  const body = ctx.request.body
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
@@ -63,9 +66,11 @@ router.get('/indexList', validator({
       operationName: "", 
       query: "", 
       variables: { 
-        first: ctx.query.first, 
-        after: ctx.query.after,
-        order: ctx.query.order
+        first: body.first, 
+        after: body.after || '',
+        order: body.order,
+        category: body.category || '',
+        tags: body.tags || []
       }, 
       extensions: { query: { id: "21207e9ddb1de777adeaca7a2fb38030" } } 
     }

@@ -6,8 +6,8 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} after - 下一页的标识
      * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
      */
-    getIndexList (params = {}) {
-      return $request.get('/v1/article/indexList', params)
+    getIndexList (data = {}) {
+      return $request.post('/v1/article/indexList', data)
     },
     /**
      * 搜索
@@ -152,5 +152,19 @@ export default ({ app: { $request } }, inject) => {
     unfollow(params = {}){
       return $request.get('/v1/user/unfollow', params)
     },
+    /**
+     * 获取类目
+     */
+    getCategories(){
+      return $request.get('/v1/categories/entry')
+    },
+    /**
+     * 获取子类目
+     * @param {string} categoryId 
+     * @param {number} limit 
+     */
+    getSubCategories(params = {}){
+      return $request.get('/v1/categories/subCategories', params)
+    }
   })
 }
