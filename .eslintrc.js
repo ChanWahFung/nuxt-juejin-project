@@ -27,6 +27,7 @@ module.exports = {
     'no-trailing-spaces': 'off',
     'prefer-const': 'off',
     'eqeqeq': 'off',
+    'quote-props': 'warn',
     'space-before-blocks': 'off',
     'vue/max-attributes-per-line': 'off',
     'vue/attributes-order': 'off',

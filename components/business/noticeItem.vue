@@ -15,8 +15,8 @@
         <span class="info__time">{{ item.createdAtString | formatTime }}</span>
       </div>
       <p class="info__reply" v-if="item.type == 'comment' || item.type == 'pin-reply' || item.type == 'pin-comment'">{{ item | reply }}</p>
-      <p class="info__entry">
-        <span class="info__type">{{ item.type | type }}：</span>
+      <p class="info__entry ellipsis">
+        <span class="info__type">{{ item | type }}:</span>
         <span class="info__content" @click="toDetail(item.entry.originalUrl)">{{ item | content }}</span>
       </p>
     </div>
@@ -32,71 +32,43 @@ export default {
     }
   },
   filters: {
-    type(val) {
-      switch (val) {
-        case 'collection':
-          return '赞了'
-
-        case 'pin-like': 
-          return '赞了你的沸点'
-
-        case 'comment':
-          return '评论了'
-
-        case 'pin-reply':
-          return '回复了你在沸点里的评论'
-
-        case 'pin-comment':
-          return '回复了你的沸点'
-
-        case 'comment-like':
-          return '赞了你的评论'
-
-        case 'pin-comment-like':
-          return '赞了你的沸点评论'
-
-        default:
-          return ''
+    type(item) {
+      let typeDesc = {
+        'collection': () => '赞了',
+        'pin-like': () => '赞了你的沸点',
+        'comment': (item) => {
+          return item.reply.content ? '回复了你的评论' : '评论了'
+        },
+        'pin-reply': () => '回复了你在沸点里的评论',
+        'pin-comment': () => '回复了你的沸点',
+        'comment-like': () => '赞了你的评论',
+        'pin-comment-like': () => '赞了你的沸点评论',
       }
+      return typeDesc[item.type] ? typeDesc[item.type](item) : ''
     },
     content(item) {
-      switch (item.type) {
-        case 'collection':
-          return item.entry.title
-
-        case 'pin-like': case 'pin-comment':
-          return item.pin.content
-
-        case 'comment':
-          return item.entry.title
-
-        case 'pin-reply':
-          return item.pinComment.content
-
-        case 'comment-like':
-          return item.comment.content
-
-        case 'pin-comment-like':
-          return item.pinComment.content
-
-        default:
-          return ''
+      let contentDesc = {
+        'collection': (item) => item.entry.title,
+        'pin-like': (item) => item.pin.content,
+        'pin-comment': (item) => item.pin.content,
+        'comment': (item) => {
+          return item.reply.content ? item.comment.content : item.entry.title
+        },
+        'pin-reply': (item) => item.pinComment.content,
+        'comment-like': () => item.comment.content,
+        'pin-comment-like': () => item.pinComment.content,
       }
+      return contentDesc[item.type] ? contentDesc[item.type](item) : ''
     },
     reply(item) {
-      switch (item.type) {
-        case 'comment':
-          return item.comment.content
-
-        case 'pin-reply':
-          return item.pinReply.content
-
-        case 'pin-comment': 
-          return item.pinComment.content
-
-        default:
-          return ''
+      let replyDesc = {
+        'comment': (item) => {
+          return item.reply.content || item.comment.content
+        },
+        'pin-reply': (item) => item.pinReply.content,
+        'pin-comment': (item) => item.pinComment.content
       }
+      return replyDesc[item.type] ? replyDesc[item.type](item) : ''
     }   
   },
   methods: {
@@ -130,6 +102,7 @@ export default {
 
   .notice-item__info{
     flex: 1;
+    overflow: hidden;
 
     .info__username{
       font-weight: 600;
