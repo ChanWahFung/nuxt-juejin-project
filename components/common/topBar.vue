@@ -1,6 +1,6 @@
 <template>
   <header class="topbar__wrapper">
-    <div class="topbar" :class="['topbar--'+wheelClass]">
+    <div class="topbar" :class="['topbar--'+(isTopbarBlock ? 'show' : 'hidden')]">
       <div class="topbar__main">
         <nuxt-link to="/timeline" class="logo">
           <img src="https://b-gold-cdn.xitu.io/v3/static/img/logo.a7995ad.svg" alt="掘金">
@@ -24,6 +24,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'TopBar',
@@ -40,7 +41,6 @@ export default {
         }
       ],
       keyword: '',
-      wheelClass: 'show',
       scrollingElement: null,
       searchFormClass: '',
       noticeNum: 0
@@ -52,17 +52,18 @@ export default {
       if (this.scrollingElement.scrollTop < 300) {
         return
       }
-      if (e.wheelDeltaY > 0 && this.wheelClass == 'hidden') {
-        this.wheelClass = 'show'
+      if (e.wheelDeltaY > 0 && this.isTopbarBlock === false) {
         this.updateTopbarBlock(true)
       }
-      if (e.wheelDeltaY < 0 && this.wheelClass == 'show') {
-        this.wheelClass = 'hidden'
+      if (e.wheelDeltaY < 0 && this.isTopbarBlock === true) {
         this.updateTopbarBlock(false)
       }
     }
   },
   computed: {
+    ...mapState([
+      'isTopbarBlock'
+    ]),
     noticeNumTip(){
       return this.noticeNum > 99 ? '99+' : this.noticeNum
     }
@@ -77,7 +78,6 @@ export default {
             this.$api.setUserNotificationNum()
             this.getUserNotificationNum()
           }
-          this.wheelClass = 'show'
           this.updateTopbarBlock(true)
         }
       },
