@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-view shadow" :class="{'nav-view--sticky': isTopbarBlock}">
     <ul class="nav-list">
-      <li class="nav-item" :class="{'nav-item--active': item.id === currentId}" v-for="item in categoryList" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
+      <li class="nav-item" :class="{'nav-item--active': item.title === currentCategoryItem.title}" v-for="item in categoryList" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
     </ul>
   </nav>
 </template>
@@ -9,15 +9,19 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 export default {
+  model: {
+    prop: 'currentCategoryItem',
+    event: 'update-item'
+  },
+  props: {
+    currentCategoryItem: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {
-      currentId: 0,
-      categoryList: [
-        {
-          id: 0,
-          name: '推荐'
-        }
-      ]
+      categoryList: []
     }
   },
   computed: {
@@ -38,7 +42,20 @@ export default {
     async getCategories() {
       let res = await this.$api.getCategories()
       if (res.s === 1) {
-        this.categoryList = this.categoryList.concat(res.d.categoryList)
+        this.categoryList = [
+          {
+            id: 0,
+            name: '推荐',
+            title: 'recommended'
+          },
+          ...res.d.categoryList
+        ]
+        if (this.$route.params.title) {
+          let arr = this.categoryList.filter(item => item.title === this.$route.params.title)
+          arr[0] && (this.$emit('update-item', arr[0]))
+        } else {
+          this.$emit('update-item', this.categoryList[0])
+        }
       }
     },
     async getTagByCategories(categoryId) {
@@ -48,12 +65,16 @@ export default {
       })
     },
     navItemClick(item) {
-      if (this.currentId != item.id) {
-        this.currentId = item.id
-        this.getTagByCategories(item.id)
-        this.$emit('nav-item-click', item)
+      if (this.currentCategoryItem.title != item.title) {
         this.isTopbarBlock === false && this.updateTopbarBlock(true)
         window.scrollTo({ top: 0 })
+        this.$router.push({
+          name: 'timeline-title',
+          params: {
+            title: item.title,
+            categoryId: item.id
+          }
+        })
       }
     }
   }

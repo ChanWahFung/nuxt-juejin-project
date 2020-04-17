@@ -1,6 +1,6 @@
 <template>
   <div>
-    <index-nav-list @nav-item-click="navItemClick"></index-nav-list>
+    <index-nav-list v-model="currentCategoryItem" @nav-item-click="getArticList"></index-nav-list>
     <div class="index-container">
       <div class="index-main shadow">
         <div class="list__header">
@@ -28,17 +28,27 @@ import authorRank from '~/components/business/authorRank'
 import indexNavList from '~/components/business/indexNavList'
 
 export default {
-  async asyncData({ app }) {
+  head () {
+    return {
+      title: `${this.currentCategoryItem.name ? this.currentCategoryItem.name + ' - ' : ''}掘金`
+    }
+  },
+  async asyncData({ app, params }) {
+    // 分类列表
+    let categoryList = await app.$api.getCategories().then(res => res.s === 1 ? res.d.categoryList : [])
+    let catgoryItem = categoryList.filter(item => item.title === params.title)[0]
     // 文章列表
     let indexData = await app.$api.getIndexList({
       first: 20,
-      order: 'POPULAR'
+      order: 'POPULAR',
+      category: catgoryItem ? catgoryItem.id : ''
     }).then(res => res.s == 1 ? res.d : {})
     // 推荐作者
     let recommendAuthors = await app.$api.getRecommendCard({ 
       limit: 5
     }).then(res => res.s == 1 ? res.d : [])
     return {
+      categoryList: [],
       list: indexData.edges || [],
       pageInfo: indexData.pageInfo || {},
       recommendAuthors
@@ -89,7 +99,7 @@ export default {
       navId: 1,
       navType: 'POPULAR',
       navTypes: [],
-      categoryId: 0,
+      currentCategoryItem: {},
       tags: [],
       list: [],
       pageInfo: {},
@@ -121,11 +131,6 @@ export default {
       }
       this.getArticList()
     },
-    // 切换类目
-    navItemClick(item) {
-      this.categoryId = item.id
-      this.getArticList()
-    },
     async getArticList({ isLoadMore = false } = {}){
       if (this.isReachBottomFetching) {
         return
@@ -136,7 +141,7 @@ export default {
         after: '',
         order: this.navType,
         tags: this.tags,
-        category: this.categoryId || ''
+        category: this.currentCategoryItem.id || ''
       }
       if (isLoadMore) {
         params.after = this.pageInfo.endCursor || ''

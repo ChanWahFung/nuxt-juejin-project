@@ -86,6 +86,14 @@ export default {
     }
     return false
   },
+  head () {
+    return {
+      title: this.articInfo.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.articInfo.content }
+      ]
+    }
+  },
   async asyncData ({ app, params }) {
     // 内容
     const articDetail = await app.$api.getDetail({
@@ -147,14 +155,6 @@ export default {
       tagIds: '',
       isFollowed: false,
       comments: []
-    }
-  },
-  head () {
-    return {
-      title: this.articInfo.title,
-      meta: [
-        { hid: 'description', name: 'description', content: this.articInfo.content }
-      ]
     }
   },
   mounted () {
