@@ -1,20 +1,22 @@
 <template>
-  <div class="index-container">
-    <index-nav-list></index-nav-list>
-    <div class="index-main shadow">
-      <div class="list__header">
-        <ul class="list__nav">
-          <li class="list__nav-item" :class="{'list__nav-item--active': item.id == navId}" v-for="item in navs" :key="item.title" @click="changeNav(item)">{{ item.title }}</li>
-          <el-select v-if="navTypes.length" size="mini" style="width:100px" v-model="navType" placeholder="请选择" @change="changeNav">
-            <el-option v-for="item in navTypes" :key="item.title" :label="item.title" :value="item.type">
-            </el-option>
-          </el-select>
-        </ul>
+  <div>
+    <index-nav-list @nav-item-click="navItemClick"></index-nav-list>
+    <div class="index-container">
+      <div class="index-main shadow">
+        <div class="list__header">
+          <ul class="list__nav">
+            <li class="list__nav-item" :class="{'list__nav-item--active': item.id == navId}" v-for="item in navs" :key="item.title" @click="changeNavType(item)">{{ item.title }}</li>
+            <el-select v-if="navTypes.length" size="mini" style="width:100px" v-model="navType" placeholder="请选择" @change="changeNavType">
+              <el-option v-for="item in navTypes" :key="item.title" :label="item.title" :value="item.type">
+              </el-option>
+            </el-select>
+          </ul>
+        </div>
+        <artic-list :list="list"></artic-list>
       </div>
-      <artic-list :list="list"></artic-list>
-    </div>
-    <div class="index-side">
-      <author-rank :list="recommendAuthors"></author-rank>
+      <div class="index-side">
+        <author-rank :list="recommendAuthors"></author-rank>
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +89,8 @@ export default {
       navId: 1,
       navType: 'POPULAR',
       navTypes: [],
+      categoryId: 0,
+      tags: [],
       list: [],
       pageInfo: {},
       recommendAuthors: [],
@@ -94,14 +98,9 @@ export default {
     };
   },
   computed: {
-    ...mapState([
-      'isTopbarBlock'
+    ...mapState('category', [
+      'tagsList'
     ])
-  },
-  watch: {
-    isTopbarBlock(n, o){
-      
-    }
   },
   methods: {
     reachBottom() {
@@ -113,12 +112,18 @@ export default {
         this.$message.info('没有更多文章了')
       }
     },
-    changeNav (item) {
+    // 热门 最新 热榜
+    changeNavType (item) {
       if (item.id && this.navId !== item.id) {
         this.navId = item.id
         this.navType = item.type
         this.navTypes = item.types || []
       }
+      this.getArticList()
+    },
+    // 切换类目
+    navItemClick(item) {
+      this.categoryId = item.id
       this.getArticList()
     },
     async getArticList({ isLoadMore = false } = {}){
@@ -128,7 +133,10 @@ export default {
       this.isReachBottomFetching = true
       let params = {
         first: 20,
-        order: this.navType
+        after: '',
+        order: this.navType,
+        tags: this.tags,
+        category: this.categoryId || ''
       }
       if (isLoadMore) {
         params.after = this.pageInfo.endCursor || ''
@@ -147,6 +155,7 @@ export default {
 <style lang="scss" scoped>
 .index-container{
   display: flex;
+  margin-top: 60px;
 
   .index-main{
     width: 700px;

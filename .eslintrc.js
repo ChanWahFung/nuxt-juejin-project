@@ -35,6 +35,7 @@ module.exports = {
     'vue/html-self-closing': 'off',
     'vue/no-v-html': 'off',
     'no-multi-spaces': 'off',
-    'object-shorthand': 'warn'
+    'object-shorthand': 'warn',
+    'no-unused-vars': 'warn'
   }
 }

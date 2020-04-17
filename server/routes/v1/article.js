@@ -34,6 +34,8 @@ router.get('/detail', validator({
  * @param {string} first - 单页数 默认20
  * @param {string} after - 分页标识，加载下一页传入
  * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
+ * @param {string} category - 类目id
+ * @param {array} tags - 标签id
  */
 router.post('/indexList', validator({
   first: { 
@@ -72,7 +74,7 @@ router.post('/indexList', validator({
         category: body.category || '',
         tags: body.tags || []
       }, 
-      extensions: { query: { id: "21207e9ddb1de777adeaca7a2fb38030" } } 
+      extensions: { query: { id: "653b587c5c7c8a00ddf67fc66f989d42" } } 
     }
   };
   let { body:res } = await request(options)

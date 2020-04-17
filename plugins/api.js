@@ -159,12 +159,12 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v1/categories/entry')
     },
     /**
-     * 获取子类目
+     * 获取类目下的标签
      * @param {string} categoryId 
      * @param {number} limit 
      */
-    getSubCategories(params = {}){
-      return $request.get('/v1/categories/subCategories', params)
+    getTagByCategories(params = {}){
+      return $request.post('/v1/categories/tags', params)
     }
   })
 }

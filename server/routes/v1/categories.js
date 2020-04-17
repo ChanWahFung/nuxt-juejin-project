@@ -19,7 +19,12 @@ router.get('/entry', async (ctx, next) => {
   ctx.body = body
 })
 
-router.get('/subCategories', validator({
+/**
+ * 获取类目下的标签
+ * @param {string} categoryId - 类目id
+ * @param {number} limit - 条数
+ */
+router.post('/tags', validator({
   categoryId: { type: 'string', required: true },
   limit: {
     type: 'string', 
@@ -28,21 +33,23 @@ router.get('/subCategories', validator({
     message: 'limit 需传入正整数'
   }
 }), async (ctx, next) => {
+  let params = ctx.request.body
+  console.log(params)
   const options = {
     url: 'https://web-api.juejin.im/query',
-    method: "GET",
+    method: "POST",
     headers: {
       'X-Agent': 'Juejin/Web',
       'X-Legacy-Device-Id': config.deviceId,
       'X-Legacy-Token': config.token,
       'X-Legacy-Uid': config.uid
     },
-    params: {
+    body: {
       operationName: "",
       query: "",
       variables: {
-        category: ctx.query.catagoryId, 
-        limit: ctx.query.limit
+        category: params.catagoryId, 
+        limit: params.limit
       },
       extensions: {query: {id: "801e22bdc908798e1c828ba6b71a9fd9"}},
     }
