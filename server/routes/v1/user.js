@@ -82,6 +82,7 @@ router.get('/recommendCard', validator({
     message: 'limit 需传入正整数'
   }
 }), async (ctx, next)=>{
+  ctx.set('Cache-Control', 'max-age=300')
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
@@ -116,10 +117,10 @@ router.get('/recommendCard', validator({
 })
 
 // 点赞逻辑共用
-function like(ctx, method){
+function like(ctx){
   const options = {
     url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.request.body.entryId,
-    method,
+    method: ctx.method,
     headers: {
       'X-Juejin-Src': 'web',
       'X-Juejin-Client': config.deviceId,
@@ -137,7 +138,7 @@ function like(ctx, method){
 router.put('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body:res, statusCode, headers } = await like(ctx, 'PUT')
+  let { body:res, statusCode, headers } = await like(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
   ctx.body = res
@@ -150,7 +151,7 @@ router.put('/like', validator({
 router.delete('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body:res, statusCode, headers } = await like(ctx, 'DELETE')
+  let { body:res, statusCode, headers } = await like(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
   ctx.body = res
@@ -173,7 +174,7 @@ function userNotificationNum(url){
 /**
  * 获取未读消息数量
  */
-router.get('/getUserNotificationNum', async (ctx, next)=>{
+router.get('/userNotificationNum', async (ctx, next)=>{
   let { body:res } = await userNotificationNum('getUserNotificationNum')
   ctx.body = res;
 })
@@ -181,20 +182,19 @@ router.get('/getUserNotificationNum', async (ctx, next)=>{
 /**
  * 设置未读消息数量
  */
-router.get('/setUserNotificationNum', async (ctx, next)=>{
+router.put('/userNotificationNum', async (ctx, next)=>{
   let { body:res } = await userNotificationNum('setUserNotificationNum')
   ctx.body = res;
 })
 
-
-// 关注逻辑共有
+// 关注用户逻辑共有
 function follow(ctx, url){
   const options = {
     url: 'https://follow-api-ms.juejin.im/v1/'+url,
     method: "GET",
     params: {
-      follower: ctx.query.follower,
-      followee: ctx.query.followee,
+      follower: ctx.request.body.follower,
+      followee: ctx.request.body.followee,
       device_id: config.deviceId,
       token: config.token,
       src: 'web'
@@ -208,7 +208,7 @@ function follow(ctx, url){
  * @param {string} follower - 关注者id
  * @param {string} followee - 被关注者id
  */
-router.get('/follow', validator({
+router.put('/follow', validator({
   follower: { type: 'string', required: true },
   followee: { type: 'string', required: true }
 }), async (ctx, next)=>{
@@ -221,7 +221,7 @@ router.get('/follow', validator({
  * @param {string} follower - 关注者id
  * @param {string} followee - 被关注者id
  */
-router.get('/unfollow', validator({
+router.delete('/follow', validator({
   follower: { type: 'string', required: true },
   followee: { type: 'string', required: true }
 }), async (ctx, next)=>{

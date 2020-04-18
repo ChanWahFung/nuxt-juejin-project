@@ -124,7 +124,7 @@ export default ({ app: { $request } }, inject) => {
      * 点赞文章
      * @param {string} entryId - 文章objectId
      */
-    articleLike(data){
+    articleLike(data = {}){
       let method = data.isCollected ? 'put' : 'delete'
       return $request[method]('/v1/user/like', { entryId: data.entryId })
     },
@@ -132,25 +132,25 @@ export default ({ app: { $request } }, inject) => {
      * 获取未读消息数量
      */
     getUserNotificationNum(){
-      return $request.get('/v1/user/getUserNotificationNum')
+      return $request.get('/v1/user/userNotificationNum')
     },
     /**
      * 获取未读消息数量
      */
     setUserNotificationNum(){
-      return $request.get('/v1/user/setUserNotificationNum')
+      return $request.put('/v1/user/userNotificationNum')
     },
     /**
-     * 关注
+     * 关注、取消关注
+     * @param {string} follower - 关注者id
+     * @param {string} followee - 被关注者id
      */
-    follow(params = {}){
-      return $request.get('/v1/user/follow', params)
-    },
-    /**
-     * 取消关注
-     */
-    unfollow(params = {}){
-      return $request.get('/v1/user/unfollow', params)
+    follow(data = {}){
+      let method = data.isFollow ? 'put' : 'delete'
+      return $request[method]('/v1/user/follow', { 
+        follower: data.follower, 
+        followee: data.followee
+      })
     },
     /**
      * 获取类目
@@ -165,6 +165,20 @@ export default ({ app: { $request } }, inject) => {
      */
     getTagByCategories(params = {}){
       return $request.post('/v1/categories/tags', params)
-    }
+    },
+    /**
+     * 获取已关注的标签
+     */
+    getTagBySubscribed(){
+      return $request.get('/v1/tag/subscribed')
+    },
+    /**
+     * 获取全部标签
+     * @param {number} page - 页码
+     * @param {number} pageSize - 页数
+     */
+    getTagByAll(params = {}){
+      return $request.get('/v1/tag/all', params)
+    },
   })
 }
