@@ -99,10 +99,12 @@ router.get('/subscribed', async (ctx, next) => {
 
 /**
  * 获取全部标签
+ * @param {string} type - 类型： 最新、最热
  * @param {number} page - 页码
  * @param {number} pageSize - 页数
  */
 router.get('/all', validator({
+  type: { type: 'enum', enum: ['new', 'hot'], required: true },
   page: {
     type: 'string', 
     required: true,
@@ -117,7 +119,44 @@ router.get('/all', validator({
   }
 }), async (ctx, next) => {
   const options = {
-    url: `https://gold-tag-ms.juejin.im/v1/tags/type/hot/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
+    url: `https://gold-tag-ms.juejin.im/v1/tags/type/${ctx.query.type}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
+    method: "GET",
+    headers: {
+      'X-Juejin-Client': config.deviceId,
+      'X-Juejin-Src': 'web',
+      'X-Juejin-Token': config.token,
+      'X-Juejin-Uid': config.uid
+    }
+  };
+  let { body } = await request(options)
+  ctx.body = body
+})
+
+/**
+ * 搜索标签
+ * @param {string} type - 类型： 最新、最热
+ * @param {string} keyword - 搜索词
+ * @param {number} page - 页码
+ * @param {number} pageSize - 页数
+ */
+router.get('/search', validator({
+  type: { type: 'enum', enum: ['new', 'hot'], required: true },
+  keyword: { type: 'string', required: true },
+  page: {
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'page 需传入正整数'
+  },
+  pageSize: {
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'pageSize 需传入正整数'
+  }
+}), async (ctx, next) => {
+  const options = {
+    url: `https://gold-tag-ms.juejin.im/v1/tags/type/${ctx.query.type}/search/${ctx.query.keyword}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
     method: "GET",
     headers: {
       'X-Juejin-Client': config.deviceId,

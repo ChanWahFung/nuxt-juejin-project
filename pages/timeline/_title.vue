@@ -1,6 +1,6 @@
 <template>
   <div>
-    <index-nav-list v-model="currentCategoryItem" @nav-item-click="getArticList"></index-nav-list>
+    <index-nav v-model="currentCategoryItem"></index-nav>
     <div class="index-container">
       <div class="index-main shadow">
         <div class="list__header">
@@ -22,10 +22,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import reachBottom from '~/mixins/reachBottom'
 import authorRank from '~/components/business/authorRank'
-import indexNavList from '~/components/business/indexNavList'
+import indexNav from '~/components/business/indexNav'
 
 export default {
   head () {
@@ -57,7 +56,7 @@ export default {
   mixins: [reachBottom],
   components: {
     'author-rank': authorRank,
-    'index-nav-list': indexNavList
+    'index-nav': indexNav
   },
   data() {
     return {
@@ -106,11 +105,6 @@ export default {
       recommendAuthors: [],
       isReachBottomFetching: false,  // 防止触底多次请求
     };
-  },
-  computed: {
-    ...mapState('category', [
-      'tagsList'
-    ])
   },
   methods: {
     reachBottom() {

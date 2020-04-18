@@ -174,11 +174,22 @@ export default ({ app: { $request } }, inject) => {
     },
     /**
      * 获取全部标签
+     * @param {string} type - 类型： 最新、最热
      * @param {number} page - 页码
      * @param {number} pageSize - 页数
      */
     getTagByAll(params = {}){
       return $request.get('/v1/tag/all', params)
+    },
+    /**
+     * 搜索标签
+     * @param {string} type - 类型： 最新、最热
+     * @param {string} keyword - 搜索词
+     * @param {number} page - 页码
+     * @param {number} pageSize - 页数
+     */
+    getTagBySearch(params = {}){
+      return $request.get('/v1/tag/search', params)
     },
   })
 }

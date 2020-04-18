@@ -16,7 +16,7 @@ module.exports = {
       routes.push({
         path: '/',
         redirect: {
-          name: 'timeline'
+          name: 'timeline-title'
         }
       })
     }

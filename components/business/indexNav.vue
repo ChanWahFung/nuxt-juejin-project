@@ -1,7 +1,8 @@
 <template>
-  <nav class="nav-view shadow" :class="{'nav-view--sticky': isTopbarBlock}">
+  <nav class="nav-view shadow" :class="{'nav-view--sticky': !isTopbarBlock}">
     <ul class="nav-list">
       <li class="nav-item" :class="{'nav-item--active': item.title === currentCategoryItem.title}" v-for="item in categoryList" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
+      <nuxt-link tag="li" to="/subscribe" class="nav-item" style="margin-left: auto;">标签管理</nuxt-link>
     </ul>
   </nav>
 </template>
@@ -27,9 +28,6 @@ export default {
   computed: {
     ...mapState([
       'isTopbarBlock'
-    ]),
-    ...mapState('category', [
-      'tagsList'
     ])
   },
   mounted() {
@@ -86,14 +84,14 @@ export default {
   z-index: 9999;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 60px;
   width: 100vw;
   background: #fff;
   border-top: 1px solid #eee;
   transition: all .2s;
 
   &.nav-view--sticky{
-    top: 60px;
+    top: 0px;
   }
 }
 

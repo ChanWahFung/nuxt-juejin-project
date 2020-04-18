@@ -35,7 +35,6 @@ router.post('/tags', validator({
   }
 }), async (ctx, next) => {
   let params = ctx.request.body
-  console.log(params)
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
