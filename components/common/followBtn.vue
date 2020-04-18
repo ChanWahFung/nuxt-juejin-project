@@ -24,8 +24,8 @@ export default {
       if (!this.followeeId) {
         return
       }
-      let action = this.isFollow ? 'unfollow' : 'follow'
-      let res = await this.$api[action]({
+      let res = await this.$api.follow({
+        isFollow: this.isFollow,
         follower: config.uid,
         followee: this.followeeId
       })
