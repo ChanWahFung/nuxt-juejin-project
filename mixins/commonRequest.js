@@ -13,5 +13,15 @@ export default {
         return Promise.resolve(false)
       }
     },
+    // 获取点赞状态
+    isArticleLike(entryId) {
+      if (entryId) {
+        return this.$api.isArticleLike({
+          entryId
+        }).then(res => res.s === 1 ? res.d.like : false)
+      } else {
+        return Promise.resolve(false)
+      }
+    }
   }
 }

@@ -5,13 +5,13 @@
         <div class="detail">
           <div class="detail__header">
             <div class="detail__userInfo">
-              <div class="detail__user__avatar" @click="toUser">
+              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__avatar">
                 <user-avatar :url="articInfo.user.avatarLarge" :round="true"></user-avatar>
-              </div>
-              <div class="detail__user__name" @click="toUser">
+              </nuxt-link>
+              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__name">
                 <span style="margin-right: 10px">{{ articInfo.user.username }}</span>
                 <level :level="articInfo.user.level"></level>
-              </div>
+              </nuxt-link>
               <div class="detail__user__meta">
                 <span class="meta__time">{{ articInfo.create_date }}</span>
                 <span>阅读{{ articInfo.viewsCount }}</span>
@@ -30,7 +30,7 @@
             <span class="tag__title">{{ item.title }}</span>
           </nuxt-link>
         </div>
-        <div v-if="authorInfo" class="author-info" @click="toUser">
+        <nuxt-link :to="'/user/' + authorInfo.uid" v-if="authorInfo" class="author-info">
           <div class="author__avatar">
             <user-avatar :url="authorInfo.avatarLarge" :round="true"></user-avatar>
           </div>
@@ -50,7 +50,7 @@
               <span>获取阅读 {{ authorInfo.totalViewsCount }}</span>
             </div>
           </div>
-        </div>
+        </nuxt-link>
         <div class="comment-area">
           <p class="comment-area__title">评论</p>
           <comment-item v-for="(item, index) in comments" :key="item.id" :author-id="authorInfo.uid" :entry-id="articDetail.entryId" v-model="comments[index]"></comment-item>
@@ -67,6 +67,7 @@
       <about-article :list="aboutArticles"></about-article>
       <catalog></catalog>
     </div>
+    <article-suspended-panel :like-count="articInfo.collectionCount" :comment-count="articInfo.commentsCount" :is-like="isLike" @setgood-handler="setGood"></article-suspended-panel>
   </div>
 </template>
 
@@ -77,6 +78,7 @@ import commonRequest from '~/mixins/commonRequest'
 import commentItem from '~/components/business/commentItem.vue'
 import aboutAuthor from '~/components/business/aboutAuthor.vue'
 import aboutArticle from '~/components/business/aboutArticle.vue'
+import articleSuspendedPanel from '~/components/business/articleSuspendedPanel'
 import catalog from '~/components/business/catalog.vue'
 
 export default {
@@ -141,7 +143,8 @@ export default {
     'comment-item': commentItem,
     'about-author': aboutAuthor,
     'about-article': aboutArticle,
-    catalog
+    'article-suspended-panel': articleSuspendedPanel,
+    'catalog': catalog
   },
   mixins: [reachBottom, commonRequest],
   data () {
@@ -154,7 +157,8 @@ export default {
       hasComments: true, // 是否还有评论数据
       tagIds: '',
       isFollowed: false,
-      comments: []
+      comments: [],
+      isLike: false
     }
   },
   mounted () {
@@ -169,6 +173,7 @@ export default {
       this.tagIds = this.articInfo.tags.map(item => item.id)
     }
     this.isCurrentUserFollowed(this.authorInfo.uid).then(res => (this.isFollowed = res))
+    this.isArticleLike(this.articDetail.entryId).then(res => (this.isLike = res))
   },
   methods: {
     formatDate,
@@ -211,8 +216,17 @@ export default {
         }
       })
     },
-    toUser() {
-      this.$router.push('/user/' + this.authorInfo.uid)
+    // 点赞
+    setGood() {
+      this.$api.articleLike({
+        isCollected: !this.isLike,
+        entryId: this.articDetail.entryId
+      }).then(res => {
+        if (res.s === 1) {
+          this.isLike = !this.isLike
+          this.isLike ? this.articInfo.collectionCount++ : this.articInfo.collectionCount--
+        }
+      })
     }
   }
 }

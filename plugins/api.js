@@ -88,6 +88,13 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v1/user/isCurrentUserFollowed', params)
     },
     /**
+     * 是否点赞文章
+     * @param {string} entryId - 文章entryId
+     */
+    isArticleLike(params = {}){
+      return $request.get('/v1/user/isArticleLike', params)
+    },
+    /**
      * 获取用户专栏文章
      * @param {string} targetUid 
      * @param {string} before - 最后一条的createdAt

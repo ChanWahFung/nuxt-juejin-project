@@ -49,7 +49,7 @@ router.get('/notification', validator({
 })
 
 /**
- * 检查是否关注用户
+ * 是否关注用户
  * @param {staring} currentUid
  * @param {string} targetUids
  */
@@ -64,6 +64,27 @@ router.get('/isCurrentUserFollowed', validator({
       currentUid: ctx.query.currentUid,
       targetUids: ctx.query.targetUids,
       src: 'web',
+    }
+  };
+  let { body:res } = await request(options)
+  ctx.body = res;
+})
+
+/**
+ * 是否点赞文章
+ * @param {string} entryId - 文章entryId
+ */
+router.get('/isArticleLike', validator({
+  entryId: { type: 'string', required: true }
+}), async (ctx, next) => {
+  const options = {
+    url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.query.entryId,
+    method: 'GET',
+    headers: {
+      'X-Juejin-Src': 'web',
+      'X-Juejin-Client': config.deviceId,
+      'X-Juejin-Token': config.token,
+      'X-Juejin-Uid': config.uid
     }
   };
   let { body:res } = await request(options)
