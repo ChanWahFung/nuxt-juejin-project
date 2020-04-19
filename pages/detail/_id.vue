@@ -53,7 +53,7 @@
         </div>
         <div class="comment-area">
           <p class="comment-area__title">评论</p>
-          <comment-item v-for="(item, index) in comments" :key="item.id" :entry-id="articDetail.entryId" v-model="comments[index]"></comment-item>
+          <comment-item v-for="(item, index) in comments" :key="item.id" :author-id="authorInfo.uid" :entry-id="articDetail.entryId" v-model="comments[index]"></comment-item>
           <div v-if="hasComments" class="comment__more-btn" @click="getMoreComment">查看更多</div>
         </div>
       </div>

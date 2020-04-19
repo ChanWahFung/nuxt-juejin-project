@@ -1,18 +1,18 @@
 <template>
   <div class="comment-item">
-    <div class="comment-item__avatar" @click="toUser(data.userId)">
+    <nuxt-link class="comment-item__avatar" :to="'/user/'+data.userId">
       <user-avatar :url="data.userInfo.avatarLarge" :round="true"></user-avatar>
-    </div>
+    </nuxt-link>
     <div class="comment-item__main">
       <div class="comment-item__userinfo">
-        <span class="comment-item__username" @click="toUser(data.userId)">{{ data.userInfo.username }}</span>
-        <level :level="data.userInfo.level"></level>
+        <nuxt-link :to="'/user/'+data.userId" class="comment-item__username">
+          <span style="margin-right:5px">{{ data.userInfo.username }}</span>
+          <level :level="data.userInfo.level"></level>
+        </nuxt-link>
         <p style="margin-left: 5px">
-          <span>
-            {{ data.userInfo.jobTitle }}
-            {{ data.userInfo.jobTitle && data.userInfo.company ? ' @ ' : '' }}
-            {{ data.userInfo.company }}
-          </span>
+          {{ data.userInfo.jobTitle }}
+          {{ data.userInfo.jobTitle && data.userInfo.company ? ' @ ' : '' }}
+          {{ data.userInfo.company }}
         </p>
       </div>
       <p class="comment-item__content">{{ data.content }}</p>
@@ -26,17 +26,25 @@
           </div>
           <div class="comment-item__main">
             <div class="comment-item__userinfo">
-              <span class="comment-item__username" @click="toUser(item.userId)">{{ item.userInfo.username }}</span>
-              <level :level="item.userInfo.level"></level>
+              <nuxt-link :to="'/user/'+item.userId" class="comment-item__username">
+                <span style="margin-right:5px">{{ item.userInfo.username }}</span>
+                <level :level="item.userInfo.level"></level>
+                <span v-if="item.userId === authorId" style="margin-left:5px">(作者)</span>
+              </nuxt-link>
               <p style="margin-left: 5px">
-                <span>
-                  {{ item.userInfo.jobTitle }}
-                  {{ item.userInfo.jobTitle && item.userInfo.company ? ' @ ' : '' }}
-                  {{ item.userInfo.company }}
-                </span>
+                {{ item.userInfo.jobTitle }}
+                {{ item.userInfo.jobTitle && item.userInfo.company ? ' @ ' : '' }}
+                {{ item.userInfo.company }}
               </p>
             </div>
-            <p class="comment-item__content">{{ item.content }}</p>
+            <p class="comment-item__content">
+              <span class="comment-item__resp-userinfo">
+                回复 
+                <nuxt-link class="comment-item__resp-username" :to="'/user/'+item.respUserInfo.objectId"> {{ item.respUserInfo.username }} </nuxt-link>
+                <level :level="item.respUserInfo.level"></level>:
+              </span>
+              <span>{{ item.content }}</span>
+            </p>
             <div class="comment-item__meta">
               <span class="comment-item__meta__time">{{ item.createdAt | formatTime }}</span>
             </div>
@@ -56,6 +64,10 @@ export default {
   },
   props: {
     entryId: {
+      type: String,
+      default: ''
+    },
+    authorId: {
       type: String,
       default: ''
     },
@@ -130,9 +142,11 @@ export default {
     color: #bbb;
 
     .comment-item__username{
+      display: inline-flex;
+      align-items: center;
       color: #333;
-      margin-right: 5px;
       cursor: pointer;
+      text-decoration: none;
     }
   }
 
@@ -140,6 +154,17 @@ export default {
     font-size: 14px;
     line-height: 1.5;
     color: #505050;
+  }
+
+  .comment-item__resp-userinfo{
+    display: inline-flex;
+    align-items: center;
+
+    .comment-item__resp-username{
+      padding: 0 5px;
+      color: #406599;
+      text-decoration: none;
+    }
   }
 
   .comment-item__meta{
