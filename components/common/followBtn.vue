@@ -63,12 +63,12 @@ export default {
     border: 1px solid currentColor;
   }
 
-  &.follow-usr-btn--active{
+  &.follow-user-btn--active{
     background: $success;
     color: #fff;
   }
 
-  &.follow-usr-btn--active{
+  &.follow-tag-btn--active{
     background: $success-2;
     color: #fff;
   }
