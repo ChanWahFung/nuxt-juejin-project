@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #f4f4f4">
+  <div style="background-color: #fff">
     <top-bar></top-bar>
     <main class="main">
       <nuxt />
@@ -9,7 +9,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
+  computed: {
+    ...mapState([
+      'layoutBgColor'
+    ])
+  },
 }
 </script>
 

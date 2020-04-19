@@ -1,5 +1,6 @@
 <template>
-  <div class="follow-btn" :class="{'follow-btn--active': isFollow}" @click.stop="toggleFollow">{{ isFollow ? '已关注' : '关注' }}</div>
+  <div v-if="type === 'user'" class="follow-btn follow-user-btn" :class="{'follow-user-btn--active': isFollow}" @click.stop="toggleFollow">{{ isFollow ? '已关注' : '关注' }}</div>
+  <div v-else-if="type === 'tag'" class="follow-btn follow-tag-btn" :class="{'follow-tag-btn--active': isFollow}" @click.stop="toggleFollow">{{ isFollow ? '已关注' : '关注' }}</div>
 </template>
 
 <script>
@@ -15,8 +16,13 @@ export default {
       type: Boolean,
       default: false
     },
+    type: {
+      type: String,
+      default: 'user'
+    },
     followeeId: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   methods: {
@@ -44,13 +50,26 @@ export default {
   line-height: 30px;
   font-size: 14px;
   text-align: center;
-  color: $success;
-  border: 1px solid $success;
   border-radius: 2px;
   cursor: pointer;
 
-  &.follow-btn--active{
+  &.follow-user-btn{
+    color: $success;
+    border: 1px solid currentColor;
+  }
+
+  &.follow-tag-btn{
+    color: $success-2;
+    border: 1px solid currentColor;
+  }
+
+  &.follow-usr-btn--active{
     background: $success;
+    color: #fff;
+  }
+
+  &.follow-usr-btn--active{
+    background: $success-2;
     color: #fff;
   }
 }

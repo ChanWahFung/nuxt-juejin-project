@@ -12,7 +12,7 @@
           <img class="item__icon" :src="item.icon">
           <span class="item__title">{{ item.title }}</span>
           <span class="item__meta">{{ item.subscribersCount }} 关注  {{ item.entryCount }} 文章</span>
-          <follow-btn :is-follow="item.isSubscribe"></follow-btn>
+          <follow-btn type="tag" :is-follow="item.isSubscribe"></follow-btn>
         </div>
       </div>
     </div>
@@ -29,6 +29,7 @@ export default {
       title: `${this.currentNavItem.name ? this.currentNavItem.name + ' - ' : ''}掘金`
     }
   },
+  layout: 'default-white',
   async asyncData({ app, params }) {
     let tagList = []
     if (!params.title || params.title === 'subscribed') {
@@ -132,7 +133,7 @@ export default {
     align-items: center;
     flex: 0 0 23%;
     line-height: 1.5;
-    padding: 30px;
+    padding: 30px 5px;
     margin-bottom: 15px;
     border: 1px solid #eee;
     border-radius: 2px;

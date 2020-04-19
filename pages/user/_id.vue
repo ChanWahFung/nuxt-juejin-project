@@ -14,12 +14,16 @@
             </h1>
           </div>
           <div class="info__position">
+            <img src="~/assets/images/position.svg">
             <span>{{ userInfo.jobTitle }}{{ userInfo.jobTitle && userInfo.company ? ' | ' : '' }}{{ userInfo.company }}</span>
           </div>
-          <div class="info__intro">{{ userInfo.selfDescription }}</div>
+          <div class="info__intro">
+            <img src="~/assets/images/intro.svg">
+            <span>{{ userInfo.selfDescription }}</span>
+          </div>
         </div>
         <div class="user-block__action">
-          <follow-btn v-model="isFollowed" :followee-id="userInfo.uid"></follow-btn>
+          <follow-btn v-model="isFollowed" type="user" :followee-id="userInfo.uid"></follow-btn>
         </div>
       </div>
       <div class="user-post">
@@ -264,17 +268,21 @@ export default {
     color: #72777b;
 
     .info__username{
+      padding-bottom: 5px;
       font-size: 26px;
       font-weight: bold;
       color: #262626;
     }
 
-    .info__position{
-      margin-top: 10px;
-    }
-
+    .info__position,
     .info__intro{
+      display: flex;
+      align-items: center;
       margin-top: 5px;
+
+      >img{
+        margin-right: 5px;
+      }
     }
   }
 

@@ -9,7 +9,7 @@
     <main class="main">
       <div class="list-header">
         <img class="list-header__icon" :src="tagInfo.icon" />
-        <follow-btn :is-follow="tagInfo.isSubscribe"></follow-btn>
+        <follow-btn type="tag" :is-follow="tagInfo.isSubscribe"></follow-btn>
         <div class="list-header__nav">
           <span v-for="item in sortList" :key="item.sort" :class="{'nav--active': sort === item.sort}" @click="changeSort(item.sort)">{{ item.title }}</span>
         </div>

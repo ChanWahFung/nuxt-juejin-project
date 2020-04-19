@@ -1,6 +1,5 @@
 export const state = () => ({
-  isTopbarBlock: true,
-  layoutBgColor: '#f4f4f4'
+  isTopbarBlock: true
 })
 
 export const mutations = {

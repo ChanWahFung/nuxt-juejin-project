@@ -112,11 +112,12 @@ export default {
     }
 
     &.panel-like-btn--active{
+      background-position: 53% 46%;
       background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/zan-active.337b9a0.svg);
 
       &:after{
         color: #fff;
-        background-color: $lighSuccess;
+        background-color: $success-2;
       }
     }
   }

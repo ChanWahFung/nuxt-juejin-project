@@ -6,7 +6,7 @@
       <p>{{ item.subscribersCount }}关注 · {{ item.entryCount }}文章</p>
     </div>
     <div class="tag-item__btn">
-      <follow-btn :is-follow="item.viewerIsFollowing"></follow-btn>
+      <follow-btn type="tag" :is-follow="item.viewerIsFollowing"></follow-btn>
     </div>
   </div>
 </template>

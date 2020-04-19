@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: #f4f4f4">
     <top-bar></top-bar>
     <nuxt />
   </div>
@@ -11,7 +11,4 @@ export default {
 </script>
 
 <style>
-html {
-  background-color: #f4f4f4;
-}
 </style>
