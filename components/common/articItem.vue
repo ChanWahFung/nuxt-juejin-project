@@ -8,7 +8,9 @@
         </li>
         <li class="meta-item">{{ item.createdAt | formatTime }}</li>
         <li class="meta-item">
-          <span v-for="(tag) in item.tags" :key="tag.id" class="meta-item__tag" @click.stop="$router.push('/tag/'+tag.title)">{{ tag.title }}</span>
+          <span v-if="item.tags.length && item.category" class="meta-item__tag" @click.stop="$router.push('/tag/'+item.tags[0].title)">{{ item.tags[0].title }}</span>
+          <span v-else v-for="tag in item.tags" :key="tag.id" class="meta-item__tag" @click.stop="$router.push('/tag/'+tag.title)">{{ tag.title }}</span>
+          <span v-if="item.category" class="meta-item__tag" @click.stop="$router.push('/tag/'+item.category.name)">{{ item.category.name }}</span>
         </li>
       </ul>
       <p class="artic-item__title ellipsis " v-html="highlight.title || item.title"></p>
