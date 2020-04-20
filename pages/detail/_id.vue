@@ -83,7 +83,7 @@ import catalog from '~/components/business/catalog.vue'
 
 export default {
   validate ({ params }) {
-    if (params.id) {
+    if (params.id && params.id != 'undefined') {
       return true
     }
     return false

@@ -26,6 +26,13 @@ import reachBottom from '../../mixins/reachBottom'
 import subscribeNav from '../../components/business/subscribeNav'
 
 export default {
+  validate ({ params }) {
+    const whiteList = ['all', 'subscribed']
+    if (whiteList.includes(params.title)) {
+      return true
+    }
+    return false
+  },
   head () {
     return {
       title: `${this.currentNavItem.name ? this.currentNavItem.name + ' - ' : ''}掘金`

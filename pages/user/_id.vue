@@ -97,16 +97,16 @@ import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
 
 export default {
-  head() {
-    return {
-      title: `${this.userInfo.username} 的个人主页 - 掘金`
-    }
-  },
   validate ({ params }) {
     if (params.id && params.id != 'undefined') {
       return true
     }
     return false
+  },
+  head() {
+    return {
+      title: `${this.userInfo.username} 的个人主页 - 掘金`
+    }
   },
   async asyncData({ app, params }) {
     // 用户信息
