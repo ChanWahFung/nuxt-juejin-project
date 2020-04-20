@@ -5,7 +5,6 @@ const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 const conditional = require('koa-conditional-get');
 const etag = require('koa-etag');
-const errorHandler = require('./middleware/errorHandler');
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
@@ -77,7 +76,6 @@ async function start () {
     ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
     nuxt.render(ctx.req, ctx.res)
   })
-  app.on('error', errorHandler)
   app.listen(port, host)
   consola.ready({
     message: `Server listening on http://${host}:${port}`,

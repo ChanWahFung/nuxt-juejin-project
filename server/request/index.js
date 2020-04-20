@@ -26,7 +26,7 @@ module.exports = function (options){
       statusCode: res.statusCode,
       statusMessage: res.statusMessage,
       headers: res.headers,
-      body: res.headers['content-type'].includes('application/json') ? JSON.parse(res.body) : res.body
+      body: res.body
     }))
     .catch(err=> err)
 }

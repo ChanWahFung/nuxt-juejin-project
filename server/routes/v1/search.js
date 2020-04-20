@@ -3,6 +3,7 @@ const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
 const config = require('../../request/config')
+const { toObject } = require('../../../utils')
 
  /**
  * 搜索
@@ -46,11 +47,12 @@ router.get('/entry', validator({
       "extensions": { "query": { "id": "a53db5867466eddc50d16a38cfeb0890" } } 
     }
   };
-  let { body:res } = await request(options)
+  let { body } = await request(options)
+  body = toObject(body)
   try {
     ctx.body = {
-      s: res.data.search ? 1 : 0,
-      d: res.data.search
+      s: body.data.search ? 1 : 0,
+      d: body.data.search
     }
   } catch (error) {
     ctx.body = {

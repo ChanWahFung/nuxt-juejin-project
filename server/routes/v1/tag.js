@@ -3,6 +3,7 @@ const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
 const config = require('../../request/config')
+const { toObject } = require('../../../utils')
 
 /**
  * 获取标签详情
@@ -21,8 +22,8 @@ router.get('/detail', validator({
       'X-Juejin-Uid': config.uid
     }
   };
-  let { body:res } = await request(options)
-  ctx.body = res
+  let { body } = await request(options)
+  ctx.body = body
 })
 
 /**
@@ -72,10 +73,11 @@ router.get('/entry', validator({
       'sort': ctx.query.sort || 'rankIndex',
     }
   };
-  let { body:res } = await request(options)
+  let { body } = await request(options)
+  body = toObject(body)
   ctx.body = {
-    s: res.s,
-    d: res.d.entrylist
+    s: body.s,
+    d: body.d.entrylist
   }
 })
 
@@ -156,7 +158,7 @@ router.get('/search', validator({
   }
 }), async (ctx, next) => {
   const options = {
-    url: `https://gold-tag-ms.juejin.im/v1/tags/type/${ctx.query.type}/search/${ctx.query.keyword}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
+    url: `https://gold-tag-ms.juejin.im/v1/tag/type/${ctx.query.type}/search/${ctx.query.keyword}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
     method: "GET",
     headers: {
       'X-Juejin-Client': config.deviceId,
@@ -191,10 +193,10 @@ function subscribe(ctx){
 router.put('/subscribe', validator({
   tagId: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  let { body:res, statusCode, headers } = await subscribe(ctx)
+  let { body, statusCode, headers } = await subscribe(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
-  ctx.body = res
+  ctx.body = body
 })
 
 /**
@@ -204,10 +206,10 @@ router.put('/subscribe', validator({
 router.delete('/subscribe', validator({
   tagId: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  let { body:res, statusCode, headers } = await subscribe(ctx)
+  let { body, statusCode, headers } = await subscribe(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
-  ctx.body = res
+  ctx.body = body
 })
 
 module.exports = router

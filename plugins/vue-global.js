@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
-import * as utils from '../utils'
+import utils from '../utils'
 
 Vue.prototype.$utils = utils
 Vue.use(ElementUI)
