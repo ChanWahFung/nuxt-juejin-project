@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #fff">
+  <div style="background-color: #fff;min-height: 100vh;">
     <top-bar></top-bar>
     <main class="main">
       <nuxt />
