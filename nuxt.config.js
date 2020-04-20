@@ -84,7 +84,6 @@ module.exports = {
     ]
   },
   serverMiddleware: [	
-    { path: '/', handler: '~/middleware/page-cache.js' },	
   ],
   /*
   ** Axios module configuration

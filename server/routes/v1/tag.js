@@ -174,7 +174,7 @@ router.get('/search', validator({
 // 关注标签逻辑共有
 function subscribe(ctx){
   const options = {
-    url: 'https://gold-tag-ms.juejin.im/v1/tag/subscribe/'+ctx.request.body.id,
+    url: 'https://gold-tag-ms.juejin.im/v1/tag/subscribe/'+ctx.request.body.tagId,
     method: ctx.method,
     headers: {
       'X-Juejin-Client': config.deviceId,

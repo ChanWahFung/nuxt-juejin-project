@@ -152,9 +152,8 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} follower - 关注者id
      * @param {string} followee - 被关注者id
      */
-    follow(data = {}){
-      let method = data.isFollow ? 'put' : 'delete'
-      return $request[method]('/v1/user/follow', { 
+    followUser(data = {}){
+      return $request[data.method]('/v1/user/follow', { 
         follower: data.follower, 
         followee: data.followee
       })
@@ -197,6 +196,15 @@ export default ({ app: { $request } }, inject) => {
      */
     getTagBySearch(params = {}){
       return $request.get('/v1/tag/search', params)
+    },
+    /**
+     * 关注标签
+     * @param {string} tagId 
+     */
+    followTag(data = {}){
+      return $request[data.method]('/v1/tag/subscribe', { 
+        tagId: data.tagId
+      })
     },
   })
 }

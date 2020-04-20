@@ -1,6 +1,6 @@
 <template>
-  <div v-if="type === 'user'" class="follow-btn follow-user-btn" :class="{'follow-user-btn--active': isFollow}" @click.stop="toggleFollow">{{ isFollow ? '已关注' : '关注' }}</div>
-  <div v-else-if="type === 'tag'" class="follow-btn follow-tag-btn" :class="{'follow-tag-btn--active': isFollow}" @click.stop="toggleFollow">{{ isFollow ? '已关注' : '关注' }}</div>
+  <div v-if="type === 'user'" class="follow-btn follow-user-btn" :class="{'follow-user-btn--active': isFollow}" @click.stop="follow">{{ isFollow ? '已关注' : '关注' }}</div>
+  <div v-else-if="type === 'tag'" class="follow-btn follow-tag-btn" :class="{'follow-tag-btn--active': isFollow}" @click.stop="follow">{{ isFollow ? '已关注' : '关注' }}</div>
 </template>
 
 <script>
@@ -18,7 +18,10 @@ export default {
     },
     type: {
       type: String,
-      default: 'user'
+      default: 'user',
+      validator(v) {
+        return ['user', 'tag'].includes(v)
+      }
     },
     followeeId: {
       type: String,
@@ -26,18 +29,29 @@ export default {
     }
   },
   methods: {
-    async toggleFollow(){
+    async follow() {
       if (!this.followeeId) {
         return
       }
-      let res = await this.$api.follow({
-        isFollow: this.isFollow,
-        follower: config.uid,
-        followee: this.followeeId
-      })
+      let res = {}
+      this.type === 'user' && (res = await this.followUser())
+      this.type === 'tag' && (res = await this.followTag())
       if (res.s === 1) {
         this.$emit('updateIsFollow', !this.isFollow)
       }
+    },
+    followUser(){
+      return this.$api.followUser({
+        method: this.isFollow ? 'delete' : 'put',
+        follower: config.uid,
+        followee: this.followeeId
+      })
+    },
+    followTag(){
+      return this.$api.followTag({
+        method: this.isFollow ? 'delete' : 'put',
+        tagId: this.followeeId
+      })
     }
   }
 }
@@ -55,12 +69,12 @@ export default {
 
   &.follow-user-btn{
     color: $success;
-    border: 1px solid currentColor;
+    border: 1px solid $success;
   }
 
   &.follow-tag-btn{
     color: $success-2;
-    border: 1px solid currentColor;
+    border: 1px solid $success-2;
   }
 
   &.follow-user-btn--active{

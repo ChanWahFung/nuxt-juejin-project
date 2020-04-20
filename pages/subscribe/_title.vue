@@ -14,7 +14,7 @@
           <img class="item__icon" :src="item.icon">
           <span class="item__title">{{ item.title }}</span>
           <span class="item__meta">{{ item.subscribersCount }} 关注  {{ item.entryCount }} 文章</span>
-          <follow-btn type="tag" :is-follow="item.isSubscribe"></follow-btn>
+          <follow-btn type="tag" v-model="item.isSubscribe" :followee-id="item.id"></follow-btn>
         </div>
       </div>
     </div>
@@ -27,7 +27,7 @@ import subscribeNav from '../../components/business/subscribeNav'
 
 export default {
   validate ({ params }) {
-    const whiteList = ['all', 'subscribed']
+    const whiteList = [undefined, 'all', 'subscribed']
     if (whiteList.includes(params.title)) {
       return true
     }
@@ -123,7 +123,7 @@ export default {
 
 <style lang='scss' scoped>
 .tag-container{
-  margin-top: 60px;
+  margin: 60px 0;
   overflow: hidden;
 }
 .nav-list{
@@ -151,18 +151,16 @@ export default {
   }
 }
 .tag-list{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 15px;
 
   .tag-item{
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: 0 0 23%;
     line-height: 1.5;
     padding: 30px 5px;
-    margin-bottom: 15px;
     border: 1px solid #eee;
     border-radius: 2px;
 
