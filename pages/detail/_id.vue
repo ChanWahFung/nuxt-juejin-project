@@ -176,7 +176,6 @@ export default {
     this.isArticleLike(this.articDetail.entryId).then(res => (this.isLike = res))
   },
   methods: {
-    formatDate,
     reachBottom(){
       this.getRecommendEntryByTagIds()
     },

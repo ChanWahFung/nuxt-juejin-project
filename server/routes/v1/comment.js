@@ -37,9 +37,10 @@ router.get('/entry', validator({
       pageSize: ctx.query.pageSize || '5',
     }
   };
-  let { body:res } = await request(options)
-  ctx.body = res
+  let { body } = await request(options)
+  ctx.body = body
 })
+
 /**
  * 获取回复列表
  * @param {string} entryId - 在文章详情内获取
@@ -77,8 +78,8 @@ router.get('/reply', validator({
       pageSize: ctx.query.pageSize
     }
   };
-  let { body:res } = await request(options)
-  ctx.body = res
+  let { body } = await request(options)
+  ctx.body = body
 })
 
 module.exports = router

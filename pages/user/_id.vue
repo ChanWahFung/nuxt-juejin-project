@@ -84,7 +84,7 @@
           关注标签<span>{{ userInfo.subscribedTagsCount }}</span>
         </div>
         <div class="more-item">
-          加入于<span>{{ formatDate('Y-MM-DD', userInfo.createdAt) }}</span>
+          加入于<span>{{ $utils.formatDate('Y-MM-DD', userInfo.createdAt) }}</span>
         </div>
       </div>
     </div>
@@ -93,7 +93,6 @@
 
 <script>
 import postItem from '~/components/business/postItem'
-import { formatDate } from '~/utils'
 import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
 
@@ -152,7 +151,6 @@ export default {
     this.isCurrentUserFollowed(this.userInfo.uid).then(res => (this.isFollowed = res))
   },
   methods: {
-    formatDate,
     reachBottom() {
       this.getUserPost({ isLoadMore: true })
     },

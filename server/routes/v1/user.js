@@ -3,6 +3,7 @@ const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
 const config = require('../../request/config')
+const { toObject } = require('../../../utils')
 
 /**
  * 获取用户信息
@@ -23,8 +24,8 @@ router.get('/multiUser', validator({
       cols: ''
     }
   };
-  let { body:res } = await request(options)
-  ctx.body = res;
+  let { body } = await request(options)
+  ctx.body = body
 })
 
 /**
@@ -44,8 +45,8 @@ router.get('/notification', validator({
       before: ctx.query.before || ''
     }
   };
-  let { body:res } = await request(options)
-  ctx.body = res;
+  let { body } = await request(options)
+  ctx.body = body
 })
 
 /**
@@ -66,8 +67,8 @@ router.get('/isCurrentUserFollowed', validator({
       src: 'web',
     }
   };
-  let { body:res } = await request(options)
-  ctx.body = res;
+  let { body } = await request(options)
+  ctx.body = body
 })
 
 /**
@@ -87,8 +88,8 @@ router.get('/isArticleLike', validator({
       'X-Juejin-Uid': config.uid
     }
   };
-  let { body:res } = await request(options)
-  ctx.body = res;
+  let { body } = await request(options)
+  ctx.body = body
 })
 
 /**
@@ -123,11 +124,12 @@ router.get('/recommendCard', validator({
       extensions: {query: {id: "b031bf7f8b17b1a173a38807136cc20e"}},
     }
   };
-  let { body:res } = await request(options)
+  let { body } = await request(options)
+  body = toObject(body)
   try {
     ctx.body = {
-      s: res.data.recommendationCard.items ? 1 : 0,
-      d: res.data.recommendationCard.items
+      s: body.data.recommendationCard.items ? 1 : 0,
+      d: body.data.recommendationCard.items
     } 
   } catch (error) {
     ctx,body = {
@@ -159,10 +161,10 @@ function like(ctx){
 router.put('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body:res, statusCode, headers } = await like(ctx)
+  let { body, statusCode, headers } = await like(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
-  ctx.body = res
+  ctx.body = body
 })
 
 /**
@@ -172,10 +174,10 @@ router.put('/like', validator({
 router.delete('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body:res, statusCode, headers } = await like(ctx)
+  let { body, statusCode, headers } = await like(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
-  ctx.body = res
+  ctx.body = body
 })
 
 // 未读消息状态逻辑共有
@@ -196,16 +198,16 @@ function userNotificationNum(url){
  * 获取未读消息数量
  */
 router.get('/userNotificationNum', async (ctx, next)=>{
-  let { body:res } = await userNotificationNum('getUserNotificationNum')
-  ctx.body = res;
+  let { body } = await userNotificationNum('getUserNotificationNum')
+  ctx.body = body
 })
 
 /**
  * 设置未读消息数量
  */
 router.put('/userNotificationNum', async (ctx, next)=>{
-  let { body:res } = await userNotificationNum('setUserNotificationNum')
-  ctx.body = res;
+  let { body } = await userNotificationNum('setUserNotificationNum')
+  ctx.body = body
 })
 
 // 关注用户逻辑共有
@@ -233,8 +235,8 @@ router.put('/follow', validator({
   follower: { type: 'string', required: true },
   followee: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  let { body:res } = await follow(ctx, 'follow')
-  ctx.body = res;
+  let { body } = await follow(ctx, 'follow')
+  ctx.body = body
 })
 
 /**
@@ -246,8 +248,8 @@ router.delete('/follow', validator({
   follower: { type: 'string', required: true },
   followee: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  let { body:res } = await follow(ctx, 'unfollow')
-  ctx.body = res;
+  let { body } = await follow(ctx, 'unfollow')
+  ctx.body = body
 })
 
 module.exports = router

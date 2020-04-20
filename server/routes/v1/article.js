@@ -3,6 +3,7 @@ const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
 const config = require('../../request/config')
+const { toObject } = require('../../../utils')
 
 /**
  * 获取详情页信息
@@ -25,8 +26,8 @@ router.get('/detail', validator({
       postId: ctx.query.postId
     }
   };
-  let { body:res } = await request(options);
-  ctx.body = res
+  let { body } = await request(options);
+  ctx.body = body
 })
 
 /**
@@ -54,7 +55,7 @@ router.post('/indexList', validator({
   tags: { type: 'array' }
 }), async (ctx, next) => {
   ctx.set('Cache-Control', 'max-age=60')
-  const body = ctx.request.body
+  const data = ctx.request.body
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
@@ -68,20 +69,21 @@ router.post('/indexList', validator({
       operationName: "", 
       query: "", 
       variables: { 
-        first: body.first, 
-        after: body.after || '',
-        order: body.order,
-        category: body.category || '',
-        tags: body.tags || []
+        first: data.first, 
+        after: data.after || '',
+        order: data.order,
+        category: data.category || '',
+        tags: data.tags || []
       }, 
       extensions: { query: { id: "653b587c5c7c8a00ddf67fc66f989d42" } } 
     }
   };
-  let { body:res } = await request(options)
+  let { body } = await request(options)
+  body = toObject(body)
   try {
     ctx.body = {
-      s: res.data.articleFeed.items ? 1 : 0,
-      d: res.data.articleFeed.items
+      s: body.data.articleFeed.items ? 1 : 0,
+      d: body.data.articleFeed.items
     }
   } catch (error) {
     ctx.body = {
@@ -124,10 +126,11 @@ router.get('/userPost', validator({
       order: ctx.query.order || 'createdAt'
     }
   };
-  let { body:res } = await request(options)
+  let { body } = await request(options)
+  body = toObject(body)
   ctx.body = {
-    s: res.s,
-    d: res.d.entrylist
+    s: body.s,
+    d: body.d.entrylist
   }
 })
 
@@ -157,10 +160,11 @@ router.get('/relatedEntry', validator({
       entryId: ctx.query.entryId
     }
   };
-  let { body:res } = await request(options)
+  let { body } = await request(options)
+  body = toObject(body)
   ctx.body = {
-    s: res.s,
-    d: res.d.entrylist
+    s: body.s,
+    d: body.d.entrylist
   }
 })
 
@@ -185,10 +189,11 @@ router.get('/recommendEntryByTagIds', validator({
       before: ctx.query.before || ''
     }
   };
-  let { body:res } = await request(options)
+  let { body } = await request(options)
+  body = toObject(body)
   ctx.body = {
-    s: res.s,
-    d: res.d.entrylist
+    s: body.s,
+    d: body.d.entrylist
   }
 })
 
