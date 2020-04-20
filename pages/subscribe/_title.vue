@@ -5,7 +5,9 @@
       <ul v-if="$route.params.title === 'all'" class="nav-list">
         <li class="nav-item" :class="{'nav-item--active': type === 'hot'}" @click="typeChange('hot')">最热</li>
         <li class="nav-item" :class="{'nav-item--active': type === 'new'}" @click="typeChange('new')">最新</li>
-        <li class="nav-item nav-item--search"></li>
+        <li class="nav-item nav-item--search">
+          <input class="search-input" v-model="keyword" @keydown.enter="tagSearch" type="text" maxlength="32" placeholder="搜索标签">
+        </li>
       </ul>
       <div class="tag-list">
         <div class="tag-item" v-for="item in tagList" :key="item.id">
@@ -54,6 +56,7 @@ export default {
       page: 1,
       pageSize: 40,
       keyword: '',
+      isSearch: false,
       type: 'hot',
       currentNavItem: {},
       tagList: []
@@ -62,16 +65,27 @@ export default {
   methods: {
     reachBottom() {
       this.page++
-      this.getTagByAll()
+      this.isSearch ? this.getTagBySearch({ isLoadMore: true }) : this.getTagByAll({ isLoadMore: true })
     },
     typeChange(type) {
       if (this.type == type) {
         return
       }
       this.type = type
-      this.getTagByAll()
+      this.page = 1
+      this.isSearch ? this.getTagBySearch() : this.getTagByAll()
     },
-    async getTagByAll() {
+    tagSearch() {
+      this.page = 1
+      if (this.keyword) {
+        this.isSearch = true
+        this.getTagBySearch()
+      } else {
+        this.isSearch = false
+        this.getTagByAll()
+      }
+    },
+    async getTagByAll({ isLoadMore = false } = {}) {
       if (this.$route.params.title === 'all') {
         let res = await this.$api.getTagByAll({
           type: this.type,
@@ -79,12 +93,12 @@ export default {
           pageSize: this.pageSize
         })
         if (res.s === 1) {
-          this.tagList = this.tagList.concat(res.d.tags)
+          this.tagList = isLoadMore ? this.tagList.concat(res.d.tags) : res.d.tags
         }
       }
     },
-    async getTagBySearch({ isLoadMore }) {
-      if (this.$route.params.title === 'all' && this.keyword) {
+    async getTagBySearch({ isLoadMore = false } = {}) {
+      if (this.$route.params.title === 'all') {
         let res = await this.$api.getTagBySearch({
           keyword: this.keyword,
           type: this.type,
@@ -120,6 +134,13 @@ export default {
     &:hover{
       color: $theme;
     }
+  }
+
+  .search-input{
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid hsla(0,0%,59.2%,.2);
+    outline: none;
   }
 }
 .tag-list{

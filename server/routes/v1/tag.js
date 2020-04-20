@@ -158,7 +158,7 @@ router.get('/search', validator({
   }
 }), async (ctx, next) => {
   const options = {
-    url: `https://gold-tag-ms.juejin.im/v1/tags/type/${ctx.query.type}/search/${ctx.query.keyword}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
+    url: `https://gold-tag-ms.juejin.im/v1/tag/type/${ctx.query.type}/search/${ctx.query.keyword}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
     method: "GET",
     headers: {
       'X-Juejin-Client': config.deviceId,
