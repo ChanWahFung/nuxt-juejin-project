@@ -16,17 +16,27 @@ module.exports = function (options){
     options.method === 'PUT' ||
     options.method === 'DELETE'
   ){
-    options.headers['Content-Type'] = 'application/json'
     if(options.body){
       options.body = JSON.stringify(options.body)
+    }
+    if(!options.headers){
+      options.headers = {}
+    }
+    options.headers = {
+      'Content-Type': 'application/json',
+      ...options.headers
     }
   }
   return requestPromise(options)
     .then(res=> ({
+      res,
       statusCode: res.statusCode,
       statusMessage: res.statusMessage,
       headers: res.headers,
       body: res.body
     }))
-    .catch(err=> err)
+    .catch(err=> ({
+      body: { s: 0 },
+      err
+    }))
 }
