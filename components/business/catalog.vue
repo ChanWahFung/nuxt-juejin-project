@@ -94,7 +94,7 @@ export default {
         }
         lastC2.children.push({ ...item, level: 'c3' })
       }
-      document.querySelectorAll('.detail__content .heading').forEach((item, index) => {
+      document.querySelectorAll('.detail__content h1,h2,h3,h4,h5,h6').forEach((item, index) => {
         item.setAttribute('id', `heading-${index}`)
         const catalogItem = new Item(`heading-${index}`, item)
         if (!catalog[0]) {

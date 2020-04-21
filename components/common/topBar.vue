@@ -38,6 +38,10 @@ export default {
         {
           name: '沸点',
           link: '/pins'
+        },
+        {
+          name: '话题',
+          link: '/topics'
         }
       ],
       keyword: '',

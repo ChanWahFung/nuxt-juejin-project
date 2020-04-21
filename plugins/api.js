@@ -206,5 +206,32 @@ export default ({ app: { $request } }, inject) => {
         tagId: data.tagId
       })
     },
+    /**
+     * 获取话题列表
+     * @param {string} sortType - 排序
+     * @param {number} page - 页码
+     * @param {number} pageSize - 条数
+     */
+    getTopicsList(params = {}) {
+      return $request.get('/v1/topics/list', params)
+    },
+    /**
+     * 获取已关注话题列表
+     * @param {string} after
+     * @param {number} page - 页码
+     * @param {number} pageSize - 条数
+     */
+    getTopicsFollowedList(params = {}) {
+      return $request.get('/v1/topics/followedList', params)
+    },
+    /**
+     * 关注话题
+     * @param {string} topicId 
+     */
+    followTopics(data = {}){
+      return $request[data.method]('/v1/topics/follow', { 
+        topicId: data.topicId
+      })
+    },
   })
 }
