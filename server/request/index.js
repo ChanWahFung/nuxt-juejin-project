@@ -29,14 +29,16 @@ module.exports = function (options){
   }
   return requestPromise(options)
     .then(res=> ({
-      res,
       statusCode: res.statusCode,
       statusMessage: res.statusMessage,
       headers: res.headers,
       body: res.body
     }))
-    .catch(err=> ({
-      body: { s: 0 },
-      err
-    }))
+    .catch(err=> {
+      console.log(err)
+      return {
+        body: { s: 0 },
+        err
+      }
+    })
 }

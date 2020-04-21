@@ -33,9 +33,9 @@ router.get('/list', validator({
       src: 'web',
       token: config.token,
       uid: config.uid,
-      sortType: ctx.query.sortType,
-      page: ctx.query.page - 1,
-      pageSize: ctx.query.pageSize
+      sortType: ctx.query.sortType || 'hot',
+      page: ctx.query.page - 1 || 0,
+      pageSize: ctx.query.pageSize || 100
     }
   };
   let { body } = await request(options)
@@ -71,9 +71,9 @@ router.get('/followedList', validator({
       src: 'web',
       token: config.token,
       uid: config.uid,
-      after: ctx.query.after,
-      page: ctx.query.page - 1,
-      pageSize: ctx.query.pageSize
+      after: ctx.query.after || 0,
+      page: ctx.query.page - 1 || 0,
+      pageSize: ctx.query.pageSize || 100
     }
   };
   let { body } = await request(options)

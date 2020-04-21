@@ -46,7 +46,7 @@ router.get('/entry', validator({
  * @param {string} entryId - 在文章详情内获取
  * @param {string} commentId - 评论id
  * @param {number} pageNum - 页码
- * @param {number} pageSize - 页数
+ * @param {number} pageSize - 条数
  */
 router.get('/reply', validator({
   entryId: { type: 'string', required: true },
@@ -74,8 +74,8 @@ router.get('/reply', validator({
       'X-Juejin-Uid': config.uid,
     },
     params: { 
-      pageNum: ctx.query.pageNum,
-      pageSize: ctx.query.pageSize
+      pageNum: ctx.query.pageNum || 1,
+      pageSize: ctx.query.pageSize || 10
     }
   };
   let { body } = await request(options)

@@ -22,7 +22,7 @@ router.get('/detail', validator({
       device_id: config.deviceId,
       token: config.token,
       src: 'web',
-      type: ctx.query.type,
+      type: ctx.query.type || 'entryView',
       postId: ctx.query.postId
     }
   };
@@ -32,7 +32,7 @@ router.get('/detail', validator({
 
 /**
  * 获取首页列表
- * @param {string} first - 单页数 默认20
+ * @param {string} first - 条数
  * @param {string} after - 分页标识，加载下一页传入
  * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
  * @param {string} category - 类目id
@@ -69,9 +69,9 @@ router.post('/indexList', validator({
       operationName: "", 
       query: "", 
       variables: { 
-        first: data.first, 
+        first: data.first || 20, 
         after: data.after || '',
-        order: data.order,
+        order: data.order || 'POPULAR',
         category: data.category || '',
         tags: data.tags || []
       }, 
@@ -97,7 +97,7 @@ router.post('/indexList', validator({
  * 获取用户专栏文章
  * @param {string} targetUid - 用户id
  * @param {string} before - 最后一条的createdAt，下一页传入
- * @param {number} limit - 单次条数
+ * @param {number} limit - 条数
  * @param {string} order - rankIndex：热门、createdAt：最新
  */
 router.get('/userPost', validator({

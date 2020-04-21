@@ -49,7 +49,7 @@ router.post('/tags', validator({
       query: "",
       variables: {
         category: params.catagoryId, 
-        limit: params.limit
+        limit: params.limit || 15
       },
       extensions: {query: {id: "801e22bdc908798e1c828ba6b71a9fd9"}},
     }
