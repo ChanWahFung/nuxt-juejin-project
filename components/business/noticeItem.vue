@@ -34,41 +34,35 @@ export default {
   filters: {
     type(item) {
       let typeDesc = {
-        'collection': () => '赞了',
-        'pin-like': () => '赞了你的沸点',
-        'comment': (item) => {
-          return item.reply.content ? '回复了你的评论' : '评论了'
-        },
-        'pin-reply': () => '回复了你在沸点里的评论',
-        'pin-comment': () => '回复了你的沸点',
-        'comment-like': () => '赞了你的评论',
-        'pin-comment-like': () => '赞了你的沸点评论',
+        'collection': '赞了',
+        'pin-like': '赞了你的沸点',
+        'comment': item.reply.content ? '回复了你的评论' : '评论了',
+        'pin-reply': '回复了你在沸点里的评论',
+        'pin-comment': '回复了你的沸点',
+        'comment-like': '赞了你的评论',
+        'pin-comment-like': '赞了你的沸点评论',
       }
-      return typeDesc[item.type] ? typeDesc[item.type](item) : ''
+      return typeDesc[item.type] || ''
     },
     content(item) {
       let contentDesc = {
-        'collection': (item) => item.entry.title,
-        'pin-like': (item) => item.pin.content,
-        'pin-comment': (item) => item.pin.content,
-        'comment': (item) => {
-          return item.reply.content ? item.comment.content : item.entry.title
-        },
-        'pin-reply': (item) => item.pinComment.content,
-        'comment-like': () => item.comment.content,
-        'pin-comment-like': () => item.pinComment.content,
+        'collection': item.entry.title,
+        'pin-like': item.pin.content,
+        'pin-comment': item.pin.content,
+        'comment': item.reply.content ? item.comment.content : item.entry.title,
+        'pin-reply': item.pinComment.content,
+        'comment-like': item.comment.content,
+        'pin-comment-like': item.pinComment.content,
       }
-      return contentDesc[item.type] ? contentDesc[item.type](item) : ''
+      return contentDesc[item.type] || ''
     },
     reply(item) {
       let replyDesc = {
-        'comment': (item) => {
-          return item.reply.content || item.comment.content
-        },
-        'pin-reply': (item) => item.pinReply.content,
-        'pin-comment': (item) => item.pinComment.content
+        'comment': item.reply.content || item.comment.content,
+        'pin-reply': item.pinReply.content,
+        'pin-comment': item.pinComment.content
       }
-      return replyDesc[item.type] ? replyDesc[item.type](item) : ''
+      return replyDesc[item.type] || ''
     }   
   },
   methods: {

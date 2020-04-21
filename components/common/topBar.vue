@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'TopBar',
@@ -74,7 +73,7 @@ export default {
   },
   watch: {
     '$route.path': {
-      handler: function (newVal, oldVal) {
+      handler(newVal, oldVal) {
         this.getUserNotificationNum()
         if (newVal != oldVal) {
           // 当前页面为消息页时 更新未读消息状态
