@@ -5,7 +5,9 @@
       <div class="list">
         <div class="topics-item" v-for="item in topicsFollowedList" :key="item.objectId">
           <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
-            <div class="item__icon count" :data-count="item.msgsCount" :style="`background-image: url(${item.icon})`"></div>
+            <div class="item__icon" :style="`background-image: url(${item.icon})`">
+              <span class="itme__msgs-count">{{ item.msgsCount | formatCount }}</span>
+            </div>
           </nuxt-link>
           <div class="item__info">
             <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
@@ -20,7 +22,7 @@
       <div class="list">
         <div class="topics-item" v-for="item in topicsList" :key="item.objectId">
           <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
-            <div class="item__icon count" :data-count="item.msgsCount" :style="`background-image: url(${item.icon})`"></div>
+            <div class="item__icon" :data-count="item.msgsCount" :style="`background-image: url(${item.icon})`"></div>
           </nuxt-link>
           <div class="item__info">
             <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
@@ -42,12 +44,12 @@ export default {
   },
   layout: 'default-white',
   async asyncData({ app }) {
-    let topicsList = await app.$api.getTopicsList({
+    let topicsList = await app.$api.getTopics({
       sortType: 'hot',
       page: 1,
       pageSize: 100
     }).then(res => res.s === 1 ? res.d.list : [])
-    let topicsFollowedList = await app.$api.getTopicsFollowedList({
+    let topicsFollowedList = await app.$api.getFollowedTopics({
       after: 0,
       page: 1,
       pageSize: 100
@@ -63,14 +65,21 @@ export default {
       topicsList: []
     }
   },
+  filters: {
+    formatCount(count) {
+      count = count / 1000
+      return count >= 1 ? count.toFixed(1) + 'k' : count
+    }
+  },
   methods: {
     async followTopics(item) {
-      let res = await this.$api.followTopics({
+      let res = await this.$api.followTopic({
         method: item.followed ? 'delete' : 'put',
-        topicId: item.objectId
+        topicIds: item.objectId
       })
       if (res.s === 1) {
         item.followed = !item.followed
+        !item.followed ? item.attendersCount++ : item.attendersCount--
       }
     }
   }
@@ -113,6 +122,23 @@ export default {
     border-radius: 12px;
     background-size: cover;
     background-repeat: no-repeat;
+
+    .itme__msgs-count{
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      margin: 0;
+      padding: 5px 7px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      text-align: center;
+      color: #f1f1f1;
+      background-color: $theme;
+      border-radius: 36px;
+      border: 2px solid #fff;
+      word-break: normal;
+    }
   }
 
   .item__info{
