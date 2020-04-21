@@ -40,7 +40,7 @@ export default {
         },
         {
           name: '话题',
-          link: '/topics'
+          link: '/topic'
         }
       ],
       keyword: '',

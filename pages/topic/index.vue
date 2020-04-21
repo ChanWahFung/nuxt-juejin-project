@@ -4,13 +4,13 @@
       <div class="list__title">我关注的话题</div>
       <div class="list">
         <div class="topics-item" v-for="item in topicsFollowedList" :key="item.objectId">
-          <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
+          <nuxt-link :to="'/topic/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
             <div class="item__icon" :style="`background-image: url(${item.icon})`">
               <span class="itme__msgs-count">{{ item.msgsCount | formatCount }}</span>
             </div>
           </nuxt-link>
           <div class="item__info">
-            <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
+            <nuxt-link class="item__title" :to="'/topic/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
             <span class="item__meta">{{ item.attendersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
             <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
           </div>
@@ -21,11 +21,11 @@
       <div class="list__title">全部话题</div>
       <div class="list">
         <div class="topics-item" v-for="item in topicsList" :key="item.objectId">
-          <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
+          <nuxt-link :to="'/topic/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
             <div class="item__icon" :data-count="item.msgsCount" :style="`background-image: url(${item.icon})`"></div>
           </nuxt-link>
           <div class="item__info">
-            <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
+            <nuxt-link class="item__title" :to="'/topic/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
             <span class="item__meta">{{ item.attendersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
             <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
           </div>
