@@ -162,7 +162,7 @@ export default ({ app: { $request } }, inject) => {
      * 获取类目
      */
     getCategories(){
-      return $request.get('/v1/categories/entry')
+      return $request.get('/v1/category/entry')
     },
     /**
      * 获取类目下的标签
@@ -170,7 +170,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} limit 
      */
     getTagByCategories(params = {}){
-      return $request.post('/v1/categories/tags', params)
+      return $request.post('/v1/category/tags', params)
     },
     /**
      * 获取已关注的标签
@@ -212,8 +212,8 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} page - 页码
      * @param {number} pageSize - 条数
      */
-    getTopicsList(params = {}) {
-      return $request.get('/v1/topics/list', params)
+    getTopics(params = {}) {
+      return $request.get('/v1/topic/list', params)
     },
     /**
      * 获取已关注话题列表
@@ -221,16 +221,16 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} page - 页码
      * @param {number} pageSize - 条数
      */
-    getTopicsFollowedList(params = {}) {
-      return $request.get('/v1/topics/followedList', params)
+    getFollowedTopics(params = {}) {
+      return $request.get('/v1/topic/followedList', params)
     },
     /**
      * 关注话题
      * @param {string} topicId 
      */
-    followTopics(data = {}){
-      return $request[data.method]('/v1/topics/follow', { 
-        topicId: data.topicId
+    followTopic(data = {}){
+      return $request[data.method]('/v1/topic/follow', { 
+        topicIds: data.topicIds
       })
     },
   })
