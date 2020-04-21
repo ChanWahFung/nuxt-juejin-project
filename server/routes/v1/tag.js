@@ -120,8 +120,9 @@ router.get('/all', validator({
     message: 'pageSize 需传入正整数'
   }
 }), async (ctx, next) => {
+  let { type, page, pageSize } = ctx.query
   const options = {
-    url: `https://gold-tag-ms.juejin.im/v1/tags/type/${ctx.query.type}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
+    url: `https://gold-tag-ms.juejin.im/v1/tags/type/${type}/page/${page}/pageSize/${pageSize}`,
     method: "GET",
     headers: {
       'X-Juejin-Client': config.deviceId,
@@ -157,8 +158,9 @@ router.get('/search', validator({
     message: 'pageSize 需传入正整数'
   }
 }), async (ctx, next) => {
+  let { type, keyword, page, pageSize } = ctx.query
   const options = {
-    url: `https://gold-tag-ms.juejin.im/v1/tag/type/${ctx.query.type}/search/${ctx.query.keyword}/page/${ctx.query.page}/pageSize/${ctx.query.pageSize}`,
+    url: `https://gold-tag-ms.juejin.im/v1/tag/type/${type}/search/${encodeURIComponent(keyword)}/page/${page}/pageSize/${pageSize}`,
     method: "GET",
     headers: {
       'X-Juejin-Client': config.deviceId,
