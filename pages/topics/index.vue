@@ -4,13 +4,13 @@
       <div class="list__title">我关注的话题</div>
       <div class="list">
         <div class="topics-item" v-for="item in topicsFollowedList" :key="item.objectId">
-          <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank">
+          <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
             <div class="item__icon count" :data-count="item.msgsCount" :style="`background-image: url(${item.icon})`"></div>
           </nuxt-link>
           <div class="item__info">
-            <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank">{{ item.title }}</nuxt-link>
+            <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
             <span class="item__meta">{{ item.attendersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
-            <span class="item__followbtn" :class="{'item__followed--active': item.followed}">{{ item.followed ? '已关注' : '+ 关注' }}</span>
+            <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
           </div>
         </div>
       </div>
@@ -19,13 +19,13 @@
       <div class="list__title">全部话题</div>
       <div class="list">
         <div class="topics-item" v-for="item in topicsList" :key="item.objectId">
-          <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank">
+          <nuxt-link :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">
             <div class="item__icon count" :data-count="item.msgsCount" :style="`background-image: url(${item.icon})`"></div>
           </nuxt-link>
           <div class="item__info">
-            <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank">{{ item.title }}</nuxt-link>
+            <nuxt-link class="item__title" :to="'/topics/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
             <span class="item__meta">{{ item.attendersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
-            <span class="item__followbtn" :class="{'item__followed--active': item.followed}">{{ item.followed ? '已关注' : '+ 关注' }}</span>
+            <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
           </div>
         </div>
       </div>
@@ -64,6 +64,15 @@ export default {
     }
   },
   methods: {
+    async followTopics(item) {
+      let res = await this.$api.followTopics({
+        method: item.followed ? 'delete' : 'put',
+        topicId: item.objectId
+      })
+      if (res.s === 1) {
+        item.followed = !item.followed
+      }
+    }
   }
 }
 </script>
@@ -116,7 +125,7 @@ export default {
     .item__title{
       font-weight: 600;
       color: #2e3135;
-      font-size: 16px;
+      font-size: 17px;
 
       &:hover{
         color: $theme;
@@ -125,16 +134,17 @@ export default {
 
     .item__meta{
       padding-top: 8px;
-      font-size: 12px;
+      font-size: 13px;
       color: #8a9aa9;
     }
 
     .item__followbtn{
       padding-top: 8px;
-      font-size: 12px;
+      font-size: 13px;
       color: #37c701;
+      cursor: pointer;
 
-      .item__followbtn--active{
+      &.item__followbtn--active{
         color: #8a9aa9;
       }
     }

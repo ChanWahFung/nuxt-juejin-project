@@ -20,9 +20,4 @@ export default {
 </script>
 
 <style>
-.main{
-  max-width: 960px;
-  margin: 0 auto;
-  margin-top: 20px;
-}
 </style>
