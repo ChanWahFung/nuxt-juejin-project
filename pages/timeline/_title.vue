@@ -43,7 +43,7 @@ export default {
       category: catgoryItem ? catgoryItem.id : ''
     }).then(res => res.s == 1 ? res.d : {})
     // 推荐作者
-    let recommendAuthors = await app.$api.getRecommendCard({ 
+    let recommendAuthors = await app.$api.getRecommendAuthor({ 
       limit: 5
     }).then(res => res.s == 1 ? res.d : [])
     return {

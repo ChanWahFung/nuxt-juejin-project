@@ -24,7 +24,7 @@ function useMiddleware(){
     },
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 86400,
-    credentials: true,
+    credentials: true,  // 允许携带头部验证信息
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
   })) 

@@ -108,8 +108,8 @@ export default ({ app: { $request } }, inject) => {
      * 获取推荐作者
      * @param {number} limit - 条数
      */
-    getRecommendCard(params = {}){
-      return $request.get('/v1/user/recommendCard', params)
+    getRecommendAuthor(params = {}){
+      return $request.get('/v1/recommend/recommendAuthor', params)
     },
     /**
      * 获取相关文章
