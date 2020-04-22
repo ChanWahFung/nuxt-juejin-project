@@ -41,6 +41,10 @@ export default {
         {
           name: '话题',
           link: '/topic'
+        },
+        {
+          name: '小册',
+          link: '/book'
         }
       ],
       keyword: '',

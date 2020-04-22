@@ -233,5 +233,19 @@ export default ({ app: { $request } }, inject) => {
         topicIds: data.topicIds
       })
     },
+    /**
+     * 获取小册类目
+     */
+    getBookChannel() {
+      return $request.get('/v1/book/navList')
+    },
+    /**
+     * 获取小册列表
+     * @param {string} alias - 类目名
+      * @param {number} pageNum
+     */
+    getBooks(params = {}) {
+      return $request.get('/v1/book/getListByLastTime', params)
+    }
   })
 }

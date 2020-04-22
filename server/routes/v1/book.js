@@ -9,7 +9,7 @@ const config = require('../../request/config')
  */
 router.get('/navList', async (ctx, next) => {
   const options = {
-    utl: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getNavList',
+    url: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getNavList',
     method: 'GET'
   }
   let { body } = await request(options)
@@ -31,7 +31,7 @@ router.get('/getListByLastTime', validator({
   }
 }), async (ctx, next) => {
   const options = {
-    utl: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getListByLastTime',
+    url: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getListByLastTime',
     method: 'GET',
     params: {
       client_id: config.deviceId,
