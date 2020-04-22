@@ -237,15 +237,30 @@ export default ({ app: { $request } }, inject) => {
      * 获取小册类目
      */
     getBookChannel() {
-      return $request.get('/v1/book/navList')
+      return $request.get('/v1/book/channel')
     },
     /**
      * 获取小册列表
      * @param {string} alias - 类目名
-      * @param {number} pageNum
+     * @param {number} pageNum
      */
     getBooks(params = {}) {
       return $request.get('/v1/book/getListByLastTime', params)
-    }
+    },
+    /**
+     * 作者排行类目
+     */
+    getAuthorChannel() {
+      return $request.get('/v1/recommend/channel')
+    },
+    /**
+     * 作者榜单
+     * @param {string} channel - 类目名
+     * @param {string} after - 分页标识
+     * @param {number} first - 条数
+     */
+    getAuthorRank(params = {}) {
+      return $request.get('/v1/recommend/authorRank', params)
+    },
   })
 }

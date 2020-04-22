@@ -55,7 +55,7 @@ router.get('/recommendAuthor', validator({
 /**
  * 类目列表
  */
-router.get('/recommended', async (ctx, next) => {
+router.get('/channel', async (ctx, next) => {
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
@@ -83,7 +83,7 @@ router.get('/recommended', async (ctx, next) => {
  */
 router.get('/authorRank', validator({
   channel: { type: 'string', required: true },
-  after: { type: 'string', required: true },
+  after: { type: 'string' },
   first: {
     type: 'string', 
     required: true,

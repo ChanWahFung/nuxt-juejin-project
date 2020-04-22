@@ -7,7 +7,7 @@ const config = require('../../request/config')
 /**
  * 小册类目
  */
-router.get('/navList', async (ctx, next) => {
+router.get('/channel', async (ctx, next) => {
   const options = {
     url: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getNavList',
     method: 'GET'
