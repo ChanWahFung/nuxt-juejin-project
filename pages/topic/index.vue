@@ -44,16 +44,20 @@ export default {
   },
   layout: 'default-white',
   async asyncData({ app }) {
-    let topicsList = await app.$api.getTopics({
-      sortType: 'hot',
-      page: 1,
-      pageSize: 100
-    }).then(res => res.s === 1 ? res.d.list : [])
-    let topicsFollowedList = await app.$api.getFollowedTopics({
-      after: 0,
-      page: 1,
-      pageSize: 100
-    }).then(res => res.s === 1 ? res.d.list : [])
+    let [topicsList, topicsFollowedList] = await Promise.all([
+      // 全部话题
+      app.$api.getTopics({
+        sortType: 'hot',
+        page: 1,
+        pageSize: 100
+      }).then(res => res.s === 1 ? res.d.list : []),
+      // 我关注的话题
+      app.$api.getFollowedTopics({
+        after: 0,
+        page: 1,
+        pageSize: 100
+      }).then(res => res.s === 1 ? res.d.list : [])
+    ])
     return {
       topicsList,
       topicsFollowedList

@@ -38,18 +38,21 @@ export default {
     // 分类列表
     let categoryList = await app.$api.getCategories().then(res => res.s === 1 ? res.d.categoryList : [])
     let catgoryItem = categoryList.filter(item => item.title === params.title)[0]
-    // 文章列表
-    let indexData = await app.$api.getIndexList({
-      first: 20,
-      order: 'POPULAR',
-      category: catgoryItem ? catgoryItem.id : ''
-    }).then(res => res.s == 1 ? res.d : {})
-    // 推荐作者
-    let recommendAuthors = await app.$api.getRecommendAuthor({ 
-      limit: 5
-    }).then(res => res.s == 1 ? res.d : [])
-    // 推荐小册
-    let recommendBooks = await app.$api.getRecommendBook().then(res => res.s === 1 ? res.d.data : [])
+
+    let [indexData, recommendAuthors, recommendBooks] = await Promise.all([
+      // 文章列表
+      app.$api.getIndexList({
+        first: 20,
+        order: 'POPULAR',
+        category: catgoryItem ? catgoryItem.id : ''
+      }).then(res => res.s == 1 ? res.d : {}),
+      // 推荐作者
+      app.$api.getRecommendAuthor({ 
+        limit: 5
+      }).then(res => res.s == 1 ? res.d : []),
+      // 推荐小册
+      app.$api.getRecommendBook().then(res => res.s === 1 ? res.d.data : [])
+    ])
     return {
       categoryList: [],
       list: indexData.edges || [],
