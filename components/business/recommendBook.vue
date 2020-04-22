@@ -1,7 +1,7 @@
 <template functional>
   <div class="book-block shadow">
     <div class="book-block__title">你可能感兴趣的小册</div>
-    <nuxt-link :to="'/book/'+item._id" class="book-item" v-for="item in props.list" :key="item._id">
+    <nuxt-link tag="div" :to="'/book/'+item._id" class="book-item" v-for="item in props.list" :key="item._id">
       <div class="item__cover" :style="`background-image: url(${item.img})`"></div>
       <div class="item__info">
         <div class="item__title">{{ item.title }}</div>
@@ -72,10 +72,20 @@
     color: #878c90;
     
     .item__raed-btn{
+      display: flex;
+      align-items: center;
       padding: 3px;
       color: #fff;
       background: $theme;
       border-radius: 2px;
+
+      &:after{
+        content: '';
+        display: inline-block;
+        margin-left: 4px;
+        border: 3px solid transparent;
+        border-left-color: #fff;
+      }
     }
   }
 }
