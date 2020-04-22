@@ -18,6 +18,7 @@
         <div class="ellipsis">{{ item.description }}</div>
       </div>
     </nuxt-link>
+    <nuxt-link tag="div" to="/recommendation/authors/recommended" class="author-block__footer">完整榜单</nuxt-link>
   </div>
 </template>
 
@@ -41,6 +42,27 @@ export default {
     padding: 15px;
     font-size: 15px;
     border-bottom: 1px solid #eee;
+  }
+
+  .author-block__footer{
+    padding: 15px;
+    font-size: 14px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    color: $theme;
+    cursor: pointer;
+
+    &:after{
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-left: 3px;
+      border: 2px solid currentColor;
+      border-left-color: transparent;
+      border-bottom-color: transparent;
+      transform: rotate(45deg);
+    }
   }
 
   .author-item{
