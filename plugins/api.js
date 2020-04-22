@@ -248,6 +248,12 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v1/book/getListByLastTime', params)
     },
     /**
+     * 推荐小册
+     */
+    getRecommendBook() {
+      return $request.get('/v1/recommend/books')
+    },
+    /**
      * 作者排行类目
      */
     getAuthorChannel() {

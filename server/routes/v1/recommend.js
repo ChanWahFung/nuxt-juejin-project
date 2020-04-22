@@ -126,4 +126,23 @@ router.get('/authorRank', validator({
   }
 })
 
+/**
+ * 推荐小册
+ */
+router.get('/books', async (ctx, next) => {
+  const options = {
+    url: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getRecommendBooks',
+    method: 'GET',
+    params: {
+      client_id: config.deviceId,
+      src: 'web',
+      token: config.token,
+      uid: config.uid,
+      category: '5562b428e4b00c57d9b94b9d'
+    }
+  }
+  let { body } = await request(options)
+  ctx.body = body
+})
+
 module.exports = router

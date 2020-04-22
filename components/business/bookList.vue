@@ -1,6 +1,6 @@
 <template>
   <div class="books">
-    <div class="book-item" v-for="item in list" :key="item._id">
+    <nuxt-link :to="'/book/'+item._id" class="book-item" v-for="item in list" :key="item._id">
       <div class="book__cover" :style="`background-image: url(${item.img})`"></div>
       <div class="book__info">
         <div class="book__title">{{ item.title }}</div>
@@ -20,7 +20,7 @@
           <span class="book__meta">{{ item.lastSectionCount }}小节 · {{ item.buyCount }}人已购买</span>
         </div>
       </div>
-    </div>
+    </nuxt-link>
   </div>
 </template>
 

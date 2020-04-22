@@ -11,7 +11,7 @@
           </nuxt-link>
           <div class="item__info">
             <nuxt-link class="item__title" :to="'/topic/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
-            <span class="item__meta">{{ item.attendersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
+            <span class="item__meta">{{ item.followersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
             <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
           </div>
         </div>
@@ -26,7 +26,7 @@
           </nuxt-link>
           <div class="item__info">
             <nuxt-link class="item__title" :to="'/topic/'+item.objectId" :title="item.description" target="_blank" rel="noopener noreferrer">{{ item.title }}</nuxt-link>
-            <span class="item__meta">{{ item.attendersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
+            <span class="item__meta">{{ item.followersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
             <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
           </div>
         </div>

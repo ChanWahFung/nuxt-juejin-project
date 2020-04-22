@@ -16,6 +16,7 @@
       </div>
       <div class="index-side">
         <author-rank :list="recommendAuthors"></author-rank>
+        <recommend-book :list="recommendBooks"></recommend-book>
       </div>
     </div>
   </div>
@@ -24,6 +25,7 @@
 <script>
 import reachBottom from '~/mixins/reachBottom'
 import authorRank from '~/components/business/authorRank'
+import recommendBook from '~/components/business/recommendBook'
 import indexNav from '~/components/business/indexNav'
 
 export default {
@@ -46,16 +48,20 @@ export default {
     let recommendAuthors = await app.$api.getRecommendAuthor({ 
       limit: 5
     }).then(res => res.s == 1 ? res.d : [])
+    // 推荐小册
+    let recommendBooks = await app.$api.getRecommendBook().then(res => res.s === 1 ? res.d.data : [])
     return {
       categoryList: [],
       list: indexData.edges || [],
       pageInfo: indexData.pageInfo || {},
-      recommendAuthors
+      recommendAuthors,
+      recommendBooks
     };
   },
   mixins: [reachBottom],
   components: {
     'author-rank': authorRank,
+    'recommend-book': recommendBook,
     'index-nav': indexNav
   },
   data() {
@@ -103,6 +109,7 @@ export default {
       list: [],
       pageInfo: {},
       recommendAuthors: [],
+      recommendBooks: [],
       isReachBottomFetching: false,  // 防止触底多次请求
     };
   },
