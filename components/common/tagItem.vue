@@ -1,14 +1,16 @@
 <template>
-  <div class="tag-item" @click="toTag(item.title)">
-    <img :src="item.icon" class="tag-item__avatar">
-    <div class="tag-item__info">
-      <p class="tag-item__title" v-html="highlight.title || item.title"></p>
-      <p>{{ item.subscribersCount }}关注 · {{ item.entryCount }}文章</p>
+  <nuxt-link :to="'/tag/'+item.title" target="_blank">
+    <div class="tag-item">
+      <img :src="item.icon" class="tag-item__avatar">
+      <div class="tag-item__info">
+        <p class="tag-item__title" v-html="highlight.title || item.title"></p>
+        <p>{{ item.subscribersCount }}关注 · {{ item.entryCount }}文章</p>
+      </div>
+      <div class="tag-item__btn">
+        <follow-btn type="tag" v-model="item.viewerIsFollowing" :followee-id="item.id"></follow-btn>
+      </div>
     </div>
-    <div class="tag-item__btn">
-      <follow-btn type="tag" v-model="item.viewerIsFollowing" :followee-id="item.id"></follow-btn>
-    </div>
-  </div>
+  </nuxt-link>
 </template>
 
 <script>
@@ -21,17 +23,6 @@ export default {
     highlight: {
       type: Object,
       default: () => ({})
-    }
-  },
-  data() {
-    return {
-    }
-  },
-  created() {
-  },
-  methods: {
-    toTag(tagName) {
-      this.$router.push(`/tag/${tagName}`)
     }
   }
 }

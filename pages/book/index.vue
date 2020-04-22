@@ -9,9 +9,12 @@
 <script>
 import reachBottom from '~/mixins/reachBottom'
 import bookList from '~/components/business/bookList'
+
 export default {
-  components: {
-    'book-list': bookList
+  head() {
+    return {
+      title: '掘金小册'
+    }
   },
   async asyncData({ app }) {
     let books = await app.$api.getBooks({
@@ -23,6 +26,9 @@ export default {
     }
   },
   mixins: [reachBottom],
+  components: {
+    'book-list': bookList
+  },
   data() {
     return {
       books: [],

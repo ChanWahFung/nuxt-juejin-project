@@ -1,13 +1,15 @@
 <template functional>
   <div class="book-block shadow">
     <div class="book-block__title">你可能感兴趣的小册</div>
-    <nuxt-link tag="div" :to="'/book/'+item._id" class="book-item" v-for="item in props.list" :key="item._id">
-      <div class="item__cover" :style="`background-image: url(${item.img})`"></div>
-      <div class="item__info">
-        <div class="item__title">{{ item.title }}</div>
-        <div class="item__bought">
-          <div>{{ item.buyCount }}人已购买</div>
-          <div class="item__raed-btn">试读</div>
+    <nuxt-link :to="'/book/'+item._id" v-for="item in props.list" :key="item._id">
+      <div class="book-item">
+        <div class="item__cover" :style="`background-image: url(${item.img})`"></div>
+        <div class="item__info">
+          <div class="item__title">{{ item.title }}</div>
+          <div class="item__bought">
+            <div>{{ item.buyCount }}人已购买</div>
+            <div class="item__raed-btn">试读</div>
+          </div>
         </div>
       </div>
     </nuxt-link>

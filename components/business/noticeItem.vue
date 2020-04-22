@@ -1,10 +1,10 @@
 <template>
   <div class="notice-item shadow">
-    <nuxt-link v-if="item.users[0]" :to="`/user/${item.users[0].uid}`" class="notice-item__avatar">
+    <nuxt-link v-if="item.users[0]" class="notice-item__avatar" :to="`/user/${item.users[0].uid}`" target="_blank">
       <user-avatar :url="item.users[0].avatarLarge" :round="true"></user-avatar>
     </nuxt-link>
     <div class="notice-item__info">
-      <nuxt-link class="info__username" v-if="item.users[0]" :to="`/user/${item.users[0].uid}`">{{ item.users[0].username }}</nuxt-link>
+      <nuxt-link v-if="item.users[0]" class="info__username" :to="`/user/${item.users[0].uid}`" target="_blank">{{ item.users[0].username }}</nuxt-link>
       <div class="info__meta">
         <span v-if="item.users[0]" class="info__job">
           {{ item.users[0].jobTitle }}
@@ -17,7 +17,7 @@
       <p class="info__reply" v-if="item.type == 'comment' || item.type == 'pin-reply' || item.type == 'pin-comment'">{{ item | reply }}</p>
       <p class="info__entry ellipsis">
         <span class="info__type">{{ item | type }}:</span>
-        <span class="info__content" @click="toDetail(item.entry.originalUrl)">{{ item | content }}</span>
+        <nuxt-link class="info__content" :to="'/detail/'+detailId" target="_blank">{{ item | content }}</nuxt-link>
       </p>
     </div>
   </div>
@@ -29,6 +29,11 @@ export default {
     item: {
       type: Object,
       default: () => ({})
+    }
+  },
+  computed: {
+    detailId() {
+      return this.item.entry.originalUrl ? this.item.entry.originalUrl.split('/').pop() : ''
     }
   },
   filters: {
@@ -64,15 +69,6 @@ export default {
       }
       return replyDesc[item.type] || ''
     }   
-  },
-  methods: {
-    toDetail(originalUrl) {
-      if (!originalUrl) { 
-        return 
-      }
-      let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
-      window.open(href, '_blank', 'noopener noreferrer')
-    }
   }
 }
 </script>

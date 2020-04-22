@@ -38,7 +38,6 @@ export default {
     // 分类列表
     let categoryList = await app.$api.getCategories().then(res => res.s === 1 ? res.d.categoryList : [])
     let catgoryItem = categoryList.filter(item => item.title === params.title)[0]
-
     let [indexData, recommendAuthors, recommendBooks] = await Promise.all([
       // 文章列表
       app.$api.getIndexList({

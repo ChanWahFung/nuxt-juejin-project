@@ -2,17 +2,17 @@
   <div class="user-follow-item shadow">
     <div class="follow__count">{{ item.count }}个新的关注者</div>
     <div class="user-item" v-for="user in item.users" :key="user.uid">
-      <div class="user__avatar" @click="toUser(user.uid)">
+      <nuxt-link class="user__avatar" :to="'/user/'+user.uid" target="_blank">
         <user-avatar :url="user.avatarLarge" :round="true"></user-avatar>
-      </div>
-      <div class="user__info" @click="toUser(user.uid)">
+      </nuxt-link>
+      <nuxt-link class="user__info" :to="'/user/'+user.uid" target="_blank">
         <span class="user__name">{{ user.username }}</span>
         <span class="user__job">
           {{ user.jobTitle }}
           {{ user.jobTitle && user.company ? '@' : '' }}
           {{ user.company }}
         </span>
-      </div>
+      </nuxt-link>
       <follow-btn v-model="user.isFollowerFollowed" type="user" :followee-id="user.uid"></follow-btn>
     </div>
   </div>
@@ -24,11 +24,6 @@ export default {
     item: {
       type: Object,
       default: () => ({})
-    }
-  },
-  methods: {
-    toUser(uid) {
-      this.$router.push('/user/' + uid)
     }
   },
 }

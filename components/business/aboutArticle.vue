@@ -1,19 +1,21 @@
 <template>
   <div class="about-article shadow">
     <div class="about-article__title">相关文章</div>
-    <div class="article-item" v-for="item in list" :key="item.objectId" @click="toDetail(item.originalUrl)">
-      <div class="article__title">{{ item.title }}</div>
-      <div class="article__meta">
-        <div class="meta-item">
-          <img class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-          {{ item.collectionCount }}
-        </div>
-        <div class="meta-item">
-          <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
-          {{ item.commentsCount }}
+    <nuxt-link v-for="item in list" :key="item.objectId" :to="'/detail/'+item.originalUrl.split('/').pop()">
+      <div class="article-item">
+        <div class="article__title">{{ item.title }}</div>
+        <div class="article__meta">
+          <div class="meta-item">
+            <img class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
+            {{ item.collectionCount }}
+          </div>
+          <div class="meta-item">
+            <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
+            {{ item.commentsCount }}
+          </div>
         </div>
       </div>
-    </div>
+    </nuxt-link>
   </div>
 </template>
 
@@ -24,16 +26,7 @@ export default {
       type: Array,
       default: () => []
     }
-  },
-  methods: {
-    toDetail(originalUrl) {
-      if (!originalUrl) { 
-        return 
-      }
-      let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
-      window.open(href, '_blank', 'noopener noreferrer')
-    }
-  },
+  }
 }
 </script>
 

@@ -1,11 +1,11 @@
 <template>
   <div class="comment-item">
-    <nuxt-link class="comment-item__avatar" :to="'/user/'+data.userId">
+    <nuxt-link class="comment-item__avatar" :to="'/user/'+data.userId" target="_blank">
       <user-avatar :url="data.userInfo.avatarLarge" :round="true"></user-avatar>
     </nuxt-link>
     <div class="comment-item__main">
       <div class="comment-item__userinfo">
-        <nuxt-link :to="'/user/'+data.userId" class="comment-item__username">
+        <nuxt-link :to="'/user/'+data.userId" class="comment-item__username" target="_blank">
           <span style="margin-right:5px">{{ data.userInfo.username }}</span>
           <level :level="data.userInfo.level"></level>
         </nuxt-link>
@@ -21,12 +21,12 @@
       </div>
       <div v-if="data.topComment.length" class="comment-item__reply-area">
         <div class="reply-item" v-for="item in data.topComment" :key="item.id">
-          <div class="comment-item__avatar" @click="toUser(item.userId)">
+          <nuxt-link :to="'/user/'+item.userId" class="comment-item__avatar" target="_blank">
             <user-avatar :url="item.userInfo.avatarLarge" :round="true"></user-avatar>
-          </div>
+          </nuxt-link>
           <div class="comment-item__main">
             <div class="comment-item__userinfo">
-              <nuxt-link :to="'/user/'+item.userId" class="comment-item__username">
+              <nuxt-link :to="'/user/'+item.userId" class="comment-item__username" target="_blank">
                 <span style="margin-right:5px">{{ item.userInfo.username }}</span>
                 <level :level="item.userInfo.level"></level>
                 <span v-if="item.userId === authorId" style="margin-left:5px">(作者)</span>
@@ -40,7 +40,7 @@
             <p class="comment-item__content">
               <span class="comment-item__resp-userinfo">
                 回复 
-                <nuxt-link class="comment-item__resp-username" :to="'/user/'+item.respUserInfo.objectId"> {{ item.respUserInfo.username }} </nuxt-link>
+                <nuxt-link class="comment-item__resp-username" :to="'/user/'+item.respUserInfo.objectId" target="_blank"> {{ item.respUserInfo.username }} </nuxt-link>
                 <level :level="item.respUserInfo.level"></level>:
               </span>
               <span>{{ item.content }}</span>
@@ -83,9 +83,6 @@ export default {
     }
   },
   methods: {
-    toUser(id) {
-      this.$router.push('/user/' + id)
-    },
     getReplyMore() {
       if (this.entryId) {
         this.$api.getReplyList({

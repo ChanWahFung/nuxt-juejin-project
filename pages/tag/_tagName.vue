@@ -15,7 +15,7 @@
         </div>
       </div>
       <artic-list :list="articleList"></artic-list>
-      <div class="nodata-tip">暂无文章</div>
+      <div v-if="articleList.length === 0" class="nodata-tip">暂无文章</div>
     </main>
   </div>
 </template>

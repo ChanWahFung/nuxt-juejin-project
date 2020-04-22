@@ -8,10 +8,10 @@
     </div>
     <div class="post-item__cover" v-if="item.screenshot" :style="{'background-image': `url(${item.screenshot})`}" @click="toDetail(item.originalUrl)"></div>
     <h1 class="post-item__title">
-      <span @click="toDetail(item.originalUrl)">{{ item.title }}</span>
+      <nuxt-link :to="'/detail/'+detailId" target="_blank">{{ item.title }}</nuxt-link>
     </h1>
     <p class="post-item__content">
-      <span @click="toDetail(item.originalUrl)">{{ item.content }}</span>
+      <nuxt-link :to="'/detail/'+detailId" target="_blank">{{ item.content }}</nuxt-link>
     </p>
     <div class="post-item__mate">
       <ul class="meta__action">
@@ -27,7 +27,7 @@
       </ul>
       <div class="meta__info">
         <span class="meta__count">阅读 {{ item.viewsCount }}</span>
-        <span class="meta__original" @click="toDetail(item.originalUrl)">阅读原文</span>
+        <nuxt-link class="meta__original" :to="'/detail/'+detailId" target="_blank">阅读原文</nuxt-link>
       </div>
     </div>
   </div>
@@ -50,14 +50,12 @@ export default {
       likeLoading: false
     }
   },
+  computed: {
+    detailId() {
+      return this.item.originalUrl ? this.item.originalUrl.split('/').pop() : ''
+    }
+  },
   methods: {
-    toDetail(originalUrl) {
-      if (!originalUrl) { 
-        return 
-      }
-      let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
-      window.open(href, '_blank', 'noopener noreferrer')
-    },
     async articleLike() {
       if (this.likeLoading) {
         return

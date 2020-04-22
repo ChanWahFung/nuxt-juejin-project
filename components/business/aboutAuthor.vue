@@ -2,7 +2,7 @@
   <div class="about-author shadow" v-if="info">
     <div class="about-author__title">关于作者</div>
     <div class="author__main">
-      <nuxt-link tag="div" :to="'/user/'+info.uid" class="author__info-block">
+      <nuxt-link :to="'/user/'+info.uid" class="author__info-block" target="_blank">
         <div class="author__avatar">
           <user-avatar :url="info.avatarLarge" :round="true"></user-avatar>
         </div>

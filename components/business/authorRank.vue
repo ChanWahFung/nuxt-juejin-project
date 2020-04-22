@@ -1,24 +1,30 @@
 <template>
   <div class="author-block shadow">
     <div class="author-block__title">🎖️ 作者榜</div>
-    <nuxt-link tag="div" :to="'/user/'+item.author.id" class="author-item" v-for="item in list" :key="item.id">
-      <div class="author__avatar">
-        <user-avatar :url="item.author.avatarLarge" :round="true"></user-avatar>
-      </div>
-      <div class="author__info">
-        <div class="author__name">
-          {{ item.author.username }}
-          <level :level="item.author.level"></level>
+    <nuxt-link :to="'/user/'+item.author.id" target="_blank" v-for="item in list" :key="item.id">
+      <div class="author-item">
+        <div class="author__avatar">
+          <user-avatar :url="item.author.avatarLarge" :round="true"></user-avatar>
         </div>
-        <div class="ellipsis">
-          {{ item.author.jobTitle }}
-          {{ item.author.jobTitle && item.author.company ? '@' : '' }}
-          {{ item.author.company }}
+        <div class="author__info">
+          <div class="author__name">
+            {{ item.author.username }}
+            <level :level="item.author.level"></level>
+          </div>
+          <div class="ellipsis">
+            {{ item.author.jobTitle }}
+            {{ item.author.jobTitle && item.author.company ? '@' : '' }}
+            {{ item.author.company }}
+          </div>
+          <div class="ellipsis">{{ item.description }}</div>
         </div>
-        <div class="ellipsis">{{ item.description }}</div>
       </div>
     </nuxt-link>
-    <nuxt-link tag="div" to="/recommendation/authors/recommended" class="author-block__footer">完整榜单</nuxt-link>
+    <nuxt-link to="/recommendation/authors/recommended">
+      <div class="author-block__footer">
+        完整榜单
+      </div>
+    </nuxt-link>
   </div>
 </template>
 

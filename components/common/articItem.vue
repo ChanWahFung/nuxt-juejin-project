@@ -1,16 +1,24 @@
 <template>
-  <div class="artic-item" @click="toDetail(item.originalUrl)">
+  <div class="artic-item" @click="toDetail">
     <div class="artic-item__info">
       <ul class="artic-item__meta">
-        <li class="meta-item mate-item--post" v-if="item.type === 'post'">专栏</li>
+        <li class="meta-item mate-item--post" v-if="item.type === 'post'">
+          <span>专栏</span>
+        </li>
         <li class="meta-item">
-          <span class="meta-item__username" @click.stop="$router.push('/user/'+(item.user.id || item.user.objectId))">{{ item.user.username }}</span>
+          <span class="meta-item__username">
+            <nuxt-link :to="'/user/'+(item.user.id || item.user.objectId)" target="_blank">{{ item.user.username }}</nuxt-link>
+          </span>
         </li>
         <li class="meta-item">{{ item.createdAt | formatTime }}</li>
         <li class="meta-item">
-          <span v-if="item.tags.length && item.category" class="meta-item__tag" @click.stop="$router.push('/tag/'+item.tags[0].title)">{{ item.tags[0].title }}</span>
-          <span v-else v-for="tag in item.tags" :key="tag.id" class="meta-item__tag" @click.stop="$router.push('/tag/'+tag.title)">{{ tag.title }}</span>
-          <span v-if="item.category" class="meta-item__tag" @click.stop="$router.push('/tag/'+item.category.name)">{{ item.category.name }}</span>
+          <span v-if="item.tags.length && item.category" class="meta-item__tag">
+            <nuxt-link :to="'/tag/'+item.tags[0].title" target="_blank">{{ item.tags[0].title }}</nuxt-link>
+          </span>
+          <span v-else v-for="tag in item.tags.slice(0, 2)" :key="tag.id" class="meta-item__tag">
+            <nuxt-link :to="'/tag/'+tag.title" target="_blank">{{ tag.title }}</nuxt-link>
+          </span>
+          <span v-if="item.category" class="meta-item__tag" :to="'/tag/'+item.category.name" target="_blank">{{ item.category.name }}</span>
         </li>
       </ul>
       <p class="artic-item__title ellipsis " v-html="highlight.title || item.title"></p>
@@ -60,15 +68,20 @@ export default {
     likeCountField() {
       let fields = ['collectionCount', 'likeCount']
       return fields.filter(key => this.item[key] == undefined ? false : key)[0]
+    },
+    detailId() {
+      return this.item.originalUrl ? this.item.originalUrl.split('/').pop() : ''
     }
   },
   methods: {
-    toDetail(originalUrl) {
-      if (!originalUrl) { 
-        return 
-      }
-      let href = originalUrl.includes('juejin') ? `/detail/${originalUrl.split('/').pop()}` : originalUrl
-      window.open(href, '_blank', 'noopener noreferrer')
+    toDetail() {
+      let routeUrl = this.$router.resolve({
+        name: 'detail-id',
+        params: {
+          id: this.detailId
+        }
+      })
+      window.open(routeUrl.href, '_blank')
     },
     async articleLike() {
       let id = this.item.id

@@ -1,27 +1,29 @@
 <template>
-  <div class="user-item" @click="$router.push('/user/'+item.id)">
-    <div class="user-item__avatar">
-      <user-avatar :url="item.avatarLarge" :round="true"></user-avatar>
+  <nuxt-link :to="'/user/'+item.id" target="_blank">
+    <div class="user-item">
+      <div class="user-item__avatar">
+        <user-avatar :url="item.avatarLarge" :round="true"></user-avatar>
+      </div>
+      <div class="user-item__info">
+        <p class="user-item__userinfo">
+          <span class="user-item__username" v-html="highlight.username || item.username"></span>
+          <span v-if="item.level > 0" style="margin-right: 10px">
+            <level :level="item.level"></level>
+          </span>
+          <span v-if="highlight.jobTitle" v-html="highlight.jobTitle"></span>
+          <span v-else>
+            {{ item.jobTitle }}
+            {{ item.jobTitle&&item.company ? ' @ ' : '' }}
+            {{ item.company }}
+          </span>
+        </p>
+        <p>{{ item.postedPostsCount }}专栏 · {{ item.followersCount }}个关注者</p>
+      </div>
+      <div class="user-item__btn">
+        <follow-btn v-model="item.viewerIsFollowing" type="user" :followee-id="item.id"></follow-btn>
+      </div>
     </div>
-    <div class="user-item__info">
-      <p class="user-item__userinfo">
-        <span class="user-item__username" v-html="highlight.username || item.username"></span>
-        <span v-if="item.level > 0" style="margin-right: 10px">
-          <level :level="item.level"></level>
-        </span>
-        <span v-if="highlight.jobTitle" v-html="highlight.jobTitle"></span>
-        <span v-else>
-          {{ item.jobTitle }}
-          {{ item.jobTitle&&item.company ? ' @ ' : '' }}
-          {{ item.company }}
-        </span>
-      </p>
-      <p>{{ item.postedPostsCount }}专栏 · {{ item.followersCount }}个关注者</p>
-    </div>
-    <div class="user-item__btn">
-      <follow-btn v-model="item.viewerIsFollowing" type="user" :followee-id="item.id"></follow-btn>
-    </div>
-  </div>
+  </nuxt-link>
 </template>
 
 <script>
