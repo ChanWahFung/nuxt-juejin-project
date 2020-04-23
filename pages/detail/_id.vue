@@ -5,10 +5,10 @@
         <div class="detail">
           <div class="detail__header">
             <div class="detail__userInfo">
-              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__avatar">
+              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__avatar" target="_blank">
                 <user-avatar :url="articInfo.user.avatarLarge" :round="true"></user-avatar>
               </nuxt-link>
-              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__name">
+              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__name" target="_blank">
                 <span style="margin-right: 10px">{{ articInfo.user.username }}</span>
                 <level :level="articInfo.user.level"></level>
               </nuxt-link>
@@ -25,12 +25,12 @@
         </div>
         <div class="tags">
           <p class="tags__title">关注下面的标签，发现更多相似文章</p>
-          <nuxt-link :to="'/tag/'+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag">
+          <nuxt-link :to="'/tag/'+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag" target="_blnk">
             <img class="tag__icon" :src="item.icon" />
             <span class="tag__title">{{ item.title }}</span>
           </nuxt-link>
         </div>
-        <nuxt-link :to="'/user/' + authorInfo.uid" v-if="authorInfo" class="author-info">
+        <nuxt-link :to="'/user/' + authorInfo.uid" v-if="authorInfo" class="author-info" target="_blank">
           <div class="author__avatar">
             <user-avatar :url="authorInfo.avatarLarge" :round="true"></user-avatar>
           </div>
