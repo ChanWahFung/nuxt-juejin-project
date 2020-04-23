@@ -67,7 +67,7 @@
       <about-article :list="aboutArticles"></about-article>
       <catalog></catalog>
     </div>
-    <article-suspended-panel :like-count="articInfo.collectionCount" :comment-count="articInfo.commentsCount" :is-like="isLike" @setgood-handler="setGood"></article-suspended-panel>
+    <article-suspended-panel ref="panel" :like-count="articInfo.collectionCount" :comment-count="articInfo.commentsCount" :is-like="isLike" @setgood-handler="setGood"></article-suspended-panel>
   </div>
 </template>
 
@@ -169,11 +169,14 @@ export default {
     this.getCommentList({
       pageSize: 5
     })
+    this.isCurrentUserFollowed(this.authorInfo.uid).then(res => (this.isFollowed = res))
+    this.isArticleLike(this.articDetail.entryId).then(res => (this.isLike = res))
     if (this.articInfo.tags) {
       this.tagIds = this.articInfo.tags.map(item => item.id)
     }
-    this.isCurrentUserFollowed(this.authorInfo.uid).then(res => (this.isFollowed = res))
-    this.isArticleLike(this.articDetail.entryId).then(res => (this.isLike = res))
+    if (location.hash === '#comment') {
+      this.$refs.panel.scrollIntoComment()
+    }
   },
   methods: {
     reachBottom(){

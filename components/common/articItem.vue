@@ -1,5 +1,5 @@
 <template>
-  <div class="artic-item" @click="toDetail">
+  <div class="artic-item" @click.self="toDetail">
     <div class="artic-item__info">
       <ul class="artic-item__meta">
         <li class="meta-item mate-item--hot" v-if="item.type === 'post' && item.hot">
@@ -32,7 +32,7 @@
           <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
           {{ item[likeCountField] }}
         </li>
-        <li class="action-item">
+        <li class="action-item" @click.stop="toDetail('#comment')">
           <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
           {{ item.commentsCount }}
         </li>
@@ -77,14 +77,14 @@ export default {
     }
   },
   methods: {
-    toDetail() {
+    toDetail(hash = '') {
       let routeUrl = this.$router.resolve({
         name: 'detail-id',
         params: {
           id: this.detailId
         }
       })
-      window.open(routeUrl.href, '_blank')
+      window.open(routeUrl.href + hash, '_blank')
     },
     async articleLike() {
       let id = this.item.id
