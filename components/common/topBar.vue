@@ -203,7 +203,7 @@ export default {
     width: 100%;
     height: 100%;
     background-size: 100%;
-    background-image: url(../../assets/images/notice.png);
+    background-image: url(../../assets/images/notice.svg);
   }
 
   .notice__count{
@@ -225,7 +225,7 @@ export default {
   &.nuxt-link-exact-active,
   &:hover{
     .notice__icon{
-      background-image: url(../../assets/images/notice-active.png);
+      background-image: url(../../assets/images/notice-active.svg);
     }
   }
 }
