@@ -1,28 +1,26 @@
 <template>
   <div class="books">
-    <nuxt-link :to="'/book/'+item._id" target="_blank" v-for="item in list" :key="item._id">
-      <div class="book-item">
-        <div class="book__cover" :style="`background-image: url(${item.img})`"></div>
-        <div class="book__info">
-          <div class="book__title">{{ item.title }}</div>
-          <div class="book__desc ellipsis">{{ item.desc }}</div>
-          <div class="book__author">
-            <nuxt-link class="author__info" :to="'/user/'+item.userData.uid">
-              <div class="author__avatar">
-                <user-avatar :url="item.userData.avatarLarge" :round="true"></user-avatar>
-              </div>
-              <span class="author__name">{{ item.userData.username }}</span>
-              <level :level="item.userData.level"></level>
-            </nuxt-link>
-            <span class="author__desc ellipsis">{{ item.profile }}</span>
-          </div>
-          <div class="book__data">
-            <span class="book__price" :class="{'book__buy': item.isBuy}">{{ item.isBuy ? '已购买' : '￥'+item.price }}</span>
-            <span class="book__meta">{{ item.lastSectionCount }}小节 · {{ item.buyCount }}人已购买</span>
-          </div>
+    <div class="book-item" v-for="item in list" :key="item._id" @click="toBookDetail(item._id)">
+      <div class="book__cover" :style="`background-image: url(${item.img})`"></div>
+      <div class="book__info">
+        <div class="book__title">{{ item.title }}</div>
+        <div class="book__desc ellipsis">{{ item.desc }}</div>
+        <div class="book__author">
+          <nuxt-link class="author__info" :to="'/user/'+item.userData.uid">
+            <div class="author__avatar">
+              <user-avatar :url="item.userData.avatarLarge" :round="true"></user-avatar>
+            </div>
+            <span class="author__name">{{ item.userData.username }}</span>
+            <level :level="item.userData.level"></level>
+          </nuxt-link>
+          <span class="author__desc ellipsis">{{ item.profile }}</span>
+        </div>
+        <div class="book__data">
+          <span class="book__price" :class="{'book__buy': item.isBuy}">{{ item.isBuy ? '已购买' : '￥'+item.price }}</span>
+          <span class="book__meta">{{ item.lastSectionCount }}小节 · {{ item.buyCount }}人已购买</span>
         </div>
       </div>
-    </nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -34,16 +32,16 @@ export default {
       default: () => []
     }
   },
-  data() {
-    return {
+  methods: {
+    toBookDetail(id) {
+      let routeUrl = this.$router.push({
+        name: 'book-id',
+        params: {
+          id,
+        }
+      })
     }
   },
-  mounted() {
-    
-  },
-  methods: {
-    
-  }
 }
 </script>
 
@@ -56,12 +54,12 @@ export default {
   padding: 30px;
   cursor: pointer;
 
-  &:hover{
-    background: #f7f9f9;
-  }
-
   &:not(:last-child){
     border-bottom: 1px solid #eee;
+  }
+
+  &:hover{
+    background: #f7f9f9;
   }
 
   .book__cover{

@@ -1,5 +1,6 @@
 <template>
   <div class="book-container">
+    <book-category :channels="bookCategoryList"></book-category>
     <div class="book-main shadow">
       <book-list :list="books"></book-list>
     </div>
@@ -9,6 +10,7 @@
 <script>
 import reachBottom from '~/mixins/reachBottom'
 import bookList from '~/components/business/bookList'
+import bookCategory from '~/components/business/bookCategory'
 
 export default {
   head() {
@@ -16,23 +18,36 @@ export default {
       title: '掘金小册'
     }
   },
-  async asyncData({ app }) {
+  async asyncData({ app, params, store }) {
+    let initBookCategoryList = [{ name: '全部', alias: '' }]
+    let bookCategoryList = []
+    // 分类
+    if (store.state.category.bookCategoryList.length) {
+      bookCategoryList = store.state.category.bookCategoryList
+    } else {
+      bookCategoryList = await app.$api.getBookChannel()
+        .then(res => res.s === 1 ? initBookCategoryList.concat(res.d) : initBookCategoryList)
+      store.commit('category/updateBookCategoryList', bookCategoryList)
+    }
+    // 小册列表
     let books = await app.$api.getBooks({
-      alias: '',
+      alias: params.alias,
       pageNum: 1
     }).then(res => res.s === 1 ? res.d : [])
     return {
+      bookCategoryList,
       books
     }
   },
   mixins: [reachBottom],
   components: {
-    'book-list': bookList
+    'book-list': bookList,
+    'book-category': bookCategory
   },
   data() {
     return {
+      bookCategoryList: [],
       books: [],
-      alias: '',
       pageNum: 1,
     }
   },
@@ -43,7 +58,7 @@ export default {
     },
     async getBooks({ isLoadMore = false } = {}) {
       let res = await this.$api.getBooks({
-        alias: this.alias,
+        alias: this.$route.params.alias,
         pageNum: this.pageNum
       })
       if (res.s === 1) {
