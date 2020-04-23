@@ -1,9 +1,11 @@
 <template>
-  <nav class="nav-view shadow" :class="{'nav-view--sticky': !isTopbarBlock}">
-    <ul class="nav-list">
-      <li class="nav-item" :class="{'nav-item--active': item.title === paramsTitle}" v-for="item in channels" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
-      <nuxt-link tag="li" to="/subscribe" class="nav-item" style="margin-left: auto;">标签管理</nuxt-link>
-    </ul>
+  <nav class="nav-view">
+    <div class="nav-mian shadow" :class="{'nav-main--sticky': !isTopbarBlock}">
+      <ul class="nav-list">
+        <li class="nav-item" :class="{'nav-item--active': item.title === paramsTitle}" v-for="item in channels" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
+        <nuxt-link tag="li" to="/subscribe" class="nav-item" style="margin-left: auto;">标签管理</nuxt-link>
+      </ul>
+    </div>
   </nav>
 </template>
 
@@ -53,16 +55,20 @@ export default {
 
 <style lang='scss' scoped>
 .nav-view{
+  height: 45px;
+}
+
+.nav-mian{
   z-index: 9999;
   position: fixed;
   left: 0;
   top: 60px;
-  width: 100vw;
+  width: 100%;
   background: #fff;
   border-top: 1px solid #eee;
   transition: all .2s;
 
-  &.nav-view--sticky{
+  &.nav-main--sticky{
     top: 0px;
   }
 }

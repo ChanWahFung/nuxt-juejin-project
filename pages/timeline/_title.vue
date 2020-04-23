@@ -173,7 +173,6 @@ export default {
 <style lang="scss" scoped>
 .index-container{
   display: flex;
-  margin-top: 60px;
 
   .index-main{
     width: 700px;
