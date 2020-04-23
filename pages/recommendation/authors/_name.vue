@@ -35,6 +35,11 @@ export default {
       pageInfo: res.pageInfo
     }
   },
+  head () {
+    return {
+      title: `${this.currentCategoryItem.title ? this.currentCategoryItem.title + ' - ' : ''}掘金`
+    }
+  },
   validate({ params }) {
     return params.name
   },
@@ -47,6 +52,11 @@ export default {
       categoryList: [],
       authors: [],
       pageInfo: {}
+    }
+  },
+  computed: {
+    currentCategoryItem() {
+      return this.categoryList.filter(item => item.name === this.$route.params.name)[0] || {}
     }
   },
   methods: {
