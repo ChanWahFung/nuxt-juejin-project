@@ -43,8 +43,7 @@ export default {
         this.$router.push({
           name: 'timeline-title',
           params: {
-            title: item.title,
-            categoryId: item.id
+            title: item.title
           }
         })
       }

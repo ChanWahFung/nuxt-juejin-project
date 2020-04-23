@@ -13,7 +13,7 @@
           <img v-show="searchFormClass" src="~/assets/images/search-icon-active.svg" class="search-icon" />
           <img v-show="searchFormClass == ''" src="~/assets/images/search-icon.svg" class="search-icon" />
         </div>
-        <nuxt-link to="/notice" class="notice">
+        <nuxt-link to="/notice" class="notice" target="_blank">
           <div class="notice__icon"></div>
           <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
         </nuxt-link>
