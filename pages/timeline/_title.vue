@@ -1,6 +1,6 @@
 <template>
   <div>
-    <index-nav v-model="currentCategoryItem"></index-nav>
+    <timeline-category :channels="categoryList"></timeline-category>
     <div class="index-container">
       <div class="index-main shadow">
         <div class="list__header">
@@ -26,45 +26,54 @@
 import reachBottom from '~/mixins/reachBottom'
 import authorRank from '~/components/business/authorRank'
 import recommendBook from '~/components/business/recommendBook'
-import indexNav from '~/components/business/indexNav'
+import timelineCategory from '~/components/business/timelineCategory'
 
 export default {
-  head () {
-    return {
-      title: `${this.currentCategoryItem.name ? this.currentCategoryItem.name + ' - ' : ''}掘金`
-    }
-  },
-  async asyncData({ app, params }) {
+  async asyncData({ app, params, store }) {
     // 分类列表
-    let categoryList = await app.$api.getCategories().then(res => res.s === 1 ? res.d.categoryList : [])
-    let catgoryItem = categoryList.filter(item => item.title === params.title)[0]
+    let initCategoryList = [{ id: 0, name: '推荐', title: 'recommended' }]
+    let categoryList = []
+    // 获取分类列表缓存
+    if (store.state.category.timelineCategoryList.length) {
+      categoryList = store.state.category.timelineCategoryList
+    } else {
+      categoryList = await app.$api.getCategories().then(res => res.s === 1 ? initCategoryList.concat(res.d.categoryList) : initCategoryList)
+      store.commit('category/update_timelineCategoryList', categoryList)
+    }
+    let currentCategoryItem = categoryList.filter(item => item.title === params.title)[0] || initCategoryList[0]
     let [indexData, recommendAuthors, recommendBooks] = await Promise.all([
       // 文章列表
       app.$api.getIndexList({
         first: 20,
         order: 'POPULAR',
-        category: catgoryItem ? catgoryItem.id : ''
+        category: currentCategoryItem.id || ''
       }).then(res => res.s == 1 ? res.d : {}),
       // 推荐作者
       app.$api.getRecommendAuthor({ 
         limit: 5
       }).then(res => res.s == 1 ? res.d : []),
       // 推荐小册
-      app.$api.getRecommendBook().then(res => res.s === 1 ? res.d.data : [])
+      app.$api.getRecommendBook().then(res => res.s === 1 ? res.d.data : []),
     ])
     return {
-      categoryList: [],
+      currentCategoryItem,
+      categoryList,
       list: indexData.edges || [],
       pageInfo: indexData.pageInfo || {},
       recommendAuthors,
       recommendBooks
     };
   },
+  head () {
+    return {
+      title: `${this.currentCategoryItem.name ? this.currentCategoryItem.name + ' - ' : ''}掘金`
+    }
+  },
   mixins: [reachBottom],
   components: {
     'author-rank': authorRank,
     'recommend-book': recommendBook,
-    'index-nav': indexNav
+    'timeline-category': timelineCategory
   },
   data() {
     return {
@@ -106,6 +115,7 @@ export default {
       navId: 1,
       navType: 'POPULAR',
       navTypes: [],
+      categoryList: [],
       currentCategoryItem: {},
       tags: [],
       list: [],

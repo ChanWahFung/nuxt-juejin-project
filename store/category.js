@@ -1,9 +1,9 @@
 export const state = () => ({
-  tagsList: {}
+  timelineCategoryList: [], // 首页分类列表
 })
 
 export const mutations = {
-  updateTagsList(state, payload){
-    state.tagsList[payload.key] = payload.data
+  update_timelineCategoryList(state, payload){
+    state.timelineCategoryList = payload
   }
 }

@@ -5,7 +5,6 @@ const validator = require('../../middleware/validator')
 const config = require('../../request/config')
 
 router.get('/entry', async (ctx, next) => {
-  ctx.set('Cache-Control', 'max-age=7200')
   const options = {
     url: 'https://gold-tag-ms.juejin.im/v1/categories',
     method: "GET",

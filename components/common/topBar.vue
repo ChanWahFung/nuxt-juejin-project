@@ -158,7 +158,7 @@ export default {
     cursor: pointer;
 
     &:hover,
-    &.nuxt-link-exact-active{
+    &.nuxt-link-active{
       color: $theme;
     }
   }

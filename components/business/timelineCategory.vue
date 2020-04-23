@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-view shadow" :class="{'nav-view--sticky': !isTopbarBlock}">
     <ul class="nav-list">
-      <li class="nav-item" :class="{'nav-item--active': item.title === currentCategoryItem.title}" v-for="item in categoryList" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
+      <li class="nav-item" :class="{'nav-item--active': item.title === paramsTitle}" v-for="item in channels" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
       <nuxt-link tag="li" to="/subscribe" class="nav-item" style="margin-left: auto;">标签管理</nuxt-link>
     </ul>
   </nav>
@@ -10,52 +10,24 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 export default {
-  model: {
-    prop: 'currentCategoryItem',
-    event: 'update-item'
-  },
   props: {
-    currentCategoryItem: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  data() {
-    return {
-      categoryList: []
+    channels: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
     ...mapState([
       'isTopbarBlock'
-    ])
-  },
-  mounted() {
-    this.getCategories()
+    ]),
+    paramsTitle() {
+      return this.$route.params.title || 'recommended'
+    }
   },
   methods: {
     ...mapMutations([
       'updateTopbarBlock'
     ]),
-    async getCategories() {
-      let res = await this.$api.getCategories()
-      if (res.s === 1) {
-        this.categoryList = [
-          {
-            id: 0,
-            name: '推荐',
-            title: 'recommended'
-          },
-          ...res.d.categoryList
-        ]
-        if (this.$route.params.title) {
-          let arr = this.categoryList.filter(item => item.title === this.$route.params.title)
-          arr[0] && (this.$emit('update-item', arr[0]))
-        } else {
-          this.$emit('update-item', this.categoryList[0])
-        }
-      }
-    },
     async getTagByCategories(categoryId) {
       await this.$api.getTagByCategories({
         categoryId,
@@ -63,7 +35,7 @@ export default {
       })
     },
     navItemClick(item) {
-      if (this.currentCategoryItem.title != item.title) {
+      if (this.paramsTitle != item.title) {
         this.isTopbarBlock === false && this.updateTopbarBlock(true)
         window.scrollTo({ top: 0 })
         this.$router.push({
