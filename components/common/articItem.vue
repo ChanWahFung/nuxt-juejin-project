@@ -2,6 +2,9 @@
   <div class="artic-item" @click="toDetail">
     <div class="artic-item__info">
       <ul class="artic-item__meta">
+        <li class="meta-item mate-item--hot" v-if="item.type === 'post' && item.hot">
+          <span>荐</span>
+        </li>
         <li class="meta-item mate-item--post" v-if="item.type === 'post'">
           <span>专栏</span>
         </li>
@@ -147,6 +150,10 @@ export default {
     &:last-child::after {
       content: "";
     }
+  }
+
+  .mate-item--hot{
+    color: #f70;
   }
 
   .mate-item--post {
