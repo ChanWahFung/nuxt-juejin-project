@@ -1,0 +1,89 @@
+<template>
+  <nav class="nav-view">
+    <div class="nav-mian shadow" :class="{'nav-main--sticky': !isTopbarBlock}">
+      <ul class="nav-list">
+        <li class="nav-item" :class="{'nav-item--active': item.name === paramsName}" v-for="item in channels" :key="item.id" @click="navItemClick(item)">{{ item.title }}</li>
+      </ul>
+    </div>
+  </nav>
+</template>
+
+<script>
+import { mapState, mapMutations } from 'vuex'
+export default {
+  props: {
+    channels: {
+      type: Array,
+      default: () => []
+    }
+  },
+  computed: {
+    ...mapState([
+      'isTopbarBlock'
+    ]),
+    paramsName() {
+      return this.$route.params.name || 'recommended'
+    }
+  },
+  methods: {
+    ...mapMutations([
+      'updateTopbarBlock'
+    ]),
+    navItemClick(item) {
+      if (this.paramsName != item.name) {
+        this.isTopbarBlock === false && this.updateTopbarBlock(true)
+        window.scrollTo({ top: 0 })
+        this.$router.push({
+          name: 'recommendation-authors-name',
+          params: {
+            name: item.name
+          }
+        })
+      }
+    }
+  }
+}
+</script>
+
+<style lang='scss' scoped>
+.nav-view{
+  height: 45px;
+}
+
+.nav-mian{
+  z-index: 9999;
+  position: fixed;
+  left: 0;
+  top: 60px;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #eee;
+  transition: all .2s;
+
+  &.nav-main--sticky{
+    top: 0px;
+  }
+}
+
+.nav-list{
+  display: flex;
+  width: 960px;
+  margin: 0 auto;
+
+  .nav-item{
+    padding: 15px 0;
+    font-size: 14px;
+    color: #71777c;
+    cursor: pointer;
+
+    &.nav-item--active,
+    &:hover{
+      color: $theme;
+    }
+
+    &:not(:last-child){
+      margin-right: 24px;
+    }
+  }
+}
+</style>

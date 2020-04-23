@@ -72,7 +72,18 @@ router.get('/channel', async (ctx, next) => {
     }
   };
   let { body } = await request(options)
-  ctx.body = body
+  body = toObject(body)
+  try {
+    ctx.body = {
+      s: body.data.channelCard.items ? 1 : 0,
+      d: body.data.channelCard.items
+    } 
+  } catch (error) {
+    ctx,body = {
+      s: 0,
+      d: []
+    }
+  }
 })
 
 /**
