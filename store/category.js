@@ -3,7 +3,7 @@ export const state = () => ({
 })
 
 export const mutations = {
-  update_timelineCategoryList(state, payload){
+  updateTimelineCategoryList(state, payload){
     state.timelineCategoryList = payload
   }
 }

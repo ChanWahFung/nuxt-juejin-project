@@ -38,7 +38,7 @@ export default {
       categoryList = store.state.category.timelineCategoryList
     } else {
       categoryList = await app.$api.getCategories().then(res => res.s === 1 ? initCategoryList.concat(res.d.categoryList) : initCategoryList)
-      store.commit('category/update_timelineCategoryList', categoryList)
+      store.commit('category/updateTimelineCategoryList', categoryList)
     }
     let currentCategoryItem = categoryList.filter(item => item.title === params.title)[0] || initCategoryList[0]
     let [indexData, recommendAuthors, recommendBooks] = await Promise.all([
