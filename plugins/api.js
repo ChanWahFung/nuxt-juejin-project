@@ -268,5 +268,14 @@ export default ({ app: { $request } }, inject) => {
     getAuthorRank(params = {}) {
       return $request.get('/v1/recommend/authorRank', params)
     },
+    /**
+     * 沸点（推荐、热门、关注）
+     * @param {string} type
+     * @param {number} first - 条数
+     * @param {string} after - 分页标识
+     */
+    getPinList(params = {}) {
+      return $request.get('/v1/pin/list', params)
+    }
   })
 }
