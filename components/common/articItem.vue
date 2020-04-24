@@ -1,5 +1,5 @@
 <template>
-  <div class="artic-item" @click.self="toDetail">
+  <div class="artic-item" @click="toDetail()">
     <div class="artic-item__info">
       <ul class="artic-item__meta">
         <li class="meta-item mate-item--hot" v-if="item.type === 'post' && item.hot">
@@ -10,16 +10,16 @@
         </li>
         <li class="meta-item">
           <span class="meta-item__username">
-            <nuxt-link :to="'/user/'+(item.user.id || item.user.objectId)" target="_blank">{{ item.user.username }}</nuxt-link>
+            <nuxt-link :to="'/user/'+(item.user.id || item.user.objectId)" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.user.username }}</nuxt-link>
           </span>
         </li>
         <li class="meta-item">{{ item.createdAt | formatTime }}</li>
         <li class="meta-item">
           <span v-if="item.tags.length && item.category" class="meta-item__tag">
-            <nuxt-link :to="'/tag/'+item.tags[0].title" target="_blank">{{ item.tags[0].title }}</nuxt-link>
+            <nuxt-link :to="'/tag/'+item.tags[0].title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.tags[0].title }}</nuxt-link>
           </span>
           <span v-else v-for="tag in item.tags.slice(0, 2)" :key="tag.id" class="meta-item__tag">
-            <nuxt-link :to="'/tag/'+tag.title" target="_blank">{{ tag.title }}</nuxt-link>
+            <nuxt-link :to="'/tag/'+tag.title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ tag.title }}</nuxt-link>
           </span>
           <span v-if="item.category" class="meta-item__tag" :to="'/tag/'+item.category.name" target="_blank">{{ item.category.name }}</span>
         </li>
