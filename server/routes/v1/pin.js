@@ -108,14 +108,36 @@ router.get('/topicList', validator({
   },
 }), async (ctx, next) => {
   const options = {
-    uid: config.uid,
-    device_id: config.deviceId,
-    token: config.token,
-    src: 'web',
-    topicId: ctx.query.topicId,
-    page: ctx.query.page,
-    pageSize: ctx.query.pageSize,
-    sortType: 'rank',
+    url: 'https://short-msg-ms.juejin.im/v1/pinList/topic',
+    method: 'GET',
+    params: {
+      uid: config.uid,
+      device_id: config.deviceId,
+      token: config.token,
+      src: 'web',
+      topicId: ctx.query.topicId,
+      page: ctx.query.page,
+      pageSize: ctx.query.pageSize,
+      sortType: 'rank',
+    }
+  }
+  let {body} = await request(options)
+  ctx.body = body
+})
+
+/**
+ * 推荐沸点
+ */
+router.get('/hotRecommendList', async (ctx, next) => {
+  const options = {
+    url: 'https://short-msg-ms.juejin.im/v1/getHotRecommendList',
+    method: 'GET',
+    params: {
+      uid: config.uid,
+      device_id: config.deviceId,
+      token: config.token,
+      src: 'web'
+    }
   }
   let {body} = await request(options)
   ctx.body = body
