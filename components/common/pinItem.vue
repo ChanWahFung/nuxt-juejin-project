@@ -1,13 +1,13 @@
 <template>
   <div class="pin-item">
     <div class="item-main">
-      <div class="user-avatar">
+      <nuxt-link class="user-avatar" :to="'/user/'+item.uid" target="_blank">
         <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
-      </div>
+      </nuxt-link>
       <div class="pin-info">
         <div class="user-info">
           <div>
-            <div class="user-name">{{ item.user.username }}</div>
+            <nuxt-link class="user-name" :to="'/user/'+item.uid" target="_blank">{{ item.user.username }}</nuxt-link>
             <div class="user-job-title">
               {{ item.user.jobTitle }}
               {{ item.user.jobTitle && item.user.company ? '@' : '' }}
@@ -21,13 +21,15 @@
         <div class="pin-content">
           {{ item.content }}
         </div>
-        <div v-if="item.url" class="pin-link">
-          <div class="link-info">
-            <div class="link-title ellipsis">{{ item.urlTitle }}</div>
-            <div class="link-domain ellipsis">{{ item.url }}</div>
+        <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">
+          <div v-if="item.url" class="pin-link">
+            <div class="link-info">
+              <div class="link-title ellipsis">{{ item.urlTitle }}</div>
+              <div class="link-domain ellipsis">{{ item.url }}</div>
+            </div>
+            <div class="link-image" :style="`background-image: url(${item.urlPic})`"></div>
           </div>
-          <img class="link-image" :src="item.urlPic">
-        </div>
+        </a>
         <div v-if="item.pictures.length" class="pin-images" :class="{'pin-images--more': item.pictures.length > 1}">
           <div v-for="url in item.pictures" :key="url" class="pin-img" :style="`background-image: url(${url})`">
             <div class="img-holder"></div>
@@ -143,6 +145,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      line-height: 1.5;
       overflow: hidden;
     }
 
@@ -162,8 +165,10 @@ export default {
       width: 65px;
       height: 65px;
       margin-left: 10px;
-      object-fit: cover;
       border-radius: 2px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-color: #f4f4f4;
     }
   }
 
