@@ -520,6 +520,7 @@ export default {
 
 
 ## 路由配置
+在`Nuxt.js`中，路由是基于文件结构自动生成，无需配置
 
 ### 命名路由
 在`Vue`中是这样配置命名路由的
@@ -534,7 +535,7 @@ const router = new VueRouter({
   ]
 })
 ```
-而在`Nuxt.js`中，路由是`Nuxt`基于文件结构自动生成，想要配置命名路由，需要创建对应的以下划线作为前缀的 `Vue` 文件 或 目录
+`Nuxt.js`中需要创建对应的以下划线作为前缀的 `Vue` 文件 或 目录
 
 以下面目录为例：
 ```
@@ -543,9 +544,9 @@ pages/
 -----| _id.vue
 --| index.vue
 ```
-对应路由配置表为：
+自动生成的路由配置如下:
 ```js
-{
+router:{
   routes: [
     {
       name: 'index',
@@ -559,4 +560,47 @@ pages/
     }
   ]
 }
+```
+
+### 嵌套路由
+
+以下面目录为例， 我们需要一级页面的`vue`文件，以及和该文件同名的文件夹（用于存放子页面）
+```
+pages/
+--| users/
+-----| _id.vue
+-----| index.vue
+--| users.vue
+```
+自动生成的路由配置如下:
+```js
+router: {
+  routes: [
+    {
+      path: '/users',
+      component: 'pages/users.vue',
+      children: [
+        {
+          path: '',
+          component: 'pages/users/index.vue',
+          name: 'users'
+        },
+        {
+          path: ':id',
+          component: 'pages/users/_id.vue',
+          name: 'users-id'
+        }
+      ]
+    }
+  ]
+}
+```
+
+然后在一级页面中使用`<nuxt-child>`来显示子页面，就像使用`<router-view>`一样
+```html
+<template>
+  <div>
+    <nuxt-child />
+  </div>
+</template>
 ```
