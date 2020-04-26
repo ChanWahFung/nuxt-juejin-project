@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="pin-item-wrap shadow" v-for="{node} in pinList" :key="node.id">
-      <pin-item :item="node.targets ? node.targets : node"></pin-item>
+      <pin-item :item="node.targets ? node.targets[0] : node"></pin-item>
     </div>
   </div>
 </template>
