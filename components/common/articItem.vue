@@ -24,7 +24,7 @@
           <span v-if="item.category" class="meta-item__tag" :to="'/tag/'+item.category.name" target="_blank">{{ item.category.name }}</span>
         </li>
       </ul>
-      <p class="artic-item__title ellipsis " v-html="highlight.title || item.title"></p>
+      <p class="artic-item__title ellipsis" v-html="highlight.title || item.title"></p>
       <p v-if="hasDesc" class="artic-item__desc" v-html="highlight.description || highlight.text || item.content"></p>
       <ul class="artic-item__action">
         <li class="action-item" :class="{active: item[likeField]}" @click.stop="articleLike">
@@ -78,6 +78,7 @@ export default {
   },
   methods: {
     toDetail(hash = '') {
+      console.log(132)
       let routeUrl = this.$router.resolve({
         name: 'detail-id',
         params: {
