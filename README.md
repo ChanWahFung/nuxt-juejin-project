@@ -45,6 +45,10 @@
 ### 小册页
   * 小册列表（分页）
 
+### 沸点页
+  * 沸点列表（分类、分页）
+  * 推荐沸点
+
 ### 交互相关
   * 文章点赞
   * 作者关注
@@ -55,10 +59,10 @@
 
 # 使用
 
-登录功能暂未做，需要手动创建 `server/request/config.js`, 填入你在掘金的用户信息，用户信息可以打开掘金网站查看接口中的`header`或`query`
+登录功能暂未做，需要手动创建 `/assets/authConfig.js`, 填入你在掘金的用户信息，用户信息可以打开掘金网站查看接口中的`header`或`query`
 
 ```js
-module.exports = {
+export default {
   uid: '',
   deviceId: ''
   token: ''
