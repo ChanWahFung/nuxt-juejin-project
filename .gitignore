@@ -6,8 +6,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/server/request/config.js
-/static/node.md
+/assets/authConfig.js
 
 # Runtime data
 pids
