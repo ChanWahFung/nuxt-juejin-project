@@ -1,63 +1,89 @@
 <template>
   <div class="pin-item">
-    <div class="item-main">
-      <nuxt-link class="user-avatar" :to="'/user/'+(item.uid || item.user.id)" target="_blank">
-        <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
-      </nuxt-link>
-      <div class="pin-info">
-        <div class="user-info">
-          <div>
-            <nuxt-link class="user-name" :to="'/user/'+(item.uid || item.user.id)" target="_blank">{{ item.user.username }}</nuxt-link>
-            <div class="user-job-title">
-              {{ item.user.jobTitle }}
-              {{ item.user.jobTitle && item.user.company ? '@' : '' }}
-              {{ item.user.company }}
-              {{ item.user.jobTitle || item.user.company ? ' · ' : '' }}
-              {{ item.createdAt | formatTime }}
-            </div>
+    <template v-if="action === 'FOLLOW_USER'">
+      <div v-if="actors.length" class="follow-block">
+        <nuxt-link :to="'/user/'+actors[0].id" class="author-avatar" target="_blank">
+          <user-avatar :url="actors[0].avatarLarge" :round="true"></user-avatar>
+        </nuxt-link>
+        <div class="author-info">
+          <div class="author-username">
+            <nuxt-link :to="'/user/'+actors[0].id" target="_blank">{{ actors[0].username }}</nuxt-link>
+            <span class="follow-text">关注了</span>
+            <nuxt-link :to="'/user/'+item.id" target="_blank">{{ item.username }}</nuxt-link>
           </div>
-          <follow-btn v-if="action !== 'PUBLISH_ARTICLE'" size="small" :is-follow="item.user.viewerIsFollowing" :followee-id="item.user.id"></follow-btn>
-        </div>
-        <div v-if="action === 'PUBLISH_ARTICLE' || action === 'LIKE_ARTICLE'">
-          <div class="pin-title">
-            <h3>{{ item.title }}</h3>
-          </div>
-          <div class="pin-post">
-            <div class="pin-post-content">
-              {{ item.content }}
-            </div>
-            <div v-if="item.screenshot" class="pin-post-cover" :style="`background-image: url(${item.screenshot})`"></div>
-          </div>
-        </div>
-        <div v-else>
-          <div class="pin-content">
-            {{ item.content }}
-          </div>
-          <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">
-            <div v-if="item.url" class="pin-link">
-              <div class="link-info">
-                <div class="link-title ellipsis">{{ item.urlTitle }}</div>
-                <div class="link-domain ellipsis">{{ item.url | domainName }}</div>
-              </div>
-              <div class="link-image" :style="`background-image: url(${item.urlPic})`"></div>
-            </div>
-          </a>
-          <div v-if="item.pictures && item.pictures.length" class="pin-images" :class="{'pin-images--more': item.pictures.length > 1}">
-            <div v-for="url in item.pictures" :key="url" class="pin-img" :style="`background-image: url(${url})`">
-              <div class="img-holder"></div>
-            </div>
-          </div>
-          <div class="pin-topic" v-if="item.topic">
-            <nuxt-link class="topic-title" :to="'/topic/'+item.topic.id" target="_blank">{{ item.topic.title }}</nuxt-link>
+          <div class="author-job-title">
+            {{ actors[0].jobTitle }}
+            {{ actors[0].jobTitle && actors[0].company ? '@' : '' }}
+            {{ actors[0].company }}
           </div>
         </div>
       </div>
-    </div>
-    <div class="item-meta">
-      <div class="meta-item"><img src="~/assets/images/pin-like.svg">&nbsp;{{ item.likeCount }}</div>
-      <div class="meta-item"><img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}</div>
-      <div class="meta-item"><img src="~/assets/images/pin-share.svg">&nbsp;分享</div>
-    </div>
+    </template>
+    <template v-else>
+      <div v-if="action === 'LIKE_ARTICLE' && actors.length" class="item-action">
+        {{ $store.state.uid === actors[0].id ? '' : '你关注的' }}
+        <nuxt-link :to="'/user/'+actors[0].id" class="actor-username">{{ actors[0].username }}</nuxt-link>
+        赞了这篇文章
+      </div>
+      <div class="item-main">
+        <nuxt-link class="user-avatar" :to="'/user/'+(item.uid || item.user.id)" target="_blank">
+          <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
+        </nuxt-link>
+        <div class="pin-info">
+          <div class="user-info">
+            <div>
+              <nuxt-link class="user-name" :to="'/user/'+(item.uid || item.user.id)" target="_blank">{{ item.user.username }}</nuxt-link>
+              <div class="user-job-title">
+                {{ item.user.jobTitle }}
+                {{ item.user.jobTitle && item.user.company ? '@' : '' }}
+                {{ item.user.company }}
+                {{ item.user.jobTitle || item.user.company ? ' · ' : '' }}
+                {{ item.createdAt | formatTime }}
+              </div>
+            </div>
+            <follow-btn v-if="!item.user.viewerIsFollowing" size="small" :is-follow="item.user.viewerIsFollowing" :followee-id="item.user.id"></follow-btn>
+          </div>
+          <div v-if="action === 'PUBLISH_ARTICLE' || action === 'LIKE_ARTICLE'">
+            <div class="pin-title">
+              <h3>{{ item.title }}</h3>
+            </div>
+            <div class="pin-post">
+              <div class="pin-post-content">
+                {{ item.content }}
+              </div>
+              <div v-if="item.screenshot" class="pin-post-cover" :style="`background-image: url(${item.screenshot})`"></div>
+            </div>
+          </div>
+          <div v-else>
+            <div class="pin-content">
+              {{ item.content }}
+            </div>
+            <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">
+              <div v-if="item.url" class="pin-link">
+                <div class="link-info">
+                  <div class="link-title ellipsis">{{ item.urlTitle }}</div>
+                  <div class="link-domain ellipsis">{{ item.url | domainName }}</div>
+                </div>
+                <div class="link-image" :style="`background-image: url(${item.urlPic})`"></div>
+              </div>
+            </a>
+            <div v-if="item.pictures && item.pictures.length" class="pin-images" :class="{'pin-images--more': item.pictures.length > 1}">
+              <div v-for="url in item.pictures" :key="url" class="pin-img" :style="`background-image: url(${url})`">
+                <div class="img-holder"></div>
+              </div>
+            </div>
+            <div class="pin-topic" v-if="item.topic">
+              <nuxt-link class="topic-title" :to="'/topic/'+item.topic.id" target="_blank">{{ item.topic.title }}</nuxt-link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="item-meta">
+        <div class="meta-item"><img src="~/assets/images/pin-like.svg">&nbsp;{{ item.likeCount }}</div>
+        <div class="meta-item"><img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}</div>
+        <div class="meta-item"><img src="~/assets/images/pin-share.svg">&nbsp;分享</div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -66,11 +92,15 @@ export default {
   props: {
     item: {
       type: Object,
-      defalut: () => ({})
+      default: () => ({})
     },
     action: {
       type: String,
-      default: () => ({})
+      default: ''
+    },
+    actors: {
+      type: Array,
+      default: () => []
     }
   },
   filters: {
@@ -105,6 +135,53 @@ export default {
         border-right: 1px solid #ebebeb;
       }
     }
+  }
+}
+.follow-block{
+  display: flex;
+  align-items: center;
+  padding: 20px;
+
+  .author-avatar{
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+  }
+
+  .author-info{
+    color: #8a9aa9;
+    
+    .author-username{
+      font-weight: 600;
+      font-size: 15px;
+      color: #17181a;
+    }
+
+    .follow-text{
+      font-weight: 500;
+      margin: 0 3px;
+      color: #8a9aa9;
+    }
+  }
+
+  .author-job-title{
+    margin-top: 5px;
+    font-size: 13px;
+  }
+}
+.item-action{
+  padding: 0 20px;
+  display: flex;
+  height: 43px;
+  align-items: center;
+  border-bottom: 1px solid #ebebeb;
+  font-size: 13px;
+  color: #8a9aa9;
+  box-sizing: border-box;
+
+  .actor-username{
+    color: #333;
+    margin: 0 3px;
   }
 }
 .item-main{

@@ -7,6 +7,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import reachBottom from '~/mixins/reachBottom'
+
 export default {
   async asyncData({ app, params }) {
     let pinList = await app.$api.getPinListByTopic({
@@ -18,17 +21,45 @@ export default {
       pinList
     }
   },
+  head() {
+    return {
+      title: `${this.categoryName ? this.categoryName + ' - ' : ''}沸点 - 掘金`
+    }
+  },
   validate({ params }) {
     return params.id
   },
+  mixins: [reachBottom],
   data() {
     return {
+      page: 1,
       pinList: []
     }
   },
-  created() {
+  computed: {
+    ...mapState('category', {
+      navList: 'pinCategoryList'
+    }),
+    categoryName() {
+      let item = this.navList.filter(item => item.id === this.$route.params.id)[0]
+      return  item ? item.name : ''
+    }
   },
   methods: {
+    reachBottom() {
+      this.page++
+      this.getPinListByTopic()
+    },
+    async getPinListByTopic() {
+      let res = await this.$api.getPinListByTopic({
+        topicId: this.$route.params.id,
+        page: this.page,
+        pageSize: 20
+      })
+      if (res.s === 1) {
+        this.pinList = this.pinList.concat(res.d.list)
+      }
+    }
   },
 }
 </script>

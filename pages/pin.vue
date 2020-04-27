@@ -30,7 +30,7 @@ import recommendPin from '~/components/business/recommendPin'
 export default {
   async asyncData({ app }) {
     let [recommendPins, followTopicList] = await Promise.all([
-      app.$api.getPinListByRecommend().then(res => res.s === 1 ? res.d.list.slice(0, 5) : []),
+      app.$api.getPinListByRecommend().then(res => res.s === 1 ? res.d.list.slice(0, 3) : []),
       app.$api.getFollowedTopics({ page: 1, pageSize: 3 }).then(res => res.s === 1 ? res.d.list : [])
     ])
     return {
