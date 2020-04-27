@@ -62,7 +62,7 @@ export default {
       let catalog = []
       function Item(id, item, level){
         this.id = id
-        this.title = item.textContent
+        this.title = item.textContent || '<未识别标题>'
         this.tag = item.tagName
         this.level = level
         this.children = []
