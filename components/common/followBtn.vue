@@ -4,8 +4,6 @@
 </template>
 
 <script>
-import config from '../../server/request/config'
-
 export default {
   model: {
     prop: 'isFollow',
@@ -50,7 +48,7 @@ export default {
     followUser(){
       return this.$api.followUser({
         method: this.isFollow ? 'delete' : 'put',
-        follower: config.uid,
+        follower: this.$store.state.uid,
         followee: this.followeeId
       })
     },

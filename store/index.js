@@ -1,5 +1,8 @@
+import authConfig from '~/assets/authConfig'
+
 export const state = () => ({
-  isTopbarBlock: true
+  isTopbarBlock: true,
+  ...authConfig
 })
 
 export const mutations = {
