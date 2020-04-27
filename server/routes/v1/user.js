@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 
 /**
  * 获取用户信息
@@ -11,13 +10,14 @@ const config = require('../../request/config')
 router.get('/multiUser', validator({
   ids: { type: 'string', required: true }
 }), async (ctx, next)=>{
+  const headers = ctx.headers
   const options = {
     url: 'https://lccro-api-ms.juejin.im/v1/get_multi_user',
     method: "GET",
     params: {
-      uid: config.uid,
-      device_id: config.deviceId,
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       src: 'web',
       ids: ctx.query.ids,
       cols: ''
@@ -34,13 +34,14 @@ router.get('/multiUser', validator({
 router.get('/notification', validator({
   before: { type: 'string' }
 }), async (ctx, next)=>{
+  const headers = ctx.headers
   const options = {
     url: 'https://ufp-api-ms.juejin.im/v1/getUserNotification',
     method: "GET",
     params: {
-      uid: config.uid,
-      token: config.token,
       src: 'web',
+      uid: headers['x-uid'],
+      token: headers['x-token'],
       before: ctx.query.before || ''
     }
   };
@@ -50,7 +51,7 @@ router.get('/notification', validator({
 
 /**
  * 是否关注用户
- * @param {staring} currentUid
+ * @param {string} currentUid
  * @param {string} targetUids
  */
 router.get('/isCurrentUserFollowed', validator({
@@ -77,14 +78,15 @@ router.get('/isCurrentUserFollowed', validator({
 router.get('/isArticleLike', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.query.entryId,
     method: 'GET',
     headers: {
       'X-Juejin-Src': 'web',
-      'X-Juejin-Client': config.deviceId,
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   let { body } = await request(options)
@@ -93,14 +95,15 @@ router.get('/isArticleLike', validator({
 
 // 点赞逻辑共用
 function like(ctx){
+  const headers = ctx.headers
   const options = {
     url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.request.body.entryId,
     method: ctx.method,
     headers: {
       'X-Juejin-Src': 'web',
-      'X-Juejin-Client': config.deviceId,
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   return request(options)
@@ -113,7 +116,7 @@ function like(ctx){
 router.put('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body, statusCode, headers } = await like(ctx)
+  const { body, statusCode, headers } = await like(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
   ctx.body = body
@@ -126,20 +129,21 @@ router.put('/like', validator({
 router.delete('/like', validator({
   entryId: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body, statusCode, headers } = await like(ctx)
+  const { body, statusCode, headers } = await like(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
   ctx.body = body
 })
 
 // 未读消息状态逻辑共有
-function userNotificationNum(url){
+function userNotificationNum(ctx, url){
+  const headers = ctx.headers
   const options = {
     url: 'https://ufp-api-ms.juejin.im/v1/'+url,
     method: "GET",
     params: {
-      uid: config.uid,
-      token: config.token,
+      uid: headers['x-uid'],
+      token: headers['x-token'],
       src: 'web'
     }
   };
@@ -150,7 +154,7 @@ function userNotificationNum(url){
  * 获取未读消息数量
  */
 router.get('/userNotificationNum', async (ctx, next)=>{
-  let { body } = await userNotificationNum('getUserNotificationNum')
+  let { body } = await userNotificationNum(ctx, 'getUserNotificationNum')
   ctx.body = body
 })
 
@@ -158,20 +162,21 @@ router.get('/userNotificationNum', async (ctx, next)=>{
  * 设置未读消息数量
  */
 router.put('/userNotificationNum', async (ctx, next)=>{
-  let { body } = await userNotificationNum('setUserNotificationNum')
+  let { body } = await userNotificationNum(ctx, 'setUserNotificationNum')
   ctx.body = body
 })
 
 // 关注用户逻辑共有
 function follow(ctx, url){
+  const headers = ctx.headers
   const options = {
     url: 'https://follow-api-ms.juejin.im/v1/'+url,
     method: "GET",
     params: {
       follower: ctx.request.body.follower,
       followee: ctx.request.body.followee,
-      device_id: config.deviceId,
-      token: config.token,
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       src: 'web'
     }
   };

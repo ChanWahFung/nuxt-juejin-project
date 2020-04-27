@@ -11,7 +11,9 @@ export default ({ app: { $axios } }, inject) => {
       }).catch(err => {
         console.error(err)
         return {
-          s: 0
+          s: 0,
+          d: {},
+          errors: [err]
         }
       })
     }

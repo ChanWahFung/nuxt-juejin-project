@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 const { toObject } = require('../../../utils')
 
 /**
@@ -13,21 +12,27 @@ const { toObject } = require('../../../utils')
  */
 router.get('/list', validator({
   type: { type: 'enum', enum: ['recommended', 'hot', 'following'], required: true },
-  first: { type: 'string', required: true },
+  first: { 
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'first 需传入正整数'
+  },
   after: { type: 'string' }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: 'POST',
     headers: {
       'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': config.deviceId,
-      'X-Legacy-Token': config.token,
-      'X-Legacy-Uid': config.uid
+      'X-Legacy-Device-Id': headers['x-device-id'],
+      'X-Legacy-Token': headers['x-token'],
+      'X-Legacy-Uid': headers['x-uid']
     }
   }
   // 不同类型获取不同参数
-  let strategyDatas = {
+  const strategyDatas = {
     recommended:  {
       field: 'recommendedActivityFeed',
       body: {
@@ -68,7 +73,7 @@ router.get('/list', validator({
       }
     }
   }
-  let strategyData = strategyDatas[ctx.query.type]
+  const strategyData = strategyDatas[ctx.query.type]
   // 设置参数
   strategyData && (options.body = strategyData.body)
   let { body } = await request(options)
@@ -81,7 +86,8 @@ router.get('/list', validator({
   } catch (error) {
     ctx.body = {
       s: 0,
-      d: {}
+      d: {},
+      errors: [body]
     }
   }
 })
@@ -107,21 +113,22 @@ router.get('/topicList', validator({
     message: 'pageSize 需传入正整数'
   },
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://short-msg-ms.juejin.im/v1/pinList/topic',
     method: 'GET',
     params: {
-      uid: config.uid,
-      device_id: config.deviceId,
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       src: 'web',
       topicId: ctx.query.topicId,
-      page: ctx.query.page,
+      page: Number(ctx.query.page) + 1,
       pageSize: ctx.query.pageSize,
       sortType: 'rank',
     }
   }
-  let {body} = await request(options)
+  let { body } = await request(options)
   ctx.body = body
 })
 
@@ -129,17 +136,18 @@ router.get('/topicList', validator({
  * 推荐沸点
  */
 router.get('/hotRecommendList', async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://short-msg-ms.juejin.im/v1/getHotRecommendList',
     method: 'GET',
     params: {
-      uid: config.uid,
-      device_id: config.deviceId,
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       src: 'web'
     }
   }
-  let {body} = await request(options)
+  let { body } = await request(options)
   ctx.body = body
 })
 

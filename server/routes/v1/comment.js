@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 
 /**
  * 获取文章评论
@@ -22,14 +21,15 @@ router.get('/entry', validator({
     message: 'pageSize 需传入正整数'
   }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://comment-wrapper-ms.juejin.im/v1/comments/entry/'+ctx.query.entryId,
     method: "GET",
     headers: {
       'X-Juejin-Src': 'web',
-      'X-Juejin-Client': config.deviceId,
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid,
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     },
     params: { 
       createdAt: ctx.query.createdAt || '',
@@ -64,14 +64,15 @@ router.get('/reply', validator({
     message: 'pageSize 需传入正整数'
   }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://comment-wrapper-ms.juejin.im/v1/comments/entry/'+ctx.query.entryId+'/comment/'+ctx.query.commentId,
     method: "GET",
     headers: {
       'X-Juejin-Src': 'web',
-      'X-Juejin-Client': config.deviceId,
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid,
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     },
     params: { 
       pageNum: ctx.query.pageNum || 1,

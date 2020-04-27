@@ -2,17 +2,17 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 
 router.get('/entry', async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://gold-tag-ms.juejin.im/v1/categories',
     method: "GET",
     headers: {
       'X-Juejin-Src': 'web',
-      'X-Juejin-Client': config.deviceId,
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid,
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   let { body } = await request(options)
@@ -33,15 +33,15 @@ router.post('/tags', validator({
     message: 'limit 需传入正整数'
   }
 }), async (ctx, next) => {
-  let params = ctx.request.body
+  const params = ctx.request.body
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
     headers: {
       'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': config.deviceId,
-      'X-Legacy-Token': config.token,
-      'X-Legacy-Uid': config.uid
+      'X-Legacy-Device-Id': headers['x-device-id'],
+      'X-Legacy-Token': headers['x-token'],
+      'X-Legacy-Uid': headers['x-uid']
     },
     body: {
       operationName: "",

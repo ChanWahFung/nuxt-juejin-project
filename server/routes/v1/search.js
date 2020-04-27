@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 const { toObject } = require('../../../utils')
 
  /**
@@ -25,14 +24,15 @@ router.get('/entry', validator({
   keyword: { type: 'string', required: true },
   period: { type: 'enum', required: true, enum: ['ALL', 'D1', 'W1', 'M3'] }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
     headers: {
       'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': config.deviceId,
-      'X-Legacy-Token': config.token,
-      'X-Legacy-Uid': config.uid
+      'X-Legacy-Device-Id': headers['x-device-id'],
+      'X-Legacy-Token': headers['x-token'],
+      'X-Legacy-Uid': headers['x-uid']
     },
     body: { 
       "operationName": "",
@@ -57,7 +57,8 @@ router.get('/entry', validator({
   } catch (error) {
     ctx.body = {
       s: 0,
-      d: {}
+      d: {},
+      errors: [body]
     }
   }
 })

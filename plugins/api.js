@@ -276,6 +276,21 @@ export default ({ app: { $request } }, inject) => {
      */
     getPinList(params = {}) {
       return $request.get('/v1/pin/list', params)
+    },
+    /**
+     * 推荐沸点
+     */
+    getPinListByRecommend() {
+      return $request.get('/v1/pin/hotRecommendList')
+    },
+    /**
+     * 沸点 - 话题列表
+     * @param {string} topicId - 话题id 
+     * @param {number} page - 页码
+     * @param {number} pageSize - 条数
+     */
+    getPinListByTopic(params = {}) {
+      return $request.get('/v1/pin/topicList', params)
     }
   })
 }

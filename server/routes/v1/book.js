@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 
 /**
  * 小册类目
@@ -30,14 +29,15 @@ router.get('/getListByLastTime', validator({
     message: 'pageNum 需传入正整数'
   }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getListByLastTime',
     method: 'GET',
     params: {
-      client_id: config.deviceId,
       src: 'web',
-      token: config.token,
-      uid: config.uid,
+      uid: headers['x-uid'],
+      client_id: headers['x-device-id'],
+      token: headers['x-token'],
       alias: ctx.query.alias || '',
       pageNum: ctx.query.pageNum || 1
     }

@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 const { toObject } = require('../../../utils')
 
 /**
@@ -14,13 +13,14 @@ router.get('/detail', validator({
   type: { type: 'enum', enum: ['entry', 'entryView'], required: true },
   postId: { type: 'string', required: true }
 }), async (ctx, next)=>{
+  const headers = ctx.headers
   const options = {
     url: 'https://post-storage-api-ms.juejin.im/v1/getDetailData',
     method: "GET",
     params: {
-      uid: config.uid,
-      device_id: config.deviceId,
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       src: 'web',
       type: ctx.query.type || 'entryView',
       postId: ctx.query.postId
@@ -56,14 +56,15 @@ router.post('/indexList', validator({
 }), async (ctx, next) => {
   ctx.set('Cache-Control', 'max-age=60')
   const data = ctx.request.body
+  const headers = ctx.headers
   const options = {
     url: 'https://web-api.juejin.im/query',
     method: "POST",
     headers: {
       'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': config.deviceId,
-      'X-Legacy-Token': config.token,
-      'X-Legacy-Uid': config.uid
+      'X-Legacy-Device-Id': headers['x-device-id'],
+      'X-Legacy-Token': headers['x-token'],
+      'X-Legacy-Uid': headers['x-uid']
     },
     body: { 
       operationName: "", 
@@ -88,7 +89,8 @@ router.post('/indexList', validator({
   } catch (error) {
     ctx.body = {
       s: 0,
-      d: {}
+      d: {},
+      errors: [body]
     }
   }
 })
@@ -111,14 +113,15 @@ router.get('/userPost', validator({
   },
   order: { type: 'enum', enum: ['rankIndex', 'createdAt'] }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://timeline-merger-ms.juejin.im/v1/get_entry_by_self',
     method: "GET",
     params: {
       src: "web",
-      uid: config.uid,
-      device_id: config.deviceId,
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       targetUid: ctx.query.targetUid,
       type: ctx.query.type || 'post',
       limit: ctx.query.limit || 20,
@@ -130,7 +133,7 @@ router.get('/userPost', validator({
   body = toObject(body)
   ctx.body = {
     s: body.s,
-    d: body.d.entrylist
+    d: body.d.entrylist || []
   }
 })
 
@@ -148,14 +151,15 @@ router.get('/relatedEntry', validator({
   },
   entryId: { type: 'string', reuqired: true }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://timeline-merger-ms.juejin.im/v1/get_related_entry',
     method: "GET",
     params: { 
       src: "web",
-      uid: config.uid,
-      device_id: config.deviceId,
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       limit: ctx.query.limit || 5,
       entryId: ctx.query.entryId
     }
@@ -164,7 +168,7 @@ router.get('/relatedEntry', validator({
   body = toObject(body)
   ctx.body = {
     s: body.s,
-    d: body.d.entrylist
+    d: body.d.entrylist || []
   }
 })
 
@@ -175,16 +179,21 @@ router.get('/relatedEntry', validator({
  */
 router.get('/recommendEntryByTagIds', validator({
   tagIds: { type: 'string', required: true },
-  before: { type: 'string' }
+  before: { 
+    type: 'string', 
+    validator: (rule, value) => Number(value),
+    message: 'before 为number类型'
+  }
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://post-storage-api-ms.juejin.im/v1/getRecommendEntryByTagIds',
     method: "GET",
     params: { 
       src: "web",
-      uid: config.uid,
-      device_id: config.deviceId,
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       tagIds: ctx.query.tagIds,
       before: ctx.query.before || ''
     }
@@ -193,7 +202,7 @@ router.get('/recommendEntryByTagIds', validator({
   body = toObject(body)
   ctx.body = {
     s: body.s,
-    d: body.d.entrylist
+    d: body.d.entrylist || []
   }
 })
 

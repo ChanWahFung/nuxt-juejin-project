@@ -1,7 +1,12 @@
+import authConfig from '~/assets/authConfig'
+
 export default function ({ app: { $axios } }) {
 	$axios.defaults.baseURL = 'http://127.0.0.1:8000'
 	$axios.defaults.timeout = 30000
 	$axios.interceptors.request.use(config => {
+		config.headers['X-Token'] = authConfig.token
+		config.headers['X-Device-Id'] = authConfig.deviceId
+		config.headers['X-Uid'] = authConfig.uid
 		return config
 	})
 	$axios.interceptors.response.use(response => {

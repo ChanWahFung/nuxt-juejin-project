@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 const { toObject } = require('../../../utils')
 
 /**
@@ -12,14 +11,15 @@ const { toObject } = require('../../../utils')
 router.get('/detail', validator({
   tagName: { type: 'string', required: true }
 }), async(ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://gold-tag-ms.juejin.im/v1/tag/'+ctx.query.tagName,
     method: "GET",
     headers: {
       'X-Juejin-Src': 'web',
-      'X-Juejin-Client': config.deviceId,
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   let { body } = await request(options)
@@ -53,31 +53,32 @@ router.get('/entry', validator({
     enum: ['rankIndex', 'createdAt', 'hotIndex']
   }
 }), async(ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://timeline-merger-ms.juejin.im/v1/get_tag_entry',
     method: "GET",
     headers: {
       'X-Juejin-Src': 'web',
-      'X-Juejin-Client': config.deviceId,
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     },
     params: {
-      'src': 'web',
-      'uid': config.uid,
-      'device_id': config.deviceId,
-      'token': config.token,
-      'tagId': ctx.query.tagId,
-      'page': ctx.query.page || 0,
-      'pageSize': ctx.query.pageSize || 20,
-      'sort': ctx.query.sort || 'rankIndex',
+      src: 'web',
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
+      tagId: ctx.query.tagId,
+      page: ctx.query.page || 0,
+      pageSize: ctx.query.pageSize || 20,
+      sort: ctx.query.sort || 'rankIndex',
     }
   };
   let { body } = await request(options)
   body = toObject(body)
   ctx.body = {
     s: body.s,
-    d: body.d.entrylist
+    d: body.d.entrylist || []
   }
 })
 
@@ -85,14 +86,15 @@ router.get('/entry', validator({
  * 获取已关注的标签
  */
 router.get('/subscribed', async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://gold-tag-ms.juejin.im/v1/user/5c455fe56fb9a049ef26e4e6/subscribe',
     method: "GET",
     headers: {
-      'X-Juejin-Client': config.deviceId,
       'X-Juejin-Src': 'web',
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   let { body } = await request(options)
@@ -120,15 +122,16 @@ router.get('/all', validator({
     message: 'pageSize 需传入正整数'
   }
 }), async (ctx, next) => {
-  let { type, page, pageSize } = ctx.query
+  const { type, page, pageSize } = ctx.query
+  const headers = ctx.headers
   const options = {
     url: `https://gold-tag-ms.juejin.im/v1/tags/type/${type}/page/${page}/pageSize/${pageSize}`,
     method: "GET",
     headers: {
-      'X-Juejin-Client': config.deviceId,
       'X-Juejin-Src': 'web',
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   let { body } = await request(options)
@@ -158,15 +161,16 @@ router.get('/search', validator({
     message: 'pageSize 需传入正整数'
   }
 }), async (ctx, next) => {
-  let { type, keyword, page, pageSize } = ctx.query
+  const { type, keyword, page, pageSize } = ctx.query
+  const headers = ctx.headers
   const options = {
     url: `https://gold-tag-ms.juejin.im/v1/tag/type/${type}/search/${encodeURIComponent(keyword)}/page/${page}/pageSize/${pageSize}`,
     method: "GET",
     headers: {
-      'X-Juejin-Client': config.deviceId,
       'X-Juejin-Src': 'web',
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   let { body } = await request(options)
@@ -175,14 +179,15 @@ router.get('/search', validator({
 
 // 关注标签逻辑共有
 function subscribe(ctx){
+  const headers = ctx.headers
   const options = {
     url: 'https://gold-tag-ms.juejin.im/v1/tag/subscribe/'+ctx.request.body.tagId,
     method: ctx.method,
     headers: {
-      'X-Juejin-Client': config.deviceId,
       'X-Juejin-Src': 'web',
-      'X-Juejin-Token': config.token,
-      'X-Juejin-Uid': config.uid
+      'X-Juejin-Client': headers['x-device-id'],
+      'X-Juejin-Token': headers['x-token'],
+      'X-Juejin-Uid': headers['x-uid'],
     }
   };
   return request(options)
@@ -195,7 +200,7 @@ function subscribe(ctx){
 router.put('/subscribe', validator({
   tagId: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  let { body, statusCode, headers } = await subscribe(ctx)
+  const { body, statusCode, headers } = await subscribe(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
   ctx.body = body
@@ -208,7 +213,7 @@ router.put('/subscribe', validator({
 router.delete('/subscribe', validator({
   tagId: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  let { body, statusCode, headers } = await subscribe(ctx)
+  const { body, statusCode, headers } = await subscribe(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
   ctx.body = body

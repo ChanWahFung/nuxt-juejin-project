@@ -26,7 +26,7 @@ function useMiddleware(){
     maxAge: 86400,
     credentials: true,  // 允许携带头部验证信息
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
-    allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Token', 'X-Device-Id', 'X-Uid'],
   })) 
   app.use(etag())
   app.use(conditional())

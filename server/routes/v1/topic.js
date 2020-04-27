@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const config = require('../../request/config')
 
 /**
  * 获取话题列表
@@ -25,14 +24,15 @@ router.get('/list', validator({
     message: 'pageSize 需传入正整数'
   },
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://short-msg-ms.juejin.im/v1/topicList',
     method: "GET",
     params: {
-      device_id: config.deviceId,
       src: 'web',
-      token: config.token,
-      uid: config.uid,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       sortType: ctx.query.sortType || 'hot',
       page: ctx.query.page - 1 || 0,
       pageSize: ctx.query.pageSize || 100
@@ -49,7 +49,7 @@ router.get('/list', validator({
  * @param {number} pageSize - 条数
  */
 router.get('/followedList', validator({
-  after: { type: 'string', required: true },
+  after: { type: 'string' },
   page: { 
     type: 'string', 
     required: true,
@@ -63,14 +63,15 @@ router.get('/followedList', validator({
     message: 'pageSize 需传入正整数'
   },
 }), async (ctx, next) => {
+  const headers = ctx.headers
   const options = {
     url: 'https://short-msg-ms.juejin.im/v1/topicList/followed',
     method: "GET",
     params: {
-      device_id: config.deviceId,
       src: 'web',
-      token: config.token,
-      uid: config.uid,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       after: ctx.query.after || 0,
       page: ctx.query.page - 1 || 0,
       pageSize: ctx.query.pageSize || 100
@@ -82,16 +83,17 @@ router.get('/followedList', validator({
 
 // 关注话题逻辑共有
 function followTopics(ctx){
-  let action = ctx.method === 'PUT' ? 'follow' : 'unfollow'
-  let idField = ctx.method === 'PUT' ? 'topicIds' : 'topicId'
+  const action = ctx.method === 'PUT' ? 'follow' : 'unfollow'
+  const idField = ctx.method === 'PUT' ? 'topicIds' : 'topicId'
+  const headers = ctx.headers
   const options = {
     url: 'https://short-msg-ms.juejin.im/v1/topic/'+action,
     method: 'POST',
     body: {
-      uid: config.uid,
-      device_id: config.deviceId,
       src: 'web',
-      token: config.token,
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
       [idField]: ctx.request.body.topicIds
     },
     headers: {
@@ -108,8 +110,7 @@ function followTopics(ctx){
 router.put('/follow', validator({
   topicIds: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body, res } = await followTopics(ctx)
-  console.log(res)
+  let { body } = await followTopics(ctx)
   ctx.body = body
 })
 
@@ -120,11 +121,8 @@ router.put('/follow', validator({
 router.delete('/follow', validator({
   topicIds: { type: 'string', required: true }
 }), async (ctx, next) => {
-  let { body, res } = await followTopics(ctx)
-  console.log(res)
+  let { body } = await followTopics(ctx)
   ctx.body = body
 })
-
-
 
 module.exports = router
