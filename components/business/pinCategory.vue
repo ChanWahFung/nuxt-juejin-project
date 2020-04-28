@@ -1,5 +1,5 @@
 <template>
-  <ul class="nav-list">
+  <ul class="nav-list" :class="{'nav-list--sticky': !isTopbarBlock}">
     <li class="nav-item" :class="{'nav-item--active': item.path == $route.path}" v-for="item in navList" :key="item.id">
       <nuxt-link :to="item.path">{{ item.name }}</nuxt-link>
     </li>
@@ -12,16 +12,26 @@ export default {
   computed: {
     ...mapState('category', {
       navList: 'pinCategoryList'
-    })
+    }),
+    ...mapState([
+      'isTopbarBlock'
+    ])
   },
 }
 </script>
 
 <style lang='scss' scoped>
 .nav-list{
+  position: fixed;
+  top: 80px;
   padding: 16px 12px;
   background: #fff;
   border-radius: 3px;
+  transition: all .2s;
+
+  &.nav-list--sticky{
+    top: 20px;
+  }
 
   .nav-item{
     position: relative;

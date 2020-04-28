@@ -6,12 +6,12 @@
           <user-avatar :url="actors[0].avatarLarge" :round="true"></user-avatar>
         </nuxt-link>
         <div class="author-info">
-          <div class="author-username">
+          <div class="author-username ellipsis">
             <nuxt-link :to="'/user/'+actors[0].id" target="_blank">{{ actors[0].username }}</nuxt-link>
             <span class="follow-text">关注了</span>
             <nuxt-link :to="'/user/'+item.id" target="_blank">{{ item.username }}</nuxt-link>
           </div>
-          <div class="author-job-title">
+          <div class="author-job-title ellipsis">
             {{ actors[0].jobTitle }}
             {{ actors[0].jobTitle && actors[0].company ? '@' : '' }}
             {{ actors[0].company }}
@@ -31,9 +31,9 @@
         </nuxt-link>
         <div class="pin-info">
           <div class="user-info">
-            <div>
-              <nuxt-link class="user-name" :to="'/user/'+(item.uid || item.user.id)" target="_blank">{{ item.user.username }}</nuxt-link>
-              <div class="user-job-title">
+            <div style="width: 70%">
+              <nuxt-link class="user-name ellipsis" :to="'/user/'+(item.uid || item.user.id)" target="_blank">{{ item.user.username }}</nuxt-link>
+              <div class="user-job-title ellipsis">
                 {{ item.user.jobTitle }}
                 {{ item.user.jobTitle && item.user.company ? '@' : '' }}
                 {{ item.user.company }}
@@ -143,13 +143,16 @@ export default {
   padding: 20px;
 
   .author-avatar{
+    flex: 0 0 45px;
     width: 45px;
     height: 45px;
     margin-right: 15px;
   }
 
   .author-info{
+    flex: 1;
     color: #8a9aa9;
+    overflow: hidden;
     
     .author-username{
       font-weight: 600;
@@ -279,6 +282,7 @@ export default {
     border-radius: 4px;
 
     .link-info{
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -299,6 +303,7 @@ export default {
     }
 
     .link-image{
+      flex: 0 0 65px;
       width: 65px;
       height: 65px;
       margin-left: 10px;
@@ -319,6 +324,7 @@ export default {
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
+      cursor: zoom-in;
 
       .img-holder{
         padding-top: 100%;
