@@ -34,6 +34,7 @@ export default {
   .pin-recommend__title{
     padding: 15px;
     font-size: 15px;
+    font-weight: 600;
     border-bottom: 1px solid #eee;
   }
 }
@@ -51,6 +52,7 @@ export default {
 
   .item-info{
     flex: 1;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
