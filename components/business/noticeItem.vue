@@ -4,7 +4,11 @@
       <user-avatar :url="item.users[0].avatarLarge" :round="true"></user-avatar>
     </nuxt-link>
     <div class="notice-item__info">
-      <nuxt-link v-if="item.users[0]" class="info__username" :to="`/user/${item.users[0].uid}`" target="_blank">{{ item.users[0].username }}</nuxt-link>
+      <div class="info__header">
+        <nuxt-link v-if="item.users[0]" class="info__username" :to="`/user/${item.users[0].uid}`" target="_blank">{{ item.users[0].username }}</nuxt-link>
+        <span v-if="item.count > 1" class="info__user-count">等 {{item.count}} 人</span>
+        <span v-if="item.count > 1" class="info__look-btn" @click="showUserListModal">查看列表</span>
+      </div>
       <div class="info__meta">
         <span v-if="item.users[0]" class="info__job">
           {{ item.users[0].jobTitle }}
@@ -20,6 +24,35 @@
         <nuxt-link class="info__content" :to="'/detail/'+detailId" target="_blank">{{ item | content }}</nuxt-link>
       </p>
     </div>
+    <div v-if="item.count > 1 && isShowUserList" class="user-list-modal">
+      <div class="modal__close-btn" @click="showUserListModal"></div>
+      <div class="modal-main">
+        <div class="modal-title">用户列表</div>
+        <ul class="user-list">
+          <li v-for="userItem in item.users" :key="userItem.uid">
+            <nuxt-link class="user-item" :to="'/user/'+userItem.uid">
+              <div class="user-item__avatar">
+                <user-avatar :url="userItem.avatarLarge" :round="true"></user-avatar>
+              </div>
+              <div class="user-item__info">
+                <div class="user-item__name">
+                  <span>{{ userItem.username }}</span>
+                  <level :level="userItem.level"></level>
+                </div>
+                <div class="user-item__job">
+                  {{ userItem.jobTitle }}
+                  {{ userItem.jobTitle && userItem.company ? ' @ ' : '' }}
+                  {{ userItem.company }}
+                </div>
+              </div>
+              <div class="user-item__follow">
+                <follow-btn :is-foloow="userItem.isFollowerFollowed" :followee-id="userItem.uid"></follow-btn>
+              </div>
+            </nuxt-link>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,6 +62,11 @@ export default {
     item: {
       type: Object,
       default: () => ({})
+    }
+  },
+  data() {
+    return {
+      isShowUserList: false
     }
   },
   computed: {
@@ -69,7 +107,13 @@ export default {
       }
       return replyDesc[item.type] || ''
     }   
-  }
+  },
+  methods: {
+    showUserListModal() {
+      this.isShowUserList = !this.isShowUserList
+      document.body.style.overflow = this.isShowUserList ? 'hidden' : ''
+    }
+  },
 }
 </script>
 
@@ -94,10 +138,27 @@ export default {
     flex: 1;
     overflow: hidden;
 
-    .info__username{
-      font-weight: 600;
-      color: #2e3135;
-      text-decoration: none;
+    .info__header{
+      display: flex;
+      align-items: center;
+
+      .info__username{
+        font-weight: 600;
+        color: #2e3135;
+        text-decoration: none;
+      }
+
+      .info__user-count{
+        margin-left: 5px;
+        font-size: 14px;
+      }
+
+      .info__look-btn{
+        margin-left: auto;
+        color: $theme;
+        font-size: 14px;
+        cursor: pointer;
+      }
     }
 
     .info__meta{
@@ -129,6 +190,92 @@ export default {
 
       &:hover{
         color: $theme;
+      }
+    }
+  }
+
+  .user-list-modal{
+    z-index: 10000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: hsla(0,0%,100%,.96);
+    overflow-y: auto;
+
+    .modal__close-btn{
+      position: fixed;
+      top: 40px;
+      right: 40px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+
+      &::before,
+      &::after{
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 2px;
+        height: 12px;
+        background: #333;
+      }
+
+      &::before{
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      &::after{
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+    }
+
+    .modal-main{
+      width: 540px;
+      margin: 72px auto 48px;
+    }
+
+    .modal-title{
+      margin-bottom: 36px;
+      font-size: 24px;
+      font-weight: 600;
+      color: #393939;
+      text-align: center;
+    }
+
+    .user-item{
+      display: flex;
+      align-items: center;
+      padding: 30px;
+
+      .user-item__avatar{
+        width: 45px;
+        height: 45px;
+        margin-right: 20px;
+      }
+
+      .user-item__name{
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: #393939;
+
+        >span{
+          margin-right: 3px;
+        }
+      }
+
+      .user-item__job{
+        margin-top: 10px;
+        font-size: 12px;
+        color: #b9c0c8;
+      }
+
+      .user-item__follow{
+        margin-left: auto;
       }
     }
   }
