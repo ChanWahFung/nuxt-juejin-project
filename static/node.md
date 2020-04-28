@@ -335,11 +335,8 @@ Vue.use(ElementUI)
 
 ### 安装
 
-`node-sass` 源在国外，下载很容易失败，使用淘宝镜像下载解决
-
-``` cmd
-npm i sass-loader scss-loader --save--dev
-npm i node-sass --save--dev sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+``` bash
+npm i node-sass sass-loader scss-loader --save--dev
 ```
 
 ### 使用
@@ -369,7 +366,7 @@ npm i node-sass --save--dev sass_binary_site=https://npm.taobao.org/mirrors/node
 
 安装
 
-``` cmd
+``` bash
 npm i @nuxtjs/style-resources --save--dev
 ```
 
@@ -393,7 +390,7 @@ npm i @nuxtjs/style-resources --save--dev
 ### 安装
 `Nuxt` 已为我们集成好 `@nuxtjs/axios` 
 
-``` cmd
+``` bash
 npm i @nuxtjs/axios --save--dev
 ```
 
