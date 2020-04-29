@@ -1,5 +1,6 @@
 <template>
   <div class="pin-item">
+    <!-- 关注类型 -->
     <template v-if="action === 'FOLLOW_USER'">
       <div v-if="actors.length" class="follow-block">
         <nuxt-link :to="'/user/'+actors[0].id" class="author-avatar" target="_blank">
@@ -26,6 +27,7 @@
         赞了这篇文章
       </div>
       <div class="item-main">
+        <!-- 用户信息区域 -->
         <nuxt-link class="user-avatar" :to="'/user/'+(item.uid || item.user.id)" target="_blank">
           <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
         </nuxt-link>
@@ -43,6 +45,7 @@
             </div>
             <follow-btn v-if="!item.user.viewerIsFollowing" size="small" :is-follow="item.user.viewerIsFollowing" :followee-id="item.user.id"></follow-btn>
           </div>
+           <!-- 文章类型 -->
           <div v-if="action === 'PUBLISH_ARTICLE' || action === 'LIKE_ARTICLE'">
             <div class="pin-title">
               <h3>{{ item.title }}</h3>
@@ -54,6 +57,7 @@
               <div v-if="item.screenshot" class="pin-post-cover" :style="`background-image: url(${item.screenshot})`"></div>
             </div>
           </div>
+           <!-- 沸点类型 -->
           <div v-else>
             <div class="pin-content">
               {{ item.content }}
@@ -78,6 +82,7 @@
           </div>
         </div>
       </div>
+      <!-- 底部栏 -->
       <div class="item-meta">
         <div class="meta-item"><img src="~/assets/images/pin-like.svg">&nbsp;{{ item.likeCount }}</div>
         <div class="meta-item"><img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}</div>
@@ -261,6 +266,7 @@ export default {
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
+      background-color: #f4f4f4;
       border-radius: 2px;
     }
   }
@@ -324,6 +330,7 @@ export default {
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
+      background-color: #f4f4f4;
       cursor: zoom-in;
 
       .img-holder{
