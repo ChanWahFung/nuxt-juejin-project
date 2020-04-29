@@ -291,6 +291,23 @@ export default ({ app: { $request } }, inject) => {
      */
     getPinListByTopic(params = {}) {
       return $request.get('/v1/pin/topicList', params)
-    }
+    },
+    /**
+     * 话题详情
+     * @param {string} topicId - 话题标签
+     */
+    getTopicDetail(params = {}) {
+      return $request.get('/v1/topic/detail', params)
+    },
+    /**
+     * 话题详情列表
+     * @param {string} topicId - 话题id
+     * @param {number} page - 页码
+     * @param {number} pageSize - 条数
+     * @param {string} sortType - 排序
+     */
+    getTopicPinList(params = {}) {
+      return $request.get('/v1/topic/pinList', params)
+    },
   })
 }

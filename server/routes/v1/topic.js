@@ -81,6 +81,73 @@ router.get('/followedList', validator({
   ctx.body = body
 })
 
+/**
+ * 话题详情
+ * @param {string} topicId - 话题id
+ */
+router.get('/detail', validator({
+  topicId: { type: 'string', required: true }
+}), async (ctx, next) => {
+  const headers = ctx.headers
+  const options = {
+    url: 'https://short-msg-ms.juejin.im/v1/topic/'+ctx.query.topicId,
+    method: "GET",
+    params: {
+      src: 'web',
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token']
+    }
+  };
+  let { body } = await request(options)
+  ctx.body = body
+})
+
+/**
+ * 话题详情列表
+ * @param {string} topicId - 话题id
+ * @param {number} page - 页码
+ * @param {number} pageSize - 条数
+ * @param {string} sortType - 排序（最热、最新）
+ */
+router.get('/pinList', validator({
+  topicId: { type: 'string', required: true },
+  page: {
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'page 需传入正整数'
+  },
+  pageSize: { 
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'pageSize 需传入正整数'
+  },
+  sortType: {
+    type: 'enum',
+    enum: ['rank', 'newest']
+  }
+}), async (ctx, next) => {
+  const headers = ctx.headers
+  const options = {
+    url: 'https://short-msg-ms.juejin.im/v1/pinList/topic',
+    method: "GET",
+    params: {
+      src: 'web',
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
+      topicId: ctx.query.topicId,
+      page: ctx.query.page - 1 || 0,
+      pageSize: ctx.query.pageSize || 20,
+      sortType: ctx.query.sortType || 'rank'
+    }
+  };
+  let { body } = await request(options)
+  ctx.body = body
+})
+
 // 关注话题逻辑共有
 function followTopics(ctx){
   const action = ctx.method === 'PUT' ? 'follow' : 'unfollow'
