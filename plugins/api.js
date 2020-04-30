@@ -309,5 +309,14 @@ export default ({ app: { $request } }, inject) => {
     getTopicPinList(params = {}) {
       return $request.get('/v1/topic/pinList', params)
     },
+    /**
+     * 话题参与者列表
+     * @param {string} topicId - 话题id
+     * @param {number} page - 页码
+     * @param {number} pageSize - 条数
+     */
+    getTopicAttenderList(params = {}) {
+      return $request.get('/v1/topic/attenders', params)
+    },
   })
 }

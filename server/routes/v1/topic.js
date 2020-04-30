@@ -104,7 +104,7 @@ router.get('/detail', validator({
 })
 
 /**
- * 话题详情列表
+ * 话题详情-沸点列表
  * @param {string} topicId - 话题id
  * @param {number} page - 页码
  * @param {number} pageSize - 条数
@@ -142,6 +142,45 @@ router.get('/pinList', validator({
       page: ctx.query.page - 1 || 0,
       pageSize: ctx.query.pageSize || 20,
       sortType: ctx.query.sortType || 'rank'
+    }
+  };
+  let { body } = await request(options)
+  ctx.body = body
+})
+
+/**
+ * 话题参与者列表
+ * @param {string} topicId - 话题id
+ * @param {number} page - 页码
+ * @param {number} pageSize - 条数
+ */
+router.get('/attenders', validator({
+  topicId: { type: 'string', required: true },
+  page: {
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'page 需传入正整数'
+  },
+  pageSize: { 
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'pageSize 需传入正整数'
+  }
+}), async (ctx, next) => {
+  const headers = ctx.headers
+  const options = {
+    url: 'https://short-msg-ms.juejin.im/v1/topic/attenders',
+    method: "GET",
+    params: {
+      src: 'web',
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
+      topicId: ctx.query.topicId,
+      page: ctx.query.page - 1 || 0,
+      pageSize: ctx.query.pageSize || 20,
     }
   };
   let { body } = await request(options)
