@@ -1,7 +1,7 @@
 <template>
   <div class="about-article shadow">
     <div class="about-article__title">相关文章</div>
-    <nuxt-link v-for="item in list" :key="item.objectId" :to="'/detail/'+item.originalUrl.split('/').pop()">
+    <nuxt-link v-for="item in list" :key="item.objectId" :to="'/detail/'+item.originalUrl.split('/').pop()" target="_blank">
       <div class="article-item">
         <div class="article__title">{{ item.title }}</div>
         <div class="article__meta">
