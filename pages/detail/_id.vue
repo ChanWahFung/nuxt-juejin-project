@@ -53,7 +53,7 @@
         </nuxt-link>
         <div class="comment-area">
           <p class="comment-area__title">评论</p>
-          <comment-item v-for="(item, index) in comments" :key="item.id" :author-id="authorInfo.uid" :entry-id="articDetail.entryId" v-model="comments[index]"></comment-item>
+          <comment-item v-for="(item, index) in comments" :key="item.id" :index="index" :author-id="authorInfo.uid" :data="item" @reply-more="getMoreReply"></comment-item>
           <div v-if="hasComments" class="comment__more-btn" @click="getMoreComment">查看更多</div>
         </div>
       </div>
@@ -75,7 +75,6 @@
 import { formatDate } from '~/utils'
 import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
-import commentItem from '~/components/business/commentItem.vue'
 import aboutAuthor from '~/components/business/aboutAuthor.vue'
 import aboutArticle from '~/components/business/aboutArticle.vue'
 import articleSuspendedPanel from '~/components/business/articleSuspendedPanel'
@@ -140,7 +139,6 @@ export default {
     }
   },
   components: {
-    'comment-item': commentItem,
     'about-author': aboutAuthor,
     'about-article': aboutArticle,
     'article-suspended-panel': articleSuspendedPanel,
@@ -227,6 +225,21 @@ export default {
         if (res.s === 1) {
           this.isLike = !this.isLike
           this.isLike ? this.articInfo.collectionCount++ : this.articInfo.collectionCount--
+        }
+      })
+    },
+    // 更多回复
+    getMoreReply({ index, pageNum, pageSize }) {
+      let comment = this.comments[index]
+      this.$api.getReplyList({
+        entryId: this.articDetail.entryId,
+        commentId: comment.id,
+        pageNum,
+        pageSize
+      }).then(res => {
+        if (res.s === 1) {
+          let data = pageNum == 1 ? res.d.comments : comment.topComment.concat(res.d.comments)
+          this.$set(comment, 'topComment', data)
         }
       })
     }

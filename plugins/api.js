@@ -278,6 +278,13 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v1/pin/list', params)
     },
     /**
+     * 单条沸点
+     * @param {string} pinId
+     */
+    getPinById(params = {}) {
+      return $request.get('/v1/pin/byId', params)
+    },
+    /**
      * 推荐沸点
      */
     getPinListByRecommend() {
@@ -317,6 +324,32 @@ export default ({ app: { $request } }, inject) => {
      */
     getTopicAttenderList(params = {}) {
       return $request.get('/v1/topic/attenders', params)
+    },
+    /**
+     * 沸点评论列表
+     * @param {string} pinId 沸点id
+     * @param {number} pageNum - 页码
+     * @param {number} pageSize - 条数
+     */
+    getPinCommentList(params = {}){
+      return $request.get('/v1/comment/pin', params)
+    },
+    /**
+     * 沸点回复列表
+     * @param {string} commentId
+     * @param {number} pageNum - 页码
+     * @param {number} pageSize - 条数
+     */
+    getPinReplyList(params = {}){
+      return $request.get('/v1/comment/pinReply', params)
+    },
+    /**
+     * 沸点点赞、取消点赞
+     */
+    likePin(data = {}) {
+      return $request[data.method]('/v1/pin/like', { 
+        pinId: data.pinId
+      })
     },
   })
 }

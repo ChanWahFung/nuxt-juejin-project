@@ -1,13 +1,13 @@
 <template>
   <div class="pin-recommend-block shadow">
     <div class="pin-recommend__title">推荐沸点</div>
-    <div class="pin-recommend-item" v-for="item in list" :key="item.id" :title="item.content">
+    <nuxt-link :to="'/pin/'+item.objectId" class="pin-recommend-item" v-for="item in list" :key="item.objectId" :title="item.content" target="_blank">
       <div class="item-info">
         <div class="item-content" :class="{'with-picture': item.pictures.length}">{{ item.content }}</div>
         <div class="item-meta">{{ item.likedCount }} 赞 · {{ item.commentCount }} 评论</div>
       </div>
       <div v-if="item.pictures.length" class="item-cover" :style="`background-image: url(${item.pictures[0]})`"></div>
-    </div>
+    </nuxt-link>
   </div>
 </template>
 

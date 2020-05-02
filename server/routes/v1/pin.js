@@ -151,4 +151,66 @@ router.get('/hotRecommendList', async (ctx, next) => {
   ctx.body = body
 })
 
+/**
+ * 单条沸点
+ * @param {string} pinId
+ */
+router.get('/byId', validator({
+  pinId: { type: 'string', required: true }
+}), async (ctx, next) => {
+  const headers = ctx.headers
+  const options = {
+    url: 'https://short-msg-ms.juejin.im/v1/getByID',
+    method: 'GET',
+    params: {
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
+      src: 'web',
+      msgId: ctx.query.pinId,
+    }
+  }
+  let { body } = await request(options)
+  ctx.body = body
+})
+
+// 点赞共有逻辑
+function like(ctx) {
+  const headers = ctx.headers
+  const action = ctx.method === 'PUT' ? 'like' : 'unlike'
+  const options = {
+    url: 'https://short-msg-ms.juejin.im/v1/'+action,
+    method: 'GET',
+    params: {
+      uid: headers['x-uid'],
+      device_id: headers['x-device-id'],
+      token: headers['x-token'],
+      src: 'web',
+      msgId: ctx.request.body.pinId
+    }
+  }
+  return request(options)
+}
+
+/**
+ * 沸点点赞
+ */
+router.put('/like', validator({
+  pinId: { type: 'string', required: true}
+}), async (ctx, next) => {
+  let { body } = await like(ctx)
+  ctx.body = body
+})
+
+/**
+ * 沸点取消点赞
+ */
+router.delete('/like', validator({
+  pinId: { type: 'string', required: true}
+}), async (ctx, next) => {
+  let { body } = await like(ctx)
+  ctx.body = body
+})
+
+
 module.exports = router

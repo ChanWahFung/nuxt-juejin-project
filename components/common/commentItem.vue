@@ -4,7 +4,7 @@
       <user-avatar :url="data.userInfo.avatarLarge" :round="true"></user-avatar>
     </nuxt-link>
     <div class="comment-item__main">
-      <div class="comment-item__userinfo">
+      <div class="comment-item__userinfo ellipsis">
         <nuxt-link :to="'/user/'+data.userId" class="comment-item__username" target="_blank">
           <span style="margin-right:5px">{{ data.userInfo.username }}</span>
           <level :level="data.userInfo.level"></level>
@@ -19,17 +19,17 @@
       <div class="comment-item__meta">
         <span class="comment-item__meta__time">{{ data.createdAt | formatTime }}</span>
       </div>
-      <div v-if="data.topComment.length" class="comment-item__reply-area">
+      <div v-if="data.topComment && data.topComment.length" class="comment-item__reply-area">
         <div class="reply-item" v-for="item in data.topComment" :key="item.id">
-          <nuxt-link :to="'/user/'+item.userId" class="comment-item__avatar" target="_blank">
+          <nuxt-link :to="'/user/'+item.userInfo.objectId" class="comment-item__avatar" target="_blank">
             <user-avatar :url="item.userInfo.avatarLarge" :round="true"></user-avatar>
           </nuxt-link>
           <div class="comment-item__main">
-            <div class="comment-item__userinfo">
-              <nuxt-link :to="'/user/'+item.userId" class="comment-item__username" target="_blank">
+            <div class="comment-item__userinfo ellipsis">
+              <nuxt-link :to="'/user/'+item.userInfo.objectId" class="comment-item__username" target="_blank">
                 <span style="margin-right:5px">{{ item.userInfo.username }}</span>
                 <level :level="item.userInfo.level"></level>
-                <span v-if="item.userId === authorId" style="margin-left:5px">(作者)</span>
+                <span v-if="item.userInfo.objectId === authorId" style="margin-left:5px">(作者)</span>
               </nuxt-link>
               <p style="margin-left: 5px">
                 {{ item.userInfo.jobTitle }}
@@ -50,7 +50,7 @@
             </div>
           </div>
         </div>
-        <div v-if="data.replyCount > data.topComment.length" class="reply__more" @click="getReplyMore">加载更多</div>
+        <div v-if="data.replyCount > data.topComment.length" class="reply__more" @click="replyMore">加载更多</div>
       </div>
     </div>
   </div>
@@ -58,18 +58,14 @@
 
 <script>
 export default {
-  model: {
-    prop: 'data',
-    event: 'updateData'
-  },
   props: {
-    entryId: {
-      type: String,
-      default: ''
-    },
     authorId: {
       type: String,
       default: ''
+    },
+    index: {
+      type: Number,
+      default: -1,
     },
     data: {
       type: Object,
@@ -83,21 +79,12 @@ export default {
     }
   },
   methods: {
-    getReplyMore() {
-      if (this.entryId) {
-        this.$api.getReplyList({
-          entryId: this.entryId,
-          commentId: this.data.id,
-          pageNum: this.pageNum,
-          pageSize: this.pageSize
-        }).then(res => {
-          if (res.s === 1) {
-            let data = JSON.parse(JSON.stringify(this.data))
-            data.topComment = this.pageNum == 1 ? res.d.comments : data.topComment.concat(res.d.comments)
-            this.$emit('updateData', data)
-          }
-        })
-      }
+    replyMore() {
+      this.$emit('reply-more', {
+        index: this.index,
+        pageNum: this.pageNum++,
+        pageSize: this.pageSize
+      })
     }
   }
 }
@@ -108,6 +95,7 @@ export default {
   position: relative;
   padding-left: 32px;
   margin-bottom: 20px;
+  background: #fff;
 
   .comment-item__avatar{
     position: absolute;
@@ -123,6 +111,7 @@ export default {
   &>.comment-item__main{
     margin-left: 14px;
     padding-bottom: 20px;
+    overflow: hidden;
   }
 
   &:not(:last-child){
