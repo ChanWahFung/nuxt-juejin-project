@@ -3,7 +3,7 @@
     <div class="pin-nav">
       <pin-category v-model="currentCategory"></pin-category>
     </div>
-    <nuxt-child class="pin-main shadow" />
+    <nuxt-child class="pin-main" />
     <div class="pin-aside">
       <recommend-pin :list="recommendPins"></recommend-pin>
       <div v-if="followTopicList.length" class="followed-topics shadow">
@@ -11,13 +11,13 @@
           <div class="title">关注的话题</div>
           <nuxt-link to="/topic" class="all-btn" target="_blank">全部</nuxt-link>
         </div>
-        <div class="topic-item" v-for="item in followTopicList" :key="item.objectId">
+        <nuxt-link :to="'/topic/'+item.objectId" class="topic-item" v-for="item in followTopicList" :key="item.objectId">
           <div class="topic-icon" :style="`background-image: url(${item.icon})`"></div>
           <div class="topic-info">
             <span class="topic-title">{{ item.title }}</span>
             <span class="topic-mate">{{ item.followersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
           </div>
-        </div>
+        </nuxt-link>
       </div>
     </div>
   </div>
