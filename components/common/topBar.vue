@@ -36,7 +36,7 @@ export default {
         },
         {
           name: '沸点',
-          link: '/pin/recommended'
+          link: '/pins/recommended'
         },
         {
           name: '话题',
