@@ -4,24 +4,24 @@
     <div class="modal-main">
       <div class="modal-title">{{ title }}</div>
       <ul class="user-list">
-        <li v-for="userItem in list" :key="userItem.uid">
-          <nuxt-link class="user-item" :to="'/user/'+userItem.uid">
+        <li v-for="userItem in list" :key="(userItem.uid || userItem.objectId)">
+          <nuxt-link class="user-item" :to="'/user/'+(userItem.uid || userItem.objectId)" target="_blank">
             <div class="user-item__avatar">
               <user-avatar :url="userItem.avatarLarge" :round="true"></user-avatar>
             </div>
             <div class="user-item__info">
-              <div class="user-item__name">
+              <div class="user-item__name ellipsis">
                 <span>{{ userItem.username }}</span>
                 <level :level="userItem.level"></level>
               </div>
-              <div class="user-item__job">
+              <div class="user-item__job ellipsis">
                 {{ userItem.jobTitle }}
                 {{ userItem.jobTitle && userItem.company ? ' @ ' : '' }}
                 {{ userItem.company }}
               </div>
             </div>
             <div class="user-item__follow">
-              <follow-btn :is-foloow="userItem.isFollowerFollowed" :followee-id="userItem.uid"></follow-btn>
+              <follow-btn v-model="userItem.isFollowerFollowed" :followee-id="(userItem.uid || userItem.objectId)"></follow-btn>
             </div>
           </nuxt-link>
         </li>
@@ -48,7 +48,8 @@ export default {
   },
   data() {
     return {
-      _scrollTarget: 'component'
+      isReachBottom: false,
+      reachBottomDistance: 80 // 距离底部多远触发
     }
   },
   watch: {
@@ -56,9 +57,32 @@ export default {
       document.body.style.overflow = newVal ? 'hidden' : ''
     }
   },
+  mounted() {
+    this.$el.addEventListener('scroll', this.modalScrollHandler)
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener('scroll', this.modalScrollHandler)
+  },
   methods: {
     closeUserListModal() {
       this.$emit('update:visible', false)
+    },
+    reachBottom() {
+      this.$emit('reach-bottom')
+    },
+    modalScrollHandler() {
+      let scrollHeight = this.$el.scrollHeight
+      let currentHeight = this.$el.scrollTop + this.$el.clientHeight + this.reachBottomDistance
+      if (currentHeight < scrollHeight && this.isReachBottom) {
+        this.isReachBottom = false
+      }
+      if (this.isReachBottom) {
+        return
+      }
+      if (currentHeight >= scrollHeight) {
+        this.isReachBottom = true
+        typeof this.reachBottom === 'function' && this.reachBottom()
+      }
     }
   }
 }
@@ -123,15 +147,23 @@ export default {
     padding: 30px;
 
     .user-item__avatar{
+      flex: 0 0 45px;
       width: 45px;
       height: 45px;
       margin-right: 20px;
     }
 
+    .user-item__info{
+      flex: 1;
+      width: 100%;
+    }
+
     .user-item__name{
+      width: 80%;
       display: flex;
       align-items: center;
       font-size: 16px;
+      line-height: 1.3;
       color: #393939;
 
       >span{
@@ -140,7 +172,8 @@ export default {
     }
 
     .user-item__job{
-      margin-top: 10px;
+      width: 80%;
+      margin-top: 8px;
       font-size: 12px;
       color: #b9c0c8;
     }
