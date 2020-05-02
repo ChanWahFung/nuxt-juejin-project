@@ -17,7 +17,7 @@
         <div class="topic-info">
           <div class="topic-icon" :style="`background-image: url(${topicDetail.icon})`"></div>
           <div class="topic-title">{{ topicDetail.title }}</div>
-          <follow-btn :is-follow="topicDetail.followed"></follow-btn>
+          <follow-btn v-model="topicDetail.followed"></follow-btn>
         </div>
         <div class="topic-desc">
           <p class="desc-title">话题介绍:</p>
@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <user-list-modal :list="attenderList" :visible.sync="isShowUserList" title="参与话题的人"></user-list-modal>
+    <user-list-modal :list="attenderList" :visible.sync="isShowUserList" title="参与话题的人" @reach-bottom="modalReachBottom"></user-list-modal>
   </div>
 </template>
 
@@ -104,13 +104,12 @@ export default {
   },
   methods: {
     reachBottom() {
-      if (this.isShowUserList) {
-        this.attenderListPage++
-        this.getTopicAttenderList({ isLoadMore: true })
-      } else {
-        this.pinListPage++
-        this.getTopicPinList({ isLoadMore: true })
-      }
+      this.pinListPage++
+      this.getTopicPinList({ isLoadMore: true })
+    },
+    modalReachBottom() {
+      this.attenderListPage++
+      this.getTopicAttenderList({ isLoadMore: true })
     },
     async getTopicPinList({ isLoadMore = false } = {}) {
       let res = await this.$api.getTopicPinList({

@@ -17,7 +17,7 @@
         <div class="user__meta">{{ item.description }}</div>
       </div>
       <div class="user__follow-btn">
-        <follow-btn type="user" :is-follow="item.author.viewerIsFollowing" :followee-id="item.author.id"></follow-btn>
+        <follow-btn type="user" v-model="item.author.viewerIsFollowing" :followee-id="item.author.id"></follow-btn>
       </div>
     </div>
   </nuxt-link>
