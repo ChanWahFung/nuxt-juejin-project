@@ -1,7 +1,7 @@
 <template functional>
   <div class="book-block shadow">
     <div class="book-block__title">你可能感兴趣的小册</div>
-    <nuxt-link to="'/book" v-for="item in props.list" :key="item._id">
+    <nuxt-link to="/book" v-for="item in props.list" :key="item._id">
       <div class="book-item">
         <div class="item__cover" :style="`background-image: url(${item.img})`"></div>
         <div class="item__info">
