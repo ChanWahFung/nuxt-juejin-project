@@ -23,7 +23,7 @@
     <template v-else>
       <div v-if="action === 'LIKE_ARTICLE' && actors.length" class="item-action">
         {{ $store.state.uid === actors[0].id ? '' : '你关注的' }}
-        <nuxt-link :to="'/user/'+actors[0].id" class="actor-username">{{ actors[0].username }}</nuxt-link>
+        <nuxt-link :to="'/user/'+actors[0].id" class="actor-username" target="_blank">{{ actors[0].username }}</nuxt-link>
         赞了这篇文章
       </div>
       <div class="item-main">

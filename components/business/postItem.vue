@@ -6,7 +6,7 @@
       </div>
       <span>{{ item.user.username }} · {{ item.createdAt | formatTime }}</span>
     </div>
-    <div class="post-item__cover" v-if="item.screenshot" :style="{'background-image': `url(${item.screenshot})`}" @click="toDetail(item.originalUrl)"></div>
+    <nuxt-link :to="'/detail/'+detailId" class="post-item__cover" v-if="item.screenshot" :style="{'background-image': `url(${item.screenshot})`}" target="_blank"></nuxt-link>
     <h1 class="post-item__title">
       <nuxt-link :to="'/detail/'+detailId" target="_blank">{{ item.title }}</nuxt-link>
     </h1>
@@ -100,6 +100,7 @@ export default {
   }
 
   .post-item__cover{
+    display: block;
     height: 210px;
     margin-bottom: 20px;
     background-size: cover;

@@ -6,7 +6,7 @@
         <div class="book__title">{{ item.title }}</div>
         <div class="book__desc ellipsis">{{ item.desc }}</div>
         <div class="book__author">
-          <nuxt-link class="author__info" :to="'/user/'+item.userData.uid">
+          <nuxt-link class="author__info" :to="'/user/'+item.userData.uid" target="_blank">
             <div class="author__avatar">
               <user-avatar :url="item.userData.avatarLarge" :round="true"></user-avatar>
             </div>
