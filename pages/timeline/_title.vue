@@ -32,14 +32,7 @@ export default {
   async asyncData({ app, params, store }) {
     // 分类列表
     let initCategoryList = [{ id: 0, name: '推荐', title: 'recommended' }]
-    let categoryList = []
-    // 获取分类列表缓存
-    if (store.state.category.timelineCategoryList.length) {
-      categoryList = store.state.category.timelineCategoryList
-    } else {
-      categoryList = await app.$api.getCategories().then(res => res.s === 1 ? initCategoryList.concat(res.d.categoryList) : initCategoryList)
-      store.commit('category/updateTimelineCategoryList', categoryList)
-    }
+    let categoryList = store.state.category.timelineCategoryList
     let currentCategoryItem = categoryList.filter(item => item.title === params.title)[0] || initCategoryList[0]
     let [indexData, recommendAuthors, recommendBooks] = await Promise.all([
       // 文章列表
@@ -69,11 +62,18 @@ export default {
       title: `${this.currentCategoryItem.name ? this.currentCategoryItem.name + ' - ' : ''}掘金`
     }
   },
-  validate ({ params }) {
-    if (params.title && params.title != 'undefined') {
-      return true
+  async validate ({ app, params, store }) {
+    // 分类列表
+    let initCategoryList = [{ id: 0, name: '推荐', title: 'recommended' }]
+    let categoryList = []
+    // 获取分类列表缓存
+    if (store.state.category.timelineCategoryList.length) {
+      categoryList = store.state.category.timelineCategoryList
+    } else {
+      categoryList = await app.$api.getCategories().then(res => res.s === 1 ? initCategoryList.concat(res.d.categoryList) : initCategoryList)
+      store.commit('category/updateTimelineCategoryList', categoryList)
     }
-    return false
+    return params.title === undefined || categoryList.filter(item => item.title === params.title).length
   },
   mixins: [reachBottom],
   components: {
