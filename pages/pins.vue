@@ -11,7 +11,7 @@
           <div class="title">关注的话题</div>
           <nuxt-link to="/topic" class="all-btn" target="_blank">全部</nuxt-link>
         </div>
-        <nuxt-link :to="'/topic/'+item.objectId" class="topic-item" v-for="item in followTopicList" :key="item.objectId">
+        <nuxt-link :to="'/topic/'+item.objectId" class="topic-item" v-for="item in followTopicList" :key="item.objectId" target="_blank">
           <div class="topic-icon" :style="`background-image: url(${item.icon})`"></div>
           <div class="topic-info">
             <span class="topic-title">{{ item.title }}</span>
