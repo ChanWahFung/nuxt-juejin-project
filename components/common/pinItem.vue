@@ -77,7 +77,7 @@
               </div>
             </div>
             <div class="pin-topic" v-if="item.topic">
-              <nuxt-link class="topic-title" :to="'/topic/'+item.topic.id" target="_blank">{{ item.topic.title }}</nuxt-link>
+              <nuxt-link class="topic-title" :to="'/topic/'+topicId" target="_blank">{{ item.topic.title }}</nuxt-link>
             </div>
           </div>
         </div>
@@ -148,6 +148,10 @@ export default {
     // 统一 uid值
     uid() {
       return this.item.uid || (this.item.user && this.item.user.id)
+    },
+    // 统一 topicId值
+    topicId() {
+      return this.item.topic.id || this.item.topic.objectId
     },
     // 统一 是否点赞字段
     isLike() {
