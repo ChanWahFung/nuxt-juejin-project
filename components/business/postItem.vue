@@ -35,10 +35,6 @@
 
 <script>
 export default {
-  model: {
-    prop: 'item',
-    event: 'updateItem'
-  },
   props: {
     item: {
       type: Object,
@@ -68,7 +64,7 @@ export default {
           isCollected: !this.item.isCollected
         })
         if (res.s === 1) {
-          this.$emit('updateItem', {
+          this.$emit('update:item', {
             ...this.item, 
             isCollected: !this.item.isCollected,
             collectionCount: this.item.isCollected ? Number(this.item.collectionCount) - 1 : Number(this.item.collectionCount) + 1 

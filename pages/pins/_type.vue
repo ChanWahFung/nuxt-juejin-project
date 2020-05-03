@@ -4,7 +4,7 @@
       <template v-if="item.node.targets">
         <pin-item :actors="item.node.actors" :item.sync="item.node.targets[0]" :action="item.node.action"></pin-item>
       </template>
-      <template>
+      <template v-else>
         <pin-item :actors="item.node.actors" :item.sync="item.node" :action="item.node.action"></pin-item>
       </template>
     </div>

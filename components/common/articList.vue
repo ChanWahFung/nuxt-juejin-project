@@ -2,10 +2,10 @@
   <div class="artic-list">
     <div v-for="(item, index) in list" :key="item.id" class="artic-item--border">
       <template v-if="list[index].node">
-        <artic-item v-model="list[index].node"></artic-item>
+        <artic-item :item.sync="list[index].node"></artic-item>
       </template>
       <template v-else-if="list[index]">
-        <artic-item v-model="list[index]"></artic-item>
+        <artic-item :item.sync="list[index]"></artic-item>
       </template>
     </div>
   </div>

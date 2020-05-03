@@ -5,10 +5,6 @@
 
 <script>
 export default {
-  model: {
-    prop: 'isFollow',
-    event: 'updateIsFollow'
-  },
   props: {
     isFollow: {
       type: Boolean,
@@ -42,7 +38,7 @@ export default {
       this.type === 'user' && (res = await this.followUser())
       this.type === 'tag' && (res = await this.followTag())
       if (res.s === 1) {
-        this.$emit('updateIsFollow', !this.isFollow)
+        this.$emit('update:is-follow', !this.isFollow)
       }
     },
     followUser(){

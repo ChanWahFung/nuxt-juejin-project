@@ -28,13 +28,13 @@
       </div>
       <div class="item-main">
         <!-- 用户信息区域 -->
-        <nuxt-link class="user-avatar" :to="'/user/'+(item.uid || item.user.id)" target="_blank">
+        <nuxt-link class="user-avatar" :to="'/user/'+uid" target="_blank">
           <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
         </nuxt-link>
         <div class="pin-info">
           <div class="user-info">
             <div style="width: 70%">
-              <nuxt-link class="user-name ellipsis" :to="'/user/'+(item.uid || item.user.id)" target="_blank">{{ item.user.username }}</nuxt-link>
+              <nuxt-link class="user-name ellipsis" :to="'/user/'+uid" target="_blank">{{ item.user.username }}</nuxt-link>
               <div class="user-job-title ellipsis">
                 {{ item.user.jobTitle }}
                 {{ item.user.jobTitle && item.user.company ? '@' : '' }}
@@ -43,7 +43,7 @@
                 {{ item.createdAt | formatTime }}
               </div>
             </div>
-            <follow-btn v-if="!item.user.viewerIsFollowing" size="small" v-model="item.user.viewerIsFollowing" :followee-id="item.user.id"></follow-btn>
+            <follow-btn v-if="!item.user.viewerIsFollowing" size="small" :is-follow.sync="item.user.viewerIsFollowing" :followee-id="uid"></follow-btn>
           </div>
            <!-- 文章类型 -->
           <div v-if="action === 'PUBLISH_ARTICLE' || action === 'LIKE_ARTICLE'">
@@ -141,9 +141,13 @@ export default {
     }
   },
   computed: {
-    // 统一 id字段
-    pinId () {
+    // 统一 id值
+    pinId() {
       return this.item.id || this.item.objectId
+    },
+    // 统一 uid值
+    uid() {
+      return this.item.uid || (this.item.user && this.item.user.id)
     },
     // 统一 是否点赞字段
     isLike() {
@@ -173,7 +177,6 @@ export default {
         let item = JSON.parse(JSON.stringify(this.item))
         item[this.isLike] = !item[this.isLike]
         item[this.likeCount] = item[this.isLike] ? ++item[this.likeCount] : --item[this.likeCount]
-        console.log(item)
         this.$emit('update:item', item)
       }
     },

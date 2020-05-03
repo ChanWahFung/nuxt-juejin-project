@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="user-item__follow">
-              <follow-btn v-model="userItem.isFollowerFollowed" :followee-id="(userItem.uid || userItem.objectId)"></follow-btn>
+              <follow-btn :is-follow.sync="userItem.isFollowerFollowed" :followee-id="(userItem.uid || userItem.objectId)"></follow-btn>
             </div>
           </nuxt-link>
         </li>

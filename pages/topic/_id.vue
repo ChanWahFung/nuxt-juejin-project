@@ -17,7 +17,7 @@
         <div class="topic-info">
           <div class="topic-icon" :style="`background-image: url(${topicDetail.icon})`"></div>
           <div class="topic-title">{{ topicDetail.title }}</div>
-          <follow-btn v-model="topicDetail.followed"></follow-btn>
+          <follow-btn :is-follow.sync="topicDetail.followed"></follow-btn>
         </div>
         <div class="topic-desc">
           <p class="desc-title">话题介绍:</p>

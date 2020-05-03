@@ -13,7 +13,7 @@
           {{ user.company }}
         </span>
       </nuxt-link>
-      <follow-btn v-model="user.isFollowerFollowed" type="user" :followee-id="user.uid"></follow-btn>
+      <follow-btn :is-follow.sync="user.isFollowerFollowed" type="user" :followee-id="user.uid"></follow-btn>
     </div>
   </div>
 </template>

@@ -17,7 +17,7 @@
                 <span>阅读{{ articInfo.viewsCount }}</span>
               </div>
             </div>
-            <follow-btn v-model="isFollowed" type="user" :followee-id="authorInfo.uid"></follow-btn>
+            <follow-btn :is-follow.sync="isFollowed" type="user" :followee-id="authorInfo.uid"></follow-btn>
           </div>
           <div v-if="articInfo.screenshot" class="detail__cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
           <h1 class="detail__title">{{ articInfo.title }}</h1>

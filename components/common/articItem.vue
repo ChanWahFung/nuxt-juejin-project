@@ -44,10 +44,6 @@
 
 <script>
 export default {
-  model: {
-    prop: 'item',
-    event: 'updateItem'
-  },
   props: {
     item: {
       type: Object,
@@ -78,7 +74,6 @@ export default {
   },
   methods: {
     toDetail(hash = '') {
-      console.log(132)
       let routeUrl = this.$router.resolve({
         name: 'detail-id',
         params: {
@@ -96,7 +91,7 @@ export default {
         })
         // 更新视图点赞状态
         if (res.s === 1) {
-          this.$emit('updateItem', {
+          this.$emit('update:item', {
             ...this.item, 
             [this.likeField]: !this.item[this.likeField],
             [this.likeCountField]: this.item[this.likeField] ? Number(this.item[this.likeCountField]) - 1 : Number(this.item[this.likeCountField]) + 1 

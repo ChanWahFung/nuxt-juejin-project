@@ -20,7 +20,7 @@
         <p>{{ item.postedPostsCount }}专栏 · {{ item.followersCount }}个关注者</p>
       </div>
       <div class="user-item__btn">
-        <follow-btn v-model="item.viewerIsFollowing" type="user" :followee-id="item.id"></follow-btn>
+        <follow-btn :is-follow.sync="item.viewerIsFollowing" type="user" :followee-id="item.id"></follow-btn>
       </div>
     </div>
   </nuxt-link>

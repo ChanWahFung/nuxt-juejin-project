@@ -7,7 +7,7 @@
         <p>{{ item.subscribersCount }}关注 · {{ item.entryCount }}文章</p>
       </div>
       <div class="tag-item__btn">
-        <follow-btn type="tag" v-model="item.viewerIsFollowing" :followee-id="item.id"></follow-btn>
+        <follow-btn type="tag" :is-follow.sync="item.viewerIsFollowing" :followee-id="item.id"></follow-btn>
       </div>
     </div>
   </nuxt-link>

@@ -14,7 +14,7 @@
           <img class="item__icon" :src="item.icon">
           <span class="item__title">{{ item.title }}</span>
           <span class="item__meta">{{ item.subscribersCount }} 关注  {{ item.entryCount }} 文章</span>
-          <follow-btn type="tag" v-model="item.isSubscribe" :followee-id="item.id"></follow-btn>
+          <follow-btn type="tag" :is-follow.sync="item.isSubscribe" :followee-id="item.id"></follow-btn>
         </div>
       </div>
     </div>
