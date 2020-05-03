@@ -69,6 +69,12 @@ export default {
       title: `${this.currentCategoryItem.name ? this.currentCategoryItem.name + ' - ' : ''}掘金`
     }
   },
+  validate ({ params }) {
+    if (params.title && params.title != 'undefined') {
+      return true
+    }
+    return false
+  },
   mixins: [reachBottom],
   components: {
     'author-rank': authorRank,

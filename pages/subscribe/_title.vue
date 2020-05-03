@@ -25,20 +25,7 @@
 import reachBottom from '../../mixins/reachBottom'
 import subscribeNav from '../../components/business/subscribeNav'
 
-export default {
-  validate ({ params }) {
-    const whiteList = [undefined, 'all', 'subscribed']
-    if (whiteList.includes(params.title)) {
-      return true
-    }
-    return false
-  },
-  head () {
-    return {
-      title: `${this.currentNavItem.name ? this.currentNavItem.name + ' - ' : ''}掘金`
-    }
-  },
-  layout: 'default-white',
+export default {  
   async asyncData({ app, params }) {
     let tagList = []
     if (!params.title || params.title === 'subscribed') {
@@ -53,6 +40,19 @@ export default {
     return {
       tagList
     }
+  },
+  head () {
+    return {
+      title: `${this.currentNavItem.name ? this.currentNavItem.name + ' - ' : ''}掘金`
+    }
+  },
+  layout: 'default-white',
+  validate ({ params }) {
+    const whiteList = ['all', 'subscribed']
+    if (params.title === undefined || whiteList.includes(params.title)) {
+      return true
+    }
+    return false
   },
   components: {
     'subscribe-nav': subscribeNav

@@ -81,20 +81,6 @@ import articleSuspendedPanel from '~/components/business/articleSuspendedPanel'
 import catalog from '~/components/business/catalog.vue'
 
 export default {
-  validate ({ params }) {
-    if (params.id && params.id != 'undefined') {
-      return true
-    }
-    return false
-  },
-  head () {
-    return {
-      title: this.articInfo.title,
-      meta: [
-        { hid: 'description', name: 'description', content: this.articInfo.content }
-      ]
-    }
-  },
   async asyncData ({ app, params }) {
     // 内容
     const articDetail = await app.$api.getDetail({
@@ -137,6 +123,20 @@ export default {
       authorInfo,
       aboutArticles
     }
+  },
+  head () {
+    return {
+      title: this.articInfo.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.articInfo.content }
+      ]
+    }
+  },
+  validate ({ params }) {
+    if (params.id && params.id != 'undefined') {
+      return true
+    }
+    return false
   },
   components: {
     'about-author': aboutAuthor,

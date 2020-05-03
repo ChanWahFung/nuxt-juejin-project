@@ -40,8 +40,11 @@ export default {
       title: `${this.currentCategoryItem.title ? this.currentCategoryItem.title + ' - ' : ''}掘金`
     }
   },
-  validate({ params }) {
-    return params.name
+  validate ({ params }) {
+    if (params.name && params.name != 'undefined') {
+      return true
+    }
+    return false
   },
   mixins: [reachBottom],
   components: {

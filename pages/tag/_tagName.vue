@@ -24,18 +24,6 @@
 import reachBottom from '~/mixins/reachBottom'
 
 export default {
-  head(){
-    return {
-      title: `${this.$route.params.tagName} - 标签 - 掘金`
-    }
-  },
-  layout: 'full',
-  validate ({ params }) {
-    if (params.tagName) {
-      return true
-    }
-    return false
-  },
   async asyncData({ app, params }) {
     // 标签详情
     const tagInfo = await app.$api.getTagDetail({
@@ -52,6 +40,18 @@ export default {
       tagInfo,
       articleList
     }
+  },
+  head(){
+    return {
+      title: `${this.$route.params.tagName} - 标签 - 掘金`
+    }
+  },
+  layout: 'full',
+  validate ({ params }) {
+    if (params.tagName && params.tagName != 'undefined') {
+      return true
+    }
+    return false
   },
   mixins: [reachBottom],
   data() {

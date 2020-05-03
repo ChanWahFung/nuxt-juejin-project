@@ -85,6 +85,12 @@ export default {
       title: `${this.topicDetail.title} - 话题 - 沸点`
     }
   },
+  validate ({ params }) {
+    if (params.id && params.id != 'undefined') {
+      return true
+    }
+    return false
+  },
   watchQuery: ['sortType'],
   mixins: [reachBottom],
   data() {

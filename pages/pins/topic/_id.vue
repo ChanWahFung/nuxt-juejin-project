@@ -26,8 +26,11 @@ export default {
       title: `${this.categoryName ? this.categoryName + ' - ' : ''}沸点 - 掘金`
     }
   },
-  validate({ params }) {
-    return params.id
+  validate ({ params }) {
+    if (params.id && params.id != 'undefined') {
+      return true
+    }
+    return false
   },
   mixins: [reachBottom],
   data() {

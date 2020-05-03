@@ -8,17 +8,28 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import reachBottom from '~/mixins/reachBottom'
 import bookList from '~/components/business/bookList'
 import bookCategory from '~/components/business/bookCategory'
 
 export default {
+  async asyncData({ app, params, store }) {
+    // 小册列表
+    let books = await app.$api.getBooks({
+      alias: params.alias,
+      pageNum: 1
+    }).then(res => res.s === 1 ? res.d : [])
+    return {
+      books
+    }
+  },
   head() {
     return {
       title: '掘金小册'
     }
   },
-  async asyncData({ app, params, store }) {
+  async validate ({ app, params, store }) {
     let initBookCategoryList = [{ name: '全部', alias: '' }]
     let bookCategoryList = []
     // 分类
@@ -29,15 +40,7 @@ export default {
         .then(res => res.s === 1 ? initBookCategoryList.concat(res.d) : initBookCategoryList)
       store.commit('category/updateBookCategoryList', bookCategoryList)
     }
-    // 小册列表
-    let books = await app.$api.getBooks({
-      alias: params.alias,
-      pageNum: 1
-    }).then(res => res.s === 1 ? res.d : [])
-    return {
-      bookCategoryList,
-      books
-    }
+    return params.alias === undefined || bookCategoryList.includes(params.alias)
   },
   mixins: [reachBottom],
   components: {
@@ -46,10 +49,13 @@ export default {
   },
   data() {
     return {
-      bookCategoryList: [],
+      // bookCategoryList: [],
       books: [],
       pageNum: 1,
     }
+  },
+  computed: {
+    ...mapState('category', ['bookCategoryList'])
   },
   methods: {
     reachBottom() {

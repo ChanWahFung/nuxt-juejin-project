@@ -35,6 +35,12 @@ export default {
       title: this.pinDetail.content || '掘金'
     }
   },
+  validate ({ params }) {
+    if (params.id && params.id != 'undefined') {
+      return true
+    }
+    return false
+  },
   mixins: [reachBottom],
   data() {
     return {
