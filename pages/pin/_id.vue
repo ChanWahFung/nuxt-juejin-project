@@ -2,7 +2,7 @@
   <div class="pin-detail-container">
     <div class="detail-main">
       <div class="detail-info">
-        <pin-item style="border-bottom: 1px solid #eee" :item="pinDetail"></pin-item>
+        <pin-item style="border-bottom: 1px solid #eee" :item.sync="pinDetail"></pin-item>
       </div>
       <div class="comment-list">
         <comment-item v-for="(item, index) in comments" :key="item.id" :index="index" :author-id="pinDetail.uid" :data="comments[index]" @reply-more="getMoreReply"></comment-item>

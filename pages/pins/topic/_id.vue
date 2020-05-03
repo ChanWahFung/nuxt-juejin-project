@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.objectId">
-      <pin-item :item="item"></pin-item>
+      <pin-item :item.sync="item"></pin-item>
     </div>
   </div>
 </template>

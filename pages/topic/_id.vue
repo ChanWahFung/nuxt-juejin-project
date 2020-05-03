@@ -6,7 +6,7 @@
         <nuxt-link :to="`/topic/${$route.params.id}?sortType=newest`" class="nav-item" :class="{'nav-item--active': sortType === 'newest'}">最新</nuxt-link>
       </div>
       <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.objectId">
-        <pin-item :item="item"></pin-item>
+        <pin-item :item.sync="item"></pin-item>
       </div>
     </div>
     <div class="topic-aside">

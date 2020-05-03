@@ -43,7 +43,7 @@
                 {{ item.createdAt | formatTime }}
               </div>
             </div>
-            <follow-btn v-if="!item.user.viewerIsFollowing" size="small" :is-follow="item.user.viewerIsFollowing" :followee-id="item.user.id"></follow-btn>
+            <follow-btn v-if="!item.user.viewerIsFollowing" size="small" v-model="item.user.viewerIsFollowing" :followee-id="item.user.id"></follow-btn>
           </div>
            <!-- 文章类型 -->
           <div v-if="action === 'PUBLISH_ARTICLE' || action === 'LIKE_ARTICLE'">
@@ -84,9 +84,36 @@
       </div>
       <!-- 底部栏 -->
       <div class="item-meta">
-        <div class="meta-item"><img src="~/assets/images/pin-like.svg">&nbsp;{{ item.likeCount }}</div>
-        <div class="meta-item"><img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}</div>
-        <div class="meta-item"><img src="~/assets/images/pin-share.svg">&nbsp;分享</div>
+        <div class="meta-item" @click="pinLike">
+          <span class="meta-info" :class="{'meta-info--active': item[isLike]}">
+            <img v-if="item[isLike]" src="~/assets/images/pin-like-active.svg">
+            <img v-else src="~/assets/images/pin-like.svg">
+            &nbsp;{{ item[likeCount] }}
+          </span>
+        </div>
+        <div class="meta-item">
+          <nuxt-link v-if="pinId" :to="'/pin/'+pinId" target="_blank">
+            <span class="meta-info">
+              <img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}
+            </span>
+          </nuxt-link>
+          <template v-else>
+            <img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}
+          </template>
+        </div>
+        <div class="meta-item" @click="isSharePanelShow = !isSharePanelShow">
+          <span class="meta-info">
+            <img src="~/assets/images/pin-share.svg">&nbsp;分享
+          </span>
+          <div v-show="isSharePanelShow" class="share-panel">
+            <div class="share-item" @click.stop="copyLink">
+              <img src="~/assets/images/link.svg" alt="">&nbsp;复制链接
+            </div>
+            <div class="share-item" @click.stop="weiboShare">
+              <img src="~/assets/images/weibo.svg" alt="">&nbsp;微博
+            </div>
+          </div>
+        </div>
       </div>
     </template>
   </div>
@@ -108,12 +135,72 @@ export default {
       default: () => []
     }
   },
+  data() {
+    return {
+      isSharePanelShow: false
+    }
+  },
+  computed: {
+    // 统一 id字段
+    pinId () {
+      return this.item.id || this.item.objectId
+    },
+    // 统一 是否点赞字段
+    isLike() {
+      let fields = ['viewerHasLiked', 'isLiked']
+      return fields.filter(key => this.item[key] != undefined)[0]
+    },
+    // 统一 点赞数字段
+    likeCount() {
+      let fields = ['likeCount', 'likedCount']
+      return fields.filter(key => this.item[key] != undefined)[0]
+    }
+  },
   filters: {
     domainName(val) {
       let res = val.match(/^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/)
       return res ? res[4] : val
     }
-  }
+  },
+  methods: {
+    // 沸点点赞、取消点赞
+    async pinLike() {
+      let res = await this.$api.likePin({
+        method: this.item[this.isLike] ? 'delete' : 'put',
+        pinId: this.pinId
+      })
+      if (res.s === 1) {
+        let item = JSON.parse(JSON.stringify(this.item))
+        item[this.isLike] = !item[this.isLike]
+        item[this.likeCount] = item[this.isLike] ? ++item[this.likeCount] : --item[this.likeCount]
+        console.log(item)
+        this.$emit('update:item', item)
+      }
+    },
+    // 分享 - 复制链接
+    copyLink() {
+      function copyHandle(content){
+        let copy = (e) => {
+          e.preventDefault()
+          e.clipboardData.setData('text/plain', content)
+          alert('复制成功')
+          document.removeEventListener('copy', copy)
+        }
+        document.addEventListener('copy', copy)
+        document.execCommand("Copy");
+      }
+      let title = `${this.item.content.length > 40 ? this.item.content.slice(0, 40) + '...' : this.item.content}#掘金沸点#`
+      let url = `https://juejin.im/pin/${this.pinId}`
+      copyHandle(title + '\n' + url)
+    },
+    // 分享 - 微博
+    weiboShare() {
+      let title = this.item.content
+      let url = `https://juejin.im/pin/${this.pinId}`
+      let pic = this.item.pictures[0] || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661'
+      window.open(`https://service.weibo.com/share/share.php?title=${title}&url=${url}&pic=${pic}`, '_blank', 'noopener noreferrer')
+    }
+  },
 }
 </script>
 
@@ -121,26 +208,6 @@ export default {
 .pin-item{
   border-radius: 2px;
   background: #fff;
-
-  .item-meta{
-    display: flex;
-    padding: 4px 0;
-    border-top: 1px solid #ebebeb;
-
-    .meta-item{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      padding: 5px 0;
-      font-size: 13px;
-      color: #8a93a0;
-
-      &:not(:last-child){
-        border-right: 1px solid #ebebeb;
-      }
-    }
-  }
 }
 .follow-block{
   display: flex;
@@ -356,6 +423,70 @@ export default {
       border: 1px solid currentColor;
       border-radius: 14px;
       user-select: none;
+    }
+  }
+}
+.item-meta{
+  display: flex;
+  padding: 4px 0;
+  border-top: 1px solid #ebebeb;
+
+  .meta-item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex: 1;
+    padding: 5px 0;
+    font-size: 13px;
+    color: #8a93a0;
+    cursor: pointer;
+
+    .meta-info{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.meta-info--active{
+        color: #37c700;
+      }
+    }
+
+    &:hover .meta-info{
+      opacity: .8;
+    }
+
+    &:not(:last-child){
+      border-right: 1px solid #ebebeb;
+    }
+
+    >a{
+      display: flex;
+      align-items: center;
+    }
+
+    .share-panel{
+      z-index: 1;
+      position: absolute;
+      bottom: 112%;
+      left: 50%;
+      width: 70%;
+      background: #fff;
+      border-radius: 2px;
+      border: 1px solid #eee;
+      transform: translateX(-50%);
+
+      .share-item{
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        color: #8a93a0;
+        font-size: 13px;
+
+        &:not(:last-child){
+          border-bottom: 1px solid #eee;
+        }
+      }
     }
   }
 }

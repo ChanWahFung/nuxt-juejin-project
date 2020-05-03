@@ -1,7 +1,12 @@
 <template>
   <div>
-    <div class="pin-item-wrap shadow" v-for="{node} in pinList" :key="node.id">
-      <pin-item :actors="node.actors" :item="node.targets ? node.targets[0] : node" :action="node.action"></pin-item>
+    <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.node.id">
+      <template v-if="item.node.targets">
+        <pin-item :actors="item.node.actors" :item.sync="item.node.targets[0]" :action="item.node.action"></pin-item>
+      </template>
+      <template>
+        <pin-item :actors="item.node.actors" :item.sync="item.node" :action="item.node.action"></pin-item>
+      </template>
     </div>
   </div>
 </template>
