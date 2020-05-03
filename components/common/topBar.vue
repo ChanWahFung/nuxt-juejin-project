@@ -116,7 +116,7 @@ export default {
 
 <style lang='scss' scoped>
 .topbar__wrapper{
-  z-index: 9998;
+  z-index: 900;
   position: relative;
   height: 60px;
 }

@@ -55,7 +55,7 @@ export default {
 }
 
 .nav-mian{
-  z-index: 9999;
+  z-index: 999;
   position: fixed;
   left: 0;
   top: 60px;

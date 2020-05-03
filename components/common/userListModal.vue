@@ -90,7 +90,7 @@ export default {
 
 <style lang='scss' scoped>
 .user-list-modal{
-  z-index: 10000;
+  z-index: 1000;
   position: fixed;
   top: 0;
   left: 0;

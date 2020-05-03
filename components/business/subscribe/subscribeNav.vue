@@ -64,7 +64,7 @@ export default {
 
 <style lang='scss' scoped>
 .nav-view{
-  z-index: 9999;
+  z-index: 999;
   position: fixed;
   left: 0;
   top: 60px;
