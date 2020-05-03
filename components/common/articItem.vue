@@ -10,7 +10,7 @@
         </li>
         <li class="meta-item">
           <span class="meta-item__username">
-            <nuxt-link :to="'/user/'+(item.user.id || item.user.objectId)" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.user.username }}</nuxt-link>
+            <nuxt-link :to="'/user/'+uid" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.user.username }}</nuxt-link>
           </span>
         </li>
         <li class="meta-item">{{ item.createdAt | formatTime }}</li>
@@ -67,6 +67,10 @@ export default {
     likeCountField() {
       let fields = ['collectionCount', 'likeCount']
       return fields.filter(key => this.item[key] == undefined ? false : key)[0]
+    },
+    // 统一 uid值
+    uid() {
+      return this.item.user.id || this.item.user.objectId
     },
     detailId() {
       return this.item.originalUrl ? this.item.originalUrl.split('/').pop() : ''
