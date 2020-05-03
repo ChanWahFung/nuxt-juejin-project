@@ -1,6 +1,6 @@
 <template>
   <div class="books">
-    <div class="book-item" v-for="item in list" :key="item._id" @click="toBookDetail(item._id)">
+    <div class="book-item" v-for="item in list" :key="item._id">
       <div class="book__cover" :style="`background-image: url(${item.img})`"></div>
       <div class="book__info">
         <div class="book__title">{{ item.title }}</div>
@@ -31,17 +31,7 @@ export default {
       type: Array,
       default: () => []
     }
-  },
-  methods: {
-    toBookDetail(id) {
-      let routeUrl = this.$router.push({
-        name: 'book-id',
-        params: {
-          id,
-        }
-      })
-    }
-  },
+  }
 }
 </script>
 
