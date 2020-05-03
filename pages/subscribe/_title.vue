@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import reachBottom from '../../mixins/reachBottom'
-import subscribeNav from '../../components/business/subscribeNav'
+import reachBottom from '~/mixins/reachBottom'
+import subscribeNav from '~/components/business/subscribe/subscribeNav'
 
 export default {  
   async asyncData({ app, params }) {

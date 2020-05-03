@@ -11,7 +11,7 @@
 
 <script>
 import reachBottom from '~/mixins/reachBottom'
-import recommendCategory from '~/components/business/recommendCategory'
+import recommendCategory from '~/components/business/recommendation/recommendCategory'
 
 export default {
   async asyncData({ app, params, store }) {

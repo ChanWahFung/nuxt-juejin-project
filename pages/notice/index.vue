@@ -9,8 +9,8 @@
 
 <script>
 import reachBottom from '~/mixins/reachBottom'
-import noticeItem from '~/components/business/noticeItem'
-import userFollowItem from '~/components/business/userFollowItem'
+import noticeItem from '~/components/business/notice/noticeItem'
+import userFollowItem from '~/components/business/notice/userFollowItem'
 
 export default {
   head() {

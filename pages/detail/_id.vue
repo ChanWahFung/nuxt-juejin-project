@@ -75,10 +75,10 @@
 import { formatDate } from '~/utils'
 import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
-import aboutAuthor from '~/components/business/aboutAuthor.vue'
-import aboutArticle from '~/components/business/aboutArticle.vue'
-import articleSuspendedPanel from '~/components/business/articleSuspendedPanel'
-import catalog from '~/components/business/catalog.vue'
+import aboutAuthor from '~/components/business/detail/aboutAuthor.vue'
+import aboutArticle from '~/components/business/detail/aboutArticle.vue'
+import articleSuspendedPanel from '~/components/business/detail/articleSuspendedPanel'
+import catalog from '~/components/business/detail/catalog.vue'
 
 export default {
   async asyncData ({ app, params }) {

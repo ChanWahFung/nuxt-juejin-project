@@ -10,8 +10,8 @@
 <script>
 import { mapState } from 'vuex'
 import reachBottom from '~/mixins/reachBottom'
-import bookList from '~/components/business/bookList'
-import bookCategory from '~/components/business/bookCategory'
+import bookList from '~/components/business/book/bookList'
+import bookCategory from '~/components/business/book/bookCategory'
 
 export default {
   async asyncData({ app, params, store }) {

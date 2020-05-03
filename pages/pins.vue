@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import pinCategory from '~/components/business/pinCategory'
-import recommendPin from '~/components/business/recommendPin'
+import pinCategory from '~/components/business/pins/pinCategory'
+import recommendPin from '~/components/business/pins/recommendPin'
 
 export default {
   async asyncData({ app }) {

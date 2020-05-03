@@ -24,9 +24,9 @@
 
 <script>
 import reachBottom from '~/mixins/reachBottom'
-import authorRank from '~/components/business/authorRank'
-import recommendBook from '~/components/business/recommendBook'
-import timelineCategory from '~/components/business/timelineCategory'
+import authorRank from '~/components/business/timeline/authorRank'
+import recommendBook from '~/components/business/timeline/recommendBook'
+import timelineCategory from '~/components/business/timeline/timelineCategory'
 
 export default {
   async asyncData({ app, params, store }) {

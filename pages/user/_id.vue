@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import postItem from '~/components/business/postItem'
+import postItem from '~/components/business/user/postItem'
 import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
 
