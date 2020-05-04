@@ -1,4 +1,4 @@
-## 配置端口
+## 配置启动端口
 第一种：
 `nuxt.config.js` :
 
@@ -16,12 +16,53 @@ export default {
 
 ``` json
 "config": {
-  "nuxt": {
-    "host": "127.0.0.1",
-    "port": "8000"
-  }
+    "nuxt": {
+        "port": "8000",
+        "host": "127.0.0.1"
+    }
 },
 ``` 
+
+## 环境变量
+
+`nuxt.config.js`提供`env`选项进行配置环境变量。但此前我尝试过根目录创建 .env 文件管理环境变量，发现是无效的。
+
+### 创建环境变量
+`nuxt.config.js`:
+```js
+{
+    env: {
+        baseUrl: process.env.NODE_ENV === 'production' ? 'http://test.com' : 'http://127.0.0.1:8000'
+    },
+}
+```
+以上配置我们创建了一个 `baseUrl` 环境变量，通过 `process.env.NODE_ENV` 判断环境来匹配对应的地址
+
+### 使用环境变量
+
+我们可以通过以下两种方式来使用 `baseUrl` 变量：
+
+1. 通过 `process.env.baseUrl`
+2. 通过 `context.env.baseUrl`
+
+举个例子， 我们可以利用它来配置 `axios` 的自定义实例。
+
+`/plugins/axios.js`:
+
+```js
+export default function (context) {
+	$axios.defaults.baseURL = process.env.baseUrl
+	// 或者 $axios.defaults.baseURL = context.env.baseUrl
+	$axios.defaults.timeout = 30000
+	$axios.interceptors.request.use(config => {
+		return config
+	})
+	$axios.interceptors.response.use(response => {
+		return response.data
+	})
+}
+```
+
 
 ## plugins
 
@@ -88,97 +129,7 @@ export default ({
 }
 ```
 
-## 全局挂载
 
-有时您希望在整个应用程序中使用某个函数或属性值，此时，你需要将它们注入到 `Vue` 实例（客户端）， `context` （服务器端）甚至 `store(Vuex)` 。按照惯例，新增的属性或方法名使用`## 配置端口
-第一种：
-`nuxt.config.js` :
-
-``` js
-export default {
-    server: {
-        port: 8000,
-        host: '127.0.0.1'
-    }
-}
-```
-
-第二种：
-`package.json` :
-
-``` json
-"config": {
-  "nuxt": {
-    "host": "127.0.0.1",
-    "port": "8000"
-  }
-},
-``` 
-
-## plugins
-
-`plugins` 作为全局注入的主要途径，关于一些使用的细节是必须要掌握的
-
-### plugin函数参数
-
-函数接收两个参数分别是 `context` 和 `inject` 
-
-* context
-
-上下文对象，该对象存储很多有用的属性。比如常用的 app 属性，包含所有插件的 Vue 根实例。例如：在使用 axios 的时候，你想获取 $axios 可以直接通过 context.app.$axios 来获取。详细属性介绍：[https://zh.nuxtjs.org/api/context](https://zh.nuxtjs.org/api/context)
-
-* inject
-
-该方法可以将 plugin 同时注入到 context ，Vue 实例， Vuex 中
-
-### plugin调用
-
-当 `plugin` 依赖于其他的 `plugin` 调用时，我们可以访问 `context` 来获取，前提是 `plugin` 需要使用 `context` 注入。
-
-举个例子：封装了一个 `request` 的基础请求 `plugin` ，现在有一个接口 `plugin` 需要调用 `request` 
-
-`plugins/request.js` 
-```js
-export default ({ app: { $axios } }, inject) => {
-  inject('request', {
-    get (url, params) {
-      return $axios({
-        method: 'get',
-        url,
-        params
-      })
-    }
-  })
-}
-```
-
-`plugins/api.js` 
-
-``` js
-export default ({
-    app: {
-        $request
-    }
-}, inject) => {
-    inject('api', {
-        getIndexList(params) {
-            return $request.get('/list/indexList', params)
-        }
-    })
-}
-```
-
-值得一提的是，在注册 `plugin` 时要注意顺序，就上面的例子来看， `request` 的注册顺序要在 `api` 之前
-
-``` js
-{
-    plugins: [
-        './plugins/axios.js',
-        './plugins/request.js',
-        './plugins/api.js',
-    ]
-}
-```
 
 ## 全局挂载
 
@@ -620,4 +571,116 @@ module.exports = {
         }
     }
 }
+```
+
+## 组件引入
+
+先来个最简单的例子，在`plugins`文件夹下创建`vue-global.js`用于管理全局需要使用的组件或方法：
+
+```js
+import Vue from 'vue'
+import utils from '~/utils'
+import myComponent from '~/components/myComponent'
+
+Vue.prototype.$utils = utils
+
+Vue.use(myComponent)
+```
+
+`nuxt.config.js`：
+```js
+{
+    plugins: [
+        '~/plugins/vue-global.js'
+    ],
+}
+```
+
+### 自定义组件
+
+对于一些自定义全局组件，我的做法是将它们放入`/components/common`文件夹统一管理。这样可以使用`require.context`来自动化的引入组件，而不是我们每有一个组件就要引入一次。
+
+`/components/myComponentsInstall.js`:
+```js
+export default {
+  install(Vue) {
+    // 批量注册公用组件
+    const components = require.context('~/components/common', false, /\.vue$/)
+    components.keys().map(path => {
+      const fileName = path.replace(/(.*\/)*([^.]+).*/ig, "$2"); // 获取文件名
+      const conpomentName = fileName.replace(/[A-Z]/g, match => "-" + match.toLowerCase()); // 转小驼峰
+      if (conpomentName[0] === '-') conpomentName = conpomentName.slice(1)
+      // 最终会把组件名由大驼峰转为小驼峰
+      // 例如： Mylist => my-list，
+      // 使用：<my-list></my-list>
+      Vue.component(conpomentName, components(path).default || components(path))
+    })
+  } 
+}
+```
+
+`/plugins/vue-global.js`:
+```js
+import Vue from 'vue'
+import myComponentsInstall from '~/components/myComponentsInstall'
+
+Vue.use(myComponentsInstall)
+```
+
+### 第三方组件库（element-UI）
+
+#### 全部引入
+
+在`vue-global.js`全部引入即可：
+
+```js
+import Vue from 'vue'
+import elementUI from 'element-ui'
+
+Vue.use(elementUI)
+```
+
+#### 按需引入
+
+安装`babel-plugin-component`:
+```bash
+npm install babel-plugin-component -D
+```
+
+`nuxt.config.js`:
+```js
+{
+    build: {
+        plugins: [
+            [
+                "component",
+                {
+                "libraryName": "element-ui",
+                "styleLibraryName": "theme-chalk"
+                }
+            ]
+        ],
+    }
+}
+```
+
+同样的，创建一个`eleComponentsInstall.js`管理 elementUI 的组件：
+```js
+import { Select, Option, Notification } from 'element-ui'
+
+export default {
+  install(Vue) {
+    Vue.use(Select)
+    Vue.use(Option)
+    Vue.prototype.$notify  = Notification
+  }
+}
+```
+
+`/plugins/vue-global.js`:
+```js
+import Vue from 'vue'
+import eleComponentsInstall from '~/components/eleComponentsInstall'
+
+Vue.use(eleComponentsInstall)
 ```
