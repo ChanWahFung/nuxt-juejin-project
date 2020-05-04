@@ -9,6 +9,12 @@ module.exports = {
     host: '127.0.0.1'
   },
   /*
+  ** Environment variable configuration
+  */
+  env: {
+    baseUrl: process.env.NODE_ENV === 'production' ? 'http://test.com' : 'http://127.0.0.1:8000'
+  },
+  /*
   ** Router configuration
   */
   router: {
@@ -98,6 +104,17 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
+    babel: {
+      plugins: [
+        [
+          "component",
+          {
+            "libraryName": "element-ui",
+            "styleLibraryName": "theme-chalk"
+          }
+        ]
+      ],
+    },
     extend (config, ctx) {
     }
   }
