@@ -1,7 +1,7 @@
 import authConfig from '~/assets/authConfig'
 
 export default function ({ app: { $axios } }) {
-	$axios.defaults.baseURL = 'http://127.0.0.1:8000'
+	$axios.defaults.baseURL = process.env.baseUrl
 	$axios.defaults.timeout = 30000
 	$axios.interceptors.request.use(config => {
 		config.headers['X-Token'] = authConfig.token

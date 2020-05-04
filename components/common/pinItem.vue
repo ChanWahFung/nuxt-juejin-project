@@ -186,11 +186,11 @@ export default {
     },
     // 分享 - 复制链接
     copyLink() {
-      function copyHandle(content){
+      let copyHandle = (content) => {
         let copy = (e) => {
           e.preventDefault()
           e.clipboardData.setData('text/plain', content)
-          alert('复制成功')
+          this.$notify.success('复制成功')
           document.removeEventListener('copy', copy)
         }
         document.addEventListener('copy', copy)
