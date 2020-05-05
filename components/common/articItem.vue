@@ -131,6 +131,8 @@ export default {
   margin-left: 30px;
   background-color: #f4f4f4;
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 2px;
 }
 

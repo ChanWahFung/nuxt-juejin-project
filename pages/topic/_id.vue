@@ -147,7 +147,8 @@ export default {
   display: flex;
 
   .topic-main{
-    flex: 1 1 auto;
+    flex: 1;
+    overflow: hidden;
 
     .nav-list{
       display: flex;
