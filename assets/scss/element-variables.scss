@@ -4,4 +4,8 @@ $--color-primary: $theme;
 /* 改变 icon 字体路径变量，必需 */
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
-@import '~element-ui/packages/theme-chalk/src/index.scss'
+/* 组件样式按需引入 */
+@import "~element-ui/packages/theme-chalk/src/select";
+@import "~element-ui/packages/theme-chalk/src/option";
+@import "~element-ui/packages/theme-chalk/src/input";
+@import "~element-ui/packages/theme-chalk/src/notification";
