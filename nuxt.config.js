@@ -39,7 +39,7 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: '//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/default.min.css' },
+      { rel: 'stylesheet', href: '//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/atom-one-light.min.css' },
     ],
     script: [
       { src: '//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/highlight.min.js' }
@@ -56,9 +56,7 @@ module.exports = {
   */
   css: [
     '~/assets/scss/reset.scss',
-    '~/assets/scss/global.scss',
-    '~/assets/highlight/atom-one-light.css',
-    'element-ui/lib/theme-chalk/index.css'
+    '~/assets/scss/global.scss'
   ],
   /*
   ** Plugins to load before mounting the App
