@@ -17,8 +17,10 @@
           <div class="notice__icon"></div>
           <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
         </nuxt-link>
+        <div class="login-btn" @click="isShowLoginModal = !isShowLoginModal">登录</div>
       </div>
     </div>
+    <login-modal v-if="isShowLoginModal" :visible.sync="isShowLoginModal"></login-modal>
   </header>
 </template>
 
@@ -27,6 +29,9 @@ import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'TopBar',
+  components: {
+    'login-modal': () => import('~/components/business/loginModal')
+  },
   data() {
     return {
       navs: [
@@ -50,7 +55,8 @@ export default {
       keyword: '',
       scrollingElement: null,
       searchFormClass: '',
-      noticeNum: 0
+      noticeNum: 0,
+      isShowLoginModal: false
     }
   },
   mounted() {
@@ -107,7 +113,6 @@ export default {
       let res = await this.$api.getUserNotificationNum()
       if (res.s === 1) {
         this.noticeNum = res.d.notification_num
-        // document.title = `${this.noticeNum > 0 ? `(${this.noticeNumTip}) ` : ''}${document.title}`
       }
     },
   }
@@ -116,7 +121,7 @@ export default {
 
 <style lang='scss' scoped>
 .topbar__wrapper{
-  z-index: 900;
+  z-index: 1000;
   position: relative;
   height: 60px;
 }
@@ -179,13 +184,17 @@ export default {
 
   .search-input{
     border: none;
-    width: 160px;
+    width: 130px;
     padding: 8px 16px;
     box-shadow: none;
     outline: none;
     font-size: 12px;
     color: #666;
     background-color: transparent;
+
+    &::placeholder{
+      color: #999;
+    }
   }
 
   .search-icon{
@@ -228,5 +237,10 @@ export default {
       background-image: url(../../assets/images/notice-active.svg);
     }
   }
+}
+.login-btn{
+  margin-left: 20px;
+  color: $theme;
+  cursor: pointer;
 }
 </style>
