@@ -77,6 +77,10 @@ export default {
   },
   methods: {
     async followTopics(item) {
+      if (!this.$store.state.auth.token) {
+        this.$loginModal()
+        return
+      }
       let res = await this.$api.followTopic({
         method: item.followed ? 'delete' : 'put',
         topicIds: item.objectId

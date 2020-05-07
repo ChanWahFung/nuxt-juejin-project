@@ -31,6 +31,10 @@ export default {
   },
   methods: {
     async follow() {
+      if (!this.$store.state.auth.token) {
+        this.$loginModal()
+        return
+      }
       if (!this.followeeId) {
         return
       }
@@ -42,13 +46,9 @@ export default {
       }
     },
     followUser(){
-      if (this.$store.state.auth.userInfo) {
-        this.$message.error('请先登录')
-        return
-      }
       return this.$api.followUser({
         method: this.isFollow ? 'delete' : 'put',
-        follower: this.$store.state.auth.userInfo.objectId,
+        follower: this.$store.state.auth.userId,
         followee: this.followeeId
       })
     },

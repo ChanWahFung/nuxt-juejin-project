@@ -87,6 +87,10 @@ export default {
       window.open(routeUrl.href + hash, '_blank')
     },
     async articleLike() {
+      if (!this.$store.state.auth.token) {
+        this.$loginModal()
+        return
+      }
       let id = this.item.id
       if (id && this.likeField && this.likeCountField) {
         let res = await this.$api.articleLike({

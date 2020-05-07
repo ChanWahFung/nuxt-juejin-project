@@ -4,7 +4,7 @@ export default {
     isCurrentUserFollowed(uid) {
       if (uid && this.$store.state.auth.userInfo) {
         return this.$api.isCurrentUserFollowed({
-          currentUid: this.$store.state.auth.userInfo.objectId,
+          currentUid: this.$store.state.auth.userId,
           targetUids: uid,
         }).then(res => res.s === 1 ? res.d[uid] : false)
       } else {

@@ -53,6 +53,10 @@ export default {
   },
   methods: {
     async articleLike() {
+      if (!this.$store.state.auth.token) {
+        this.$loginModal()
+        return
+      }
       if (this.likeLoading) {
         return
       }
