@@ -13,11 +13,14 @@
           <img v-show="searchFormClass" src="~/assets/images/search-icon-active.svg" class="search-icon" />
           <img v-show="searchFormClass == ''" src="~/assets/images/search-icon.svg" class="search-icon" />
         </div>
-        <nuxt-link to="/notice" class="notice" target="_blank">
-          <div class="notice__icon"></div>
-          <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
-        </nuxt-link>
-        <div class="login-btn" @click="isShowLoginModal = !isShowLoginModal">登录</div>
+        <template v-if="userinfo">
+          <nuxt-link to="/notice" class="notice" target="_blank">
+            <div class="notice__icon"></div>
+            <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
+          </nuxt-link>
+          <nuxt-link :to="'/user/'+userinfo.objectId" class="user-enter" :style="`background-image:url(${userinfo.avatarLarge})`" target="_blank"></nuxt-link>
+        </template>
+        <div v-else class="login-btn" @click="isShowLoginModal = !isShowLoginModal">登录</div>
       </div>
     </div>
     <login-modal v-if="isShowLoginModal" :visible.sync="isShowLoginModal"></login-modal>
@@ -76,6 +79,9 @@ export default {
   computed: {
     ...mapState([
       'isTopbarBlock'
+    ]),
+    ...mapState('auth', [
+      'userinfo'
     ]),
     noticeNumTip(){
       return this.noticeNum > 99 ? '99+' : this.noticeNum
@@ -237,6 +243,16 @@ export default {
       background-image: url(../../assets/images/notice-active.svg);
     }
   }
+}
+.user-enter{
+  margin-left: 30px;
+  width: 30px;
+  height: 30px;
+  background-position: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgb(238, 238, 238);
+  border-radius: 50%;
 }
 .login-btn{
   margin-left: 20px;

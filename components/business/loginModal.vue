@@ -3,15 +3,15 @@
     <div class="login-form">
       <div class="panfish">
         <img v-show="currentFocus===''" src="https://b-gold-cdn.xitu.io/v3/static/img/normal.0447fe9.png" class="normal">
-        <img v-show="currentFocus==='account'" src="https://b-gold-cdn.xitu.io/v3/static/img/greeting.1415c1c.png" class="greeting">
+        <img v-show="currentFocus==='phoneNumber'" src="https://b-gold-cdn.xitu.io/v3/static/img/greeting.1415c1c.png" class="greeting">
         <img v-show="currentFocus==='password'" src="https://b-gold-cdn.xitu.io/v3/static/img/blindfold.58ce423.png" class="blindfold">
       </div>
       <div class="login-pancel">
         <h1 class="title">登录</h1>
-        <i title="关闭" class="close-btn el-icon-close" @click="$emit('update:visible', false)"></i>
-        <el-input class="account-input" v-model="account" placeholder="请输入手机号或邮箱" maxlength="64" @focus="currentFocus='account'" @blur="currentFocus=''"></el-input>
-        <el-input class="password-input" v-model="password" show-password type="password" placeholder="请输入密码" maxlength="64"  @focus="currentFocus='password'" @blur="currentFocus=''"></el-input>
-        <div class="submit-btn">登录</div>
+        <i title="关闭" class="close-btn el-icon-close" @click="hideModal"></i>
+        <el-input class="phoneNumber-input" v-model="phoneNumber" placeholder="请输入手机号或邮箱" maxlength="64" @focus="currentFocus='phoneNumber'" @blur="currentFocus=''"></el-input>
+        <el-input class="password-input" v-model="password" type="password" placeholder="请输入密码" maxlength="64"  @focus="currentFocus='password'" @blur="currentFocus=''"></el-input>
+        <el-button style="width:100%;margin-top:10px" :loading="loginLoading" type="primary" @click="login">登录</el-button>
       </div>
     </div>
   </div>
@@ -28,15 +28,45 @@ export default {
   data() {
     return {
       currentFocus: '',
-      account: '', // 账号
-      password: '', // 密码
+      phoneNumber: '', // 账号
+      password: '',    // 密码
+      loginLoading: false,
     }
   },
-  mounted() {
-    
-  },
   methods: {
-    
+    async login() {
+      if (this.phoneNumber.trim() === '') {
+        this.$message.warning('请输入账号')
+        return
+      }
+      if (this.password.trim() === '') {
+        this.$message.warning('请输入密码')
+        return
+      }
+      this.loginLoading = true
+      let res = await this.$api.loginAuth({
+        phoneNumber: this.phoneNumber,
+        password: this.password
+      })
+      this.loginLoading = false
+      if (res.token) {
+        this.setLoginInfo(res)
+        this.hideModal()
+      } else {
+        this.$message.error('登录失败，请重试')
+      }      
+    },
+    setLoginInfo(res) {
+      const expires = this.$store.state.auth.cookieMaxExpires
+      this.$cookies.set('clientId', res.clientId, { expires })
+      this.$cookies.set('token', res.token, { expires })
+      this.$cookies.set('userId', res.userId, { expires })
+      this.$cookies.set('userinfo', res.user, { expires })
+      this.$store.commit('auth/updateUserinfo', res.user)
+    },
+    hideModal() {
+      this.$emit('update:visible', false)
+    }
   }
 }
 </script>
@@ -111,7 +141,7 @@ export default {
       cursor: pointer;
     }
 
-    .account-input,
+    .phoneNumber-input,
     .password-input{
       margin-bottom: 8px;
 
