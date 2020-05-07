@@ -63,7 +63,7 @@ module.exports = {
       $store.commit('auth/updateUserInfo', res.user)
       $store.commit('auth/updateClientId', res.clientId)
       $store.commit('auth/updateToken', res.token)
-      $store.commit('auth/updateUserid', res.userId)
+      $store.commit('auth/updateUserId', res.userId)
     }
   },
   /**
@@ -90,7 +90,7 @@ module.exports = {
       $store.commit('auth/updateUserInfo', null)
       $store.commit('auth/updateClientId', '')
       $store.commit('auth/updateToken', '')
-      $store.commit('auth/updateUserid', '')
+      $store.commit('auth/updateUserId', '')
     }
   }
 }

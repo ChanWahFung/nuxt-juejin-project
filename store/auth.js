@@ -11,7 +11,7 @@ export const mutations = {
     state.userInfo = payload
   },
   updateUserId(state, payload){
-    state.userid = payload
+    state.userId = payload
   },
   updateClientId(state, payload){
     state.clientId = payload
