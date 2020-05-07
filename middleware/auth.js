@@ -1,13 +1,17 @@
-export default function ({ app, store, redirect }) {
+import { removeAuthInfo } from '~/utils/index'
+
+export default function (context) {
+  const { app, store } = context
+  // 每次跳转路由 验证登录状态是否过期
   app.$api.isAuth().then(res => {
     if (res.s === 1) {
-      if (res.d.isExpired) {
-        app.$cookies.remove('userinfo')
-        app.$cookies.remove('token')
-        app.$cookies.remove('clientId')
-        app.$cookies.remove('userId')
-      } else {
-        store.commit('auth/updateUserinfo', app.$cookies.get('userinfo'))
+      if (res.d.isExpired) {   // 过期 移除登陆验证信息
+        removeAuthInfo(context)
+      } else {                 // 未过期 重新设置存储
+        store.commit('auth/updateUserInfo', app.$cookies.get('userInfo'))
+        store.commit('auth/updateUserId', app.$cookies.get('userId'))
+        store.commit('auth/updateClientId', app.$cookies.get('clientId'))
+        store.commit('auth/updateToken', app.$cookies.get('token'))
       }
     }
   })

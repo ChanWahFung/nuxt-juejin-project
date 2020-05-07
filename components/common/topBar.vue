@@ -13,12 +13,12 @@
           <img v-show="searchFormClass" src="~/assets/images/search-icon-active.svg" class="search-icon" />
           <img v-show="searchFormClass == ''" src="~/assets/images/search-icon.svg" class="search-icon" />
         </div>
-        <template v-if="userinfo">
+        <template v-if="userInfo">
           <nuxt-link to="/notice" class="notice" target="_blank">
             <div class="notice__icon"></div>
             <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
           </nuxt-link>
-          <nuxt-link :to="'/user/'+userinfo.objectId" class="user-enter" :style="`background-image:url(${userinfo.avatarLarge})`" target="_blank"></nuxt-link>
+          <nuxt-link :to="'/user/'+userInfo.objectId" class="user-enter" :style="`background-image:url(${userInfo.avatarLarge})`" target="_blank"></nuxt-link>
         </template>
         <div v-else class="login-btn" @click="isShowLoginModal = !isShowLoginModal">登录</div>
       </div>
@@ -81,7 +81,7 @@ export default {
       'isTopbarBlock'
     ]),
     ...mapState('auth', [
-      'userinfo'
+      'userInfo'
     ]),
     noticeNumTip(){
       return this.noticeNum > 99 ? '99+' : this.noticeNum

@@ -50,19 +50,11 @@ export default {
       })
       this.loginLoading = false
       if (res.token) {
-        this.setLoginInfo(res)
+        this.$utils.setAuthInfo(this, res)
         this.hideModal()
       } else {
         this.$message.error('登录失败，请重试')
       }      
-    },
-    setLoginInfo(res) {
-      const expires = this.$store.state.auth.cookieMaxExpires
-      this.$cookies.set('clientId', res.clientId, { expires })
-      this.$cookies.set('token', res.token, { expires })
-      this.$cookies.set('userId', res.userId, { expires })
-      this.$cookies.set('userinfo', res.user, { expires })
-      this.$store.commit('auth/updateUserinfo', res.user)
     },
     hideModal() {
       this.$emit('update:visible', false)
