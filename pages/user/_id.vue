@@ -41,15 +41,15 @@
         <div class="honor-block__title">个人成就</div>
         <div class="honor-block__list">
           <template v-if="userInfo.roles">
-            <div class="honor-item" v-if="userInfo.roles.builder.isGranted">
+            <div class="honor-item" v-if="userInfo.roles.builder && userInfo.roles.builder.isGranted">
               <img class="honor-item__icon shadow" src="~/assets/images/honor-1.svg" />
               <span class="honor-item__title">掘金共建者</span>
             </div>
-            <div class="honor-item" v-if="userInfo.roles.bookAuthor.isGranted">
+            <div class="honor-item" v-if="userInfo.roles.bookAuthor && userInfo.roles.bookAuthor.isGranted">
               <img class="honor-item__icon shadow" src="~/assets/images/honor-2.svg" />
               <span class="honor-item__title">掘金小册写作权限</span>
             </div>
-            <div class="honor-item" v-if="userInfo.roles.favorableAuthor.isGranted">
+            <div class="honor-item" v-if="userInfo.roles.favorableAuthor && userInfo.roles.favorableAuthor.isGranted">
               <img class="honor-item__icon shadow" src="~/assets/images/honor-3.svg" />
               <span class="honor-item__title">掘金优秀作者</span>
             </div>
