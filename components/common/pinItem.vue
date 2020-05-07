@@ -174,7 +174,7 @@ export default {
     // 沸点点赞、取消点赞
     async pinLike() {
       if (!this.$store.state.auth.token) {
-        this.$loginModal()
+        this.$loginModal(this)
         return
       }
       let res = await this.$api.likePin({

@@ -88,7 +88,7 @@ export default {
     },
     async articleLike() {
       if (!this.$store.state.auth.token) {
-        this.$loginModal()
+        this.$loginModal(this)
         return
       }
       let id = this.item.id

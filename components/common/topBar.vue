@@ -20,7 +20,7 @@
           </nuxt-link>
           <nuxt-link :to="'/user/'+userInfo.objectId" class="user-enter" :style="`background-image:url(${userInfo.avatarLarge})`" target="_blank"></nuxt-link>
         </template>
-        <div v-else class="login-btn" @click="$loginModal">登录</div>
+        <div v-else class="login-btn" @click="showLoginModal">登录</div>
       </div>
     </div>
   </header>
@@ -117,6 +117,9 @@ export default {
         this.noticeNum = res.d.notification_num
       }
     },
+    showLoginModal() {
+      this.$loginModal(this)
+    }
   }
 }
 </script>

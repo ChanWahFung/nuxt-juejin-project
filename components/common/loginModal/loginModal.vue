@@ -28,7 +28,8 @@ export default {
     }
   },
   methods: {
-    show(cb) {
+    show(ctx, cb) {
+      this.ctx = ctx
       this.cb = cb
       return new Promise((resolve, reject) => {
         this.resolve = resolve
@@ -45,7 +46,7 @@ export default {
         return
       }
       this.loginLoading = true
-      let res = await this.$api.loginAuth({
+      let res = await this.ctx.$api.loginAuth({
         phoneNumber: this.phoneNumber,
         password: this.password
       })

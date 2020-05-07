@@ -32,7 +32,7 @@ export default {
   methods: {
     async follow() {
       if (!this.$store.state.auth.token) {
-        this.$loginModal()
+        this.$loginModal(this)
         return
       }
       if (!this.followeeId) {
