@@ -20,10 +20,9 @@
           </nuxt-link>
           <nuxt-link :to="'/user/'+userInfo.objectId" class="user-enter" :style="`background-image:url(${userInfo.avatarLarge})`" target="_blank"></nuxt-link>
         </template>
-        <div v-else class="login-btn" @click="isShowLoginModal = !isShowLoginModal">登录</div>
+        <div v-else class="login-btn" @click="$loginModal">登录</div>
       </div>
     </div>
-    <login-modal v-if="isShowLoginModal" :visible.sync="isShowLoginModal"></login-modal>
   </header>
 </template>
 
@@ -32,9 +31,6 @@ import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'TopBar',
-  components: {
-    'login-modal': () => import('~/components/business/loginModal')
-  },
   data() {
     return {
       navs: [

@@ -8,7 +8,7 @@
       </div>
       <div class="login-pancel">
         <h1 class="title">登录</h1>
-        <i title="关闭" class="close-btn el-icon-close" @click="hideModal"></i>
+        <i title="关闭" class="close-btn el-icon-close" @click="cancel"></i>
         <el-input class="phoneNumber-input" v-model="phoneNumber" placeholder="请输入手机号或邮箱" maxlength="64" @focus="currentFocus='phoneNumber'" @blur="currentFocus=''"></el-input>
         <el-input class="password-input" v-model="password" type="password" placeholder="请输入密码" maxlength="64"  @focus="currentFocus='password'" @blur="currentFocus=''"></el-input>
         <el-button style="width:100%;margin-top:10px" :loading="loginLoading" type="primary" @click="login">登录</el-button>
@@ -19,12 +19,6 @@
 
 <script>
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
       currentFocus: '',
@@ -34,6 +28,13 @@ export default {
     }
   },
   methods: {
+    show(cb) {
+      this.cb = cb
+      return new Promise((resolve, reject) => {
+        this.resolve = resolve
+        this.reject = reject
+      })
+    },
     async login() {
       if (this.phoneNumber.trim() === '') {
         this.$message.warning('请输入账号')
@@ -49,15 +50,24 @@ export default {
         password: this.password
       })
       this.loginLoading = false
+      // 登录成功
       if (res.token) {
         this.$utils.setAuthInfo(this, res)
+        this.resolve()
         this.hideModal()
       } else {
         this.$message.error('登录失败，请重试')
       }      
     },
+    // 销毁弹窗
     hideModal() {
-      this.$emit('update:visible', false)
+      typeof this.cb === 'function' && this.cb()
+      document.body.removeChild(this.$el)
+      this.$destroy()
+    },
+    cancel() {
+      this.reject()
+      this.hideModal()
     }
   }
 }
