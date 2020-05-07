@@ -18,7 +18,19 @@
             <div class="notice__icon"></div>
             <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
           </nuxt-link>
-          <nuxt-link :to="'/user/'+userInfo.objectId" class="user-enter" :style="`background-image:url(${userInfo.avatarLarge})`" target="_blank"></nuxt-link>
+          <div class="user-enter" :style="`background-image:url(${userInfo.avatarLarge})`" @click="isShowNavMenu = !isShowNavMenu">
+            <ul v-show="isShowNavMenu" class="nav-menu shadow">
+              <li class="nav-item">
+                <nuxt-link :to="'/user/'+userInfo.objectId">我的主页</nuxt-link>
+              </li>
+              <li class="nav-item">
+                <nuxt-link to="/subscribe">标签管理</nuxt-link>
+              </li>
+              <li class="nav-item" @click.stop="logout">
+                登出
+              </li>
+            </ul>
+          </div>
         </template>
         <div v-else class="login-btn" @click="showLoginModal">登录</div>
       </div>
@@ -55,7 +67,7 @@ export default {
       scrollingElement: null,
       searchFormClass: '',
       noticeNum: 0,
-      isShowLoginModal: false
+      isShowNavMenu: false
     }
   },
   mounted() {
@@ -119,6 +131,11 @@ export default {
     },
     showLoginModal() {
       this.$loginModal(this)
+    },
+    // 登出
+    logout() {
+      this.isShowNavMenu = false
+      this.$utils.removeAuthInfo(this)
     }
   }
 }
@@ -244,6 +261,7 @@ export default {
   }
 }
 .user-enter{
+  position: relative;
   margin-left: 30px;
   width: 30px;
   height: 30px;
@@ -252,6 +270,34 @@ export default {
   background-repeat: no-repeat;
   background-color: rgb(238, 238, 238);
   border-radius: 50%;
+  cursor: pointer;
+
+  .nav-menu{
+    z-index: 10;
+    position: absolute;
+    top: 150%;
+    right: 0;
+    padding: 10px 0;
+    border-radius: 2px;
+    border: 1px solid #eee;
+    background: #fff;
+
+    .nav-item{
+      padding: 6px 12px;
+      font-size: 16px;
+      color: #71777c;
+      white-space: nowrap;
+      cursor: pointer;
+
+      >a{
+        width: 100%;
+        display: block;
+      }
+      &:hover{
+        background-color: hsla(0,0%,94.9%,.5);
+      }
+    }
+  }
 }
 .login-btn{
   margin-left: 20px;
