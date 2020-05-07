@@ -1,7 +1,7 @@
 import authConfig from '~/assets/authConfig'
 
 export const state = () => ({
-  isTopbarBlock: true,
+  isTopbarBlock: true, // 顶部栏是否显示
   ...authConfig
 })
 
