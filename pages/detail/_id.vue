@@ -218,6 +218,10 @@ export default {
     },
     // 点赞
     setGood() {
+      if (!this.$store.state.auth.token) {
+        this.$loginModal(this)
+        return
+      }
       this.$api.articleLike({
         isCollected: !this.isLike,
         entryId: this.articDetail.entryId
