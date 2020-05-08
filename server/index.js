@@ -3,11 +3,8 @@ const Koa = require('koa')
 const cors = require('koa2-cors')
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
-const conditional = require('koa-conditional-get');
-const etag = require('koa-etag');
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
-
 const app = new Koa()
 const router = new Router()
 
@@ -27,9 +24,7 @@ function useMiddleware(){
     credentials: true,  // 允许携带头部验证信息
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Token', 'X-Device-Id', 'X-Uid'],
-  })) 
-  app.use(etag())
-  app.use(conditional())
+  }))
 }
 
 function useRouter(path){

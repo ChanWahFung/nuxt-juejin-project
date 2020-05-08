@@ -40,7 +40,7 @@ module.exports = {
   /**
    * 设置登录验证信息
    * @param {object} ctx - 服务端传入context 客户端传入this
-   * @param {object} res 
+   * @param {object} res - 登录验证信息
    */
   setAuthInfo(ctx, res) {
     let $cookies, $store
@@ -52,7 +52,7 @@ module.exports = {
     // 服务端
     if (process.server) {
       $cookies = ctx.app.$cookies
-      $store = ctx.$store
+      $store = ctx.store
     }
     if ($cookies && $store) {
       const expires = $store.state.auth.cookieMaxExpires
@@ -80,7 +80,7 @@ module.exports = {
     // 服务端
     if (process.server) {
       $cookies = ctx.app.$cookies
-      $store = ctx.$store
+      $store = ctx.store
     }
     if ($cookies && $store) {
       $cookies.remove('userInfo')
