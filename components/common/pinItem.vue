@@ -72,7 +72,7 @@
               </div>
             </a>
             <div v-if="item.pictures && item.pictures.length" class="pin-images" :class="{'pin-images--more': item.pictures.length > 1}">
-              <div v-for="url in item.pictures" :key="url" class="pin-img" :style="`background-image: url(${url})`">
+              <div v-for="url in item.pictures" :key="url" class="pin-img" :style="`background-image: url(${url})`" @click="showPicturesModal(url, item.pictures)">
                 <div class="img-holder"></div>
               </div>
             </div>
@@ -210,6 +210,13 @@ export default {
       let url = `https://juejin.im/pin/${this.pinId}`
       let pic = this.item.pictures[0] || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661'
       window.open(`https://service.weibo.com/share/share.php?title=${title}&url=${url}&pic=${pic}`, '_blank', 'noopener noreferrer')
+    },
+    // 预览大图
+    showPicturesModal(url, urls) {
+      this.$picturesModal({
+        url,
+        urls
+      })
     }
   },
 }
