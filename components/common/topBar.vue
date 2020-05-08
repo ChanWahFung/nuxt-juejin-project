@@ -18,16 +18,20 @@
             <div class="notice__icon"></div>
             <span class="notice__count" v-if="noticeNum > 0">{{ noticeNumTip }}</span>
           </nuxt-link>
-          <div class="user-enter" :style="`background-image:url(${userInfo.avatarLarge})`" @click="isShowNavMenu = !isShowNavMenu">
+          <div class="user-entry" :style="`background-image:url(${userInfo.avatarLarge})`" @click="isShowNavMenu = !isShowNavMenu">
             <ul v-show="isShowNavMenu" class="nav-menu shadow">
               <li class="nav-item">
-                <nuxt-link :to="'/user/'+userInfo.objectId">我的主页</nuxt-link>
+                <nuxt-link :to="'/user/'+userInfo.objectId">
+                  <img class="nav-item__icon" src="~/assets/images/menu-user.svg" alt="">我的主页
+                </nuxt-link>
               </li>
               <li class="nav-item">
-                <nuxt-link to="/subscribe">标签管理</nuxt-link>
+                <nuxt-link to="/subscribe">
+                  <img class="nav-item__icon" src="~/assets/images/menu-tag.svg" alt="">标签管理
+                </nuxt-link>
               </li>
               <li class="nav-item" @click.stop="logout">
-                登出
+                <img class="nav-item__icon" src="~/assets/images/menu-logout.svg" alt="">登出
               </li>
             </ul>
           </div>
@@ -260,7 +264,7 @@ export default {
     }
   }
 }
-.user-enter{
+.user-entry{
   position: relative;
   margin-left: 30px;
   width: 30px;
@@ -277,19 +281,30 @@ export default {
     position: absolute;
     top: 150%;
     right: 0;
+    width: 150px;
     padding: 10px 0;
-    border-radius: 2px;
-    border: 1px solid #eee;
+    border-radius: 3px;
+    border: 1px solid #ddd;
     background: #fff;
 
     .nav-item{
-      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      padding: 7px 12px;
       font-size: 16px;
       color: #71777c;
       white-space: nowrap;
       cursor: pointer;
 
+      .nav-item__icon{
+        width: 15px;
+        height: 15px;
+        margin-right: 10px;
+      }
+
       >a{
+        display: flex;
+        align-items: center;
         width: 100%;
         display: block;
       }
