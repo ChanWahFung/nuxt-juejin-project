@@ -24,11 +24,21 @@
 import reachBottom from '~/mixins/reachBottom'
 
 export default {
-  async asyncData({ app, params }) {
+  async asyncData({ app, params, error }) {
     // 标签详情
     const tagInfo = await app.$api.getTagDetail({
       tagName: encodeURIComponent(params.tagName)
-    }).then(res => res.s === 1 ? res.d : {})
+    }).then(res => {
+      if (res.s === 1) {
+        return res.d
+      } else {
+        error({
+          statusCode: 404,
+          message: res.m
+        })
+        return {}
+      }
+    })
     // 标签下的文章
     const articleList = await app.$api.getTagEntry({
       tagId: tagInfo.id,
