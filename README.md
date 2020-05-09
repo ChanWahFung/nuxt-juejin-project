@@ -1,6 +1,6 @@
 # 介绍
 
-`nuxt-juejin-project` 是一个使用 `Nuxt.js` 仿写掘金的学习项目，主要使用 ：`nuxt` + `vuex` + `koa` + `axios` + `element-ui`。该项目所有数据与掘金同步，因为接口都是通过 `koa` 作为中间层转发（找接口真是个累活😅）。在写项目时我会尽可能的使用 `Nuxt.js` 提供的配置以及一些技术点，希望借此更全面的学习 `Nuxt.js`。以下是部分技术点：服务端渲染、接口转发、路由配置、权限验证、自动化引入组件。
+`nuxt-juejin-project` 是一个使用 `Nuxt.js` 仿写掘金的学习项目，主要使用 ：`nuxt` + `vuex` + `koa` + `axios` + `element-ui`。该项目所有数据与掘金同步，因为接口都是通过 `koa` 作为中间层转发（找接口真是个累活😅）。在写项目时我会尽可能的使用 `Nuxt.js` 提供的配置以及一些技术点，希望借此更全面的学习 `Nuxt.js`。以下是部分技术点：服务端渲染、接口转发、路由配置、权限验证。
 
 # 功能
 
@@ -78,7 +78,7 @@
 
 # 目录描述
 
-为了快速的了解项目结构，这里我对项目目录做出描述。
+为了快速的了解项目结构，在此对项目目录做出描述。
 
 ```
 ├─assets  // 存放静态资源（如：scss）
@@ -119,10 +119,14 @@ git clone https://github.com/ChanWahFung/nuxt-juejin-project.git
 cd nuxt-juejin-project
 
 # 安装依赖
-$ npm install
+npm install
 
 # 服务启动
-$ npm run dev
+npm run dev
 ```
 
 访问 http://localhost:8000
+
+# 补充
+
+* 国内 github 克隆会比较慢，你可以选择从码云克隆 https://gitee.com/ChanWahFung/nuxt-juejin-project.git

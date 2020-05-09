@@ -1,6 +1,6 @@
 <template>
   <div class="catalog" :class="[{'catalog--sticky': isSticky}, {'is-topbar-block': isTopbarBlock}]" @scroll.stop="()=>{}">
-    <div class="catalog__title">目录</div>
+    <div v-show="catalogData.length" class="catalog__title">目录</div>
     <div class="catalog__body">
       <ul class="catalog__list">
         <li class="catalog-item" :class="[c1.level, {'catalog-item--active' : c1.id === currentCatalogId }]" v-for="c1 in catalogData" :key="c1.id">
