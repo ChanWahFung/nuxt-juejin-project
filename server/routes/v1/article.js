@@ -181,7 +181,7 @@ router.get('/recommendEntryByTagIds', validator({
   tagIds: { type: 'string', required: true },
   before: { 
     type: 'string', 
-    validator: (rule, value) => Number(value),
+    validator: (rule, value) => Number(value) > 0 || value === '',
     message: 'before 为number类型'
   }
 }), async (ctx, next) => {

@@ -205,7 +205,7 @@ export default {
     },
     // 推荐文章
     getRecommendEntryByTagIds(){
-      let last = this.recommendArticles.slice(-1)
+      let last = this.recommendArticles.slice(-1)[0]
       let before = last ? last.rankIndex : ''
       this.$api.getRecommendEntryByTagIds({
         tagIds: this.tagIds.join('|'),
