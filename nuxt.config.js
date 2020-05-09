@@ -58,7 +58,8 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    '~/assets/scss/reset.scss',
+    '~/assets/css/reset.css',
+    '~/assets/css/page-transition.css',
     '~/assets/scss/global.scss'
   ],
   /*

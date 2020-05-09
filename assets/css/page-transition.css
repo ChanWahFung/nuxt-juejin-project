@@ -1,0 +1,14 @@
+.page-enter,
+.page-leave-to{
+  opacity: 0;
+  visibility: hidden;
+}
+.page-enter-active,
+.page-leave-active{
+  transition: opacity .08s;
+}
+.page-enter-to,
+.page-leave{
+  opacity: 1;
+  visibility: visible;
+}
