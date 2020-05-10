@@ -62,6 +62,7 @@
             <div class="pin-content">
               {{ item.content }}
             </div>
+            <!-- 网页链接 -->
             <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">
               <div v-if="item.url" class="pin-link">
                 <div class="link-info">
@@ -71,11 +72,13 @@
                 <div class="link-image" :style="`background-image: url(${item.urlPic})`"></div>
               </div>
             </a>
+            <!-- 图片 -->
             <div v-if="item.pictures && item.pictures.length" class="pin-images" :class="{'pin-images--more': item.pictures.length > 1}">
               <div v-for="url in item.pictures" :key="url" class="pin-img" :style="`background-image: url(${url})`" @click="showPicturesModal(url, item.pictures)">
                 <div class="img-holder"></div>
               </div>
             </div>
+            <!-- 话题 -->
             <div class="pin-topic" v-if="item.topic">
               <nuxt-link class="topic-title" :to="'/topic/'+topicId" target="_blank">{{ item.topic.title }}</nuxt-link>
             </div>
@@ -309,6 +312,7 @@ export default {
     .user-job-title{
       margin-top: 6px;
       font-size: 13px;
+      line-height: 1.3;
       color: #8a9aa9;
     }
   }
