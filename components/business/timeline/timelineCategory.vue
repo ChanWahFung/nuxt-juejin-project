@@ -3,7 +3,7 @@
     <div class="nav-mian shadow" :class="{'nav-main--sticky': !isTopbarBlock}">
       <ul class="nav-list">
         <li class="nav-item" :class="{'nav-item--active': item.title === paramsTitle}" v-for="item in channels" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
-        <nuxt-link tag="li" to="/subscribe" class="nav-item" style="margin-left: auto;">标签管理</nuxt-link>
+        <nuxt-link v-if="token" tag="li" to="/subscribe" class="nav-item" style="margin-left: auto;">标签管理</nuxt-link>
       </ul>
     </div>
   </nav>
@@ -21,6 +21,9 @@ export default {
   computed: {
     ...mapState([
       'isTopbarBlock'
+    ]),
+    ...mapState('auth', [
+      'token'
     ]),
     paramsTitle() {
       return this.$route.params.title || 'recommended'
