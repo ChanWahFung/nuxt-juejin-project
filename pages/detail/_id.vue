@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import { formatDate } from '~/utils'
 import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
 import aboutAuthor from '~/components/business/detail/aboutAuthor.vue'
@@ -95,7 +94,7 @@ export default {
       if (res.s === 1) {
         return {
           ...res.d,
-          create_date: formatDate('Y年MM月DD日', res.d.createdAt)
+          create_date: app.$utils.formatDate('Y年MM月DD日', res.d.createdAt)
         }
       }
       return {}

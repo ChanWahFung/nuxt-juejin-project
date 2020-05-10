@@ -1,5 +1,3 @@
-import { removeAuthInfo } from '~/utils/index'
-
 export default function (context) {
   const { app, store } = context
   const cookiesToken = app.$cookies.get('token')
@@ -8,7 +6,7 @@ export default function (context) {
     app.$api.isAuth().then(res => {
       if (res.s === 1) {
         if (res.d.isExpired) {   // 过期 移除登陆验证信息
-          removeAuthInfo(context)
+          app.$utils.removeAuthInfo(context)
         } else {                 // 未过期 重新设置存储
           const stateToken = store.state.auth.token
           if (cookiesToken && stateToken === '') {
