@@ -42,6 +42,7 @@ export default {
     show(cb) {
       this.cb = cb
       return new Promise((resolve, reject) => {
+        document.body.style.overflow = 'hidden'
         this.resolve = resolve
         this.reject = reject
       })
@@ -50,6 +51,7 @@ export default {
     hideModal() {
       typeof this.cb === 'function' && this.cb()
       document.body.removeChild(this.$el)
+      document.body.style.overflow = ''
       this.$destroy()
     },
     cancel() {
@@ -78,10 +80,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0,0,0,.9);
+  background-color: #222;
 
   .picture{
-    max-width: 40vw;
+    max-width: 90vw;
   }
 
   .picture-index{

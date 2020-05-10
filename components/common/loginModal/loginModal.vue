@@ -32,6 +32,7 @@ export default {
       this.ctx = ctx
       this.cb = cb
       return new Promise((resolve, reject) => {
+        document.body.style.overflow = 'hidden'
         this.resolve = resolve
         this.reject = reject
       })
@@ -64,6 +65,7 @@ export default {
     hideModal() {
       typeof this.cb === 'function' && this.cb()
       document.body.removeChild(this.$el)
+      document.body.style.overflow = ''
       this.$destroy()
     },
     cancel() {
