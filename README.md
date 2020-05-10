@@ -109,6 +109,28 @@
 │nuxt.config.js   // Nuxt.js应用配置
 ```
 
+# 部分效果截图
+
+* 首页
+
+![](https://s1.ax1x.com/2020/05/10/Y39ysU.gif)
+
+* 详情
+
+![](https://s1.ax1x.com/2020/05/10/Y39Lod.gif)
+
+* 搜索
+
+![](https://s1.ax1x.com/2020/05/10/Y3CuOU.gif)
+
+* 沸点
+
+![](https://s1.ax1x.com/2020/05/10/Y3CxAJ.gif)
+
+* 话题
+
+![](https://s1.ax1x.com/2020/05/10/Y3C3k9.gif)
+
 # 项目启动
 
 ``` bash
