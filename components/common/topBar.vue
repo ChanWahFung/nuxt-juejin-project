@@ -71,22 +71,25 @@ export default {
       scrollingElement: null,
       searchFormClass: '',
       noticeNum: 0,
-      isShowNavMenu: false
+      isShowNavMenu: false,
+
     }
   },
   mounted() {
-    this.scrollingElement = document.scrollingElement
-    window.onwheel = (e) => {
-      if (this.scrollingElement.scrollTop < 300) {
+    let scrollingElement = document.scrollingElement
+    let scrollTop = 0
+    window.addEventListener('scroll', () => {
+      if (scrollingElement.scrollTop < 300) {
+        this.isTopbarBlock === false && this.updateTopbarBlock(true)
         return
       }
-      if (e.wheelDeltaY > 0 && this.isTopbarBlock === false) {
+      if (scrollingElement.scrollTop > scrollTop) {
+        this.updateTopbarBlock(false)
+      } else if (scrollingElement.scrollTop < scrollTop) {
         this.updateTopbarBlock(true)
       }
-      if (e.wheelDeltaY < 0 && this.isTopbarBlock === true) {
-        this.updateTopbarBlock(false)
-      }
-    }
+      scrollTop = scrollingElement.scrollTop
+    })
   },
   computed: {
     ...mapState([
