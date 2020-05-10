@@ -208,7 +208,7 @@ export default {
     weiboShare() {
       let title = this.item.content
       let url = `https://juejin.im/pin/${this.pinId}`
-      let pic = this.item.pictures[0] || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661'
+      let pic = encodeURIComponent(this.item.pictures[0] || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
       window.open(`https://service.weibo.com/share/share.php?title=${title}&url=${url}&pic=${pic}`, '_blank', 'noopener noreferrer')
     },
     // 预览大图

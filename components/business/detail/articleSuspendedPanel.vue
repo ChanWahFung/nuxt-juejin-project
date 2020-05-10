@@ -7,6 +7,11 @@
       </li>
       <li class="panel-btn panel-collect-btn">
       </li>
+      <li class="panel-share-title">分享</li>
+      <li class="panel-btn panel-weibo-btn" @click="weiboShare">
+      </li>
+      <li class="panel-btn panel-qq-btn" @click="qqShare">
+      </li>
     </ul>
   </div>
 </template>
@@ -40,11 +45,33 @@ export default {
   created() {
   },
   methods: {
+    // 跳转到评论区
     scrollIntoComment() {
       let offsetTop = document.querySelector('.detail-block .comment-area').offsetTop
       window.scrollTo({
         top: offsetTop + (this.isTopbarBlock ? -80 : 0)
       })
+    },
+    // qq分享
+    qqShare() {
+      let info = this.$parent.articInfo
+      if (info && info.originalUrl) {
+        let title = `${info.title} - ${info.user.username} - 掘金专栏`
+        let url = info.originalUrl
+        let summary = info.content
+        let pic = encodeURIComponent(info.screenshot || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
+        window.open(`https://connect.qq.com/widget/shareqq/index.html?title=${title}&url=${url}&summary=${summary}&pics=${pic}&site=掘金`, '_blank', 'noopener noreferrer')
+      }
+    },
+    // 微博分享
+    weiboShare() {
+      let info = this.$parent.articInfo
+      if (info && info.originalUrl) {
+        let title = `${info.title} - ${info.user.username} - 掘金专栏`
+        let url = info.originalUrl
+        let pic = encodeURIComponent(info.screenshot || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
+        window.open(`https://service.weibo.com/share/share.php?title=${title}&url=${url}&pic=${pic}`, '_blank', 'noopener noreferrer')
+      }
     }
   },
 }
@@ -55,6 +82,16 @@ export default {
   position: fixed;
   top: 200px;
   left: 120px;
+
+  .btn-list{
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .panel-share-title{
+    margin: 30px 0 12px;
+    color: #c6c6c6;
+  }
 
   .panel-btn{
     position: relative;
@@ -91,6 +128,24 @@ export default {
 
       &:hover{
         background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/collect-hover.5d446a7.svg);
+      }
+    }
+
+    &.panel-weibo-btn{
+      background-position: 50%;
+      background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/weibo.2076a57.svg);
+
+      &:hover{
+        background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/weibo-hover.9abf502.svg);
+      }
+    }
+
+    &.panel-qq-btn{
+      background-position: 50%;
+      background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/qq.0834411.svg);
+
+      &:hover{
+        background-image: url(https://b-gold-cdn.xitu.io/v3/static/img/qq-hover.d11dd84.svg);
       }
     }
 
