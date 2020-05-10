@@ -56,6 +56,7 @@ export default {
       if (res.token) {
         this.ctx.$utils.setAuthInfo(this.ctx, res)
         this.resolve()
+        location.reload()
         this.hideModal()
       } else {
         this.$message.error('登录失败，请重试')
