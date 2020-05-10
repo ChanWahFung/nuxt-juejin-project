@@ -1,7 +1,7 @@
 <template>
   <div class="pin-container">
     <div class="pin-nav">
-      <pin-category v-model="currentCategory"></pin-category>
+      <pin-category></pin-category>
     </div>
     <nuxt-child class="pin-main" />
     <div class="pin-aside">
@@ -49,7 +49,6 @@ export default {
   },
   data() {
     return {
-      currentCategory: {},
       recommendPins: [],
       followTopicList: []
     }

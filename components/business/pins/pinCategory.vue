@@ -1,6 +1,6 @@
 <template>
   <ul class="nav-list" :class="{'nav-list--sticky': !isTopbarBlock}">
-    <li class="nav-item" :class="{'nav-item--active': item.path == $route.path}" v-for="item in navList" :key="item.id">
+    <li class="nav-item" :class="{'nav-item--active': item.path == $route.path}" v-for="item in navList" :key="item.id" @click="changeCategory">
       <nuxt-link :to="item.path">{{ item.name }}</nuxt-link>
     </li>
   </ul>
@@ -16,6 +16,11 @@ export default {
     ...mapState([
       'isTopbarBlock'
     ])
+  },
+  methods: {
+    changeCategory() {
+      window.scrollTo({ top: 0 })
+    }
   },
 }
 </script>
