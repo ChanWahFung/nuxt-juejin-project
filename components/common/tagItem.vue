@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link :to="'/tag/'+item.title" target="_blank">
+  <nuxt-link :to="'/tag?name='+item.title" target="_blank">
     <div class="tag-item">
       <img :src="item.icon" class="tag-item__avatar">
       <div class="tag-item__info">

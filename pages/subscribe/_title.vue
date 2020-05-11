@@ -11,10 +11,10 @@
       </ul>
       <div class="tag-list">
         <div class="tag-item" v-for="item in tagList" :key="item.id">
-          <nuxt-link :to="'/tag/'+item.title" target="_blank">
+          <nuxt-link :to="'/tag?name='+item.title" target="_blank">
             <img class="item__icon" :src="item.icon">
           </nuxt-link>
-          <nuxt-link :to="'/tag/'+item.title" target="_blank">
+          <nuxt-link :to="'/tag?name='+item.title" target="_blank">
             <span class="item__title">{{ item.title }}</span>
           </nuxt-link>
           <span class="item__meta">{{ item.subscribersCount }} 关注  {{ item.entryCount }} 文章</span>

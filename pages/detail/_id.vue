@@ -25,7 +25,7 @@
         </div>
         <div class="tags">
           <p class="tags__title">关注下面的标签，发现更多相似文章</p>
-          <nuxt-link :to="'/tag/'+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag" target="_blank">
+          <nuxt-link :to="'/tag?name='+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag" target="_blank">
             <img class="tag__icon" :src="item.icon" />
             <span class="tag__title">{{ item.title }}</span>
           </nuxt-link>

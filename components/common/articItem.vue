@@ -16,12 +16,12 @@
         <li class="meta-item">{{ item.createdAt | formatTime }}</li>
         <li class="meta-item">
           <span v-if="item.tags.length && item.category" class="meta-item__tag">
-            <nuxt-link :to="'/tag/'+item.tags[0].title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.tags[0].title }}</nuxt-link>
+            <nuxt-link :to="'/tag?name='+item.tags[0].title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.tags[0].title }}</nuxt-link>
           </span>
           <span v-else v-for="tag in item.tags.slice(0, 2)" :key="tag.id" class="meta-item__tag">
-            <nuxt-link :to="'/tag/'+tag.title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ tag.title }}</nuxt-link>
+            <nuxt-link :to="'/tag?name='+tag.title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ tag.title }}</nuxt-link>
           </span>
-          <span v-if="item.category" class="meta-item__tag" :to="'/tag/'+item.category.name" target="_blank">{{ item.category.name }}</span>
+          <span v-if="item.category" class="meta-item__tag" :to="'/tag?name='+item.category.name" target="_blank">{{ item.category.name }}</span>
         </li>
       </ul>
       <p class="artic-item__title ellipsis" v-html="highlight.title || item.title"></p>
