@@ -5,7 +5,7 @@
     <div class="cancel-btn" @click="cancel"></div>
     <div class="picture-index">{{currentIndex+1}} / {{urls.length}}</div>
     <div class="picture">
-      <img :src="currentUrl" alt="" width="100%">
+      <img :src="currentUrl" alt="">
     </div>
   </div>
 </template>
@@ -84,6 +84,11 @@ export default {
 
   .picture{
     max-width: 90vw;
+
+    >img{
+      max-width: 100%;
+      max-height: 100vh;
+    }
   }
 
   .picture-index{
