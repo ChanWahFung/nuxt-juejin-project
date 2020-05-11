@@ -138,10 +138,10 @@ export default {
     return false
   },
   components: {
-    'about-author': aboutAuthor,
-    'about-article': aboutArticle,
-    'article-suspended-panel': articleSuspendedPanel,
-    'catalog': catalog
+    aboutAuthor,
+    aboutArticle,
+    articleSuspendedPanel,
+    catalog
   },
   mixins: [reachBottom, commonRequest],
   data () {

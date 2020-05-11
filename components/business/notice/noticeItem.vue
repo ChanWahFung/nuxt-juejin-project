@@ -6,7 +6,7 @@
     <div class="notice-item__info">
       <div class="info__header">
         <nuxt-link v-if="item.users[0]" class="info__username" :to="`/user/${item.users[0].uid}`" target="_blank">{{ item.users[0].username }}</nuxt-link>
-        <span v-if="item.count > 1" class="info__user-count">等 {{item.count}} 人</span>
+        <span v-if="item.count > 1" class="info__user-count">等 {{ item.count }} 人</span>
         <span v-if="item.count > 1" class="info__look-btn" @click="isShowUserList = !isShowUserList">查看列表</span>
       </div>
       <div class="info__meta">

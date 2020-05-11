@@ -45,7 +45,7 @@
             </div>
             <follow-btn v-if="!item.user.viewerIsFollowing" size="small" :is-follow.sync="item.user.viewerIsFollowing" :followee-id="uid"></follow-btn>
           </div>
-           <!-- 文章类型 -->
+          <!-- 文章类型 -->
           <div v-if="action === 'PUBLISH_ARTICLE' || action === 'LIKE_ARTICLE'">
             <div class="pin-title">
               <h3>{{ item.title }}</h3>
@@ -57,13 +57,13 @@
               <div v-if="item.screenshot" class="pin-post-cover" :style="`background-image: url(${item.screenshot})`"></div>
             </div>
           </div>
-           <!-- 沸点类型 -->
+          <!-- 沸点类型 -->
           <div v-else>
             <div class="pin-content">
-              <span class="pre" v-for="item in pinContent" :key="item.id">
-                <template v-if="item.type === 'text'">{{ item.value }}</template>
-                <a class="url" v-if="item.type === 'url'" :href="item.url" target="_blank" rel="noopener noreferrer">
-                  <img src="https://b-gold-cdn.xitu.io/v3/static/img/pin-url-link.3f843e8.svg">{{ item.value }}
+              <span class="pre" v-for="citem in pinContent" :key="citem.id">
+                <template v-if="citem.type === 'text'">{{ citem.value }}</template>
+                <a class="url" v-if="citem.type === 'url'" :href="citem.url" target="_blank" rel="noopener noreferrer">
+                  <img src="https://b-gold-cdn.xitu.io/v3/static/img/pin-url-link.3f843e8.svg">{{ citem.value }}
                 </a>
               </span>
             </div>
@@ -371,7 +371,7 @@ export default {
 
   .pin-content{
     margin: 5px 0;
-    
+
     .pre{
       white-space: pre-wrap;
       word-break: break-word;

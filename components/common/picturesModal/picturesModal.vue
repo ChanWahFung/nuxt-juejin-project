@@ -3,7 +3,7 @@
     <div v-show="isShowPrev" class="arrow prev-arrow" @click="prev"></div>
     <div v-show="isShowNext" class="arrow next-arrow" @click="next"></div>
     <div class="cancel-btn" @click="cancel"></div>
-    <div class="picture-index">{{currentIndex+1}} / {{urls.length}}</div>
+    <div class="picture-index">{{ currentIndex+1 }} / {{ urls.length }}</div>
     <div class="picture">
       <img :src="currentUrl" alt="">
     </div>
