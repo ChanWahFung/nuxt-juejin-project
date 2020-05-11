@@ -53,8 +53,10 @@
         </nuxt-link>
         <div class="comment-area">
           <p class="comment-area__title">评论</p>
-          <comment-item v-for="(item, index) in comments" :key="item.id" :index="index" :author-id="authorInfo.uid" :data="item" @reply-more="getMoreReply"></comment-item>
-          <div v-if="hasComments" class="comment__more-btn" @click="getMoreComment">查看更多</div>
+          <div style="padding-left: 50px">
+            <comment-item v-for="(item, index) in comments" :key="item.id" :index="index" :author-id="authorInfo.uid" :data="item" @reply-more="getMoreReply"></comment-item>
+            <div v-if="hasComments" class="comment__more-btn" @click="getMoreComment">查看更多</div>
+          </div>
         </div>
       </div>
       <div class="detail-recommend shadow">
@@ -317,6 +319,15 @@ export default {
 
     /deep/ p{
       margin: 22px 0;
+
+      >code{
+        background-color: rgb(255, 245, 245);
+        color: rgb(255, 80, 44);
+        font-size: 13px;
+        padding: 1px 5px;
+        border-radius: 2px;
+        overflow-x: auto;
+      }
     }
 
     /deep/ h1{
@@ -436,7 +447,7 @@ export default {
 }
 
 .comment-area{
-  padding: 20px 0 20px 50px;
+  padding: 20px 0;
 
   .comment-area__title{
     padding-bottom: 20px;
