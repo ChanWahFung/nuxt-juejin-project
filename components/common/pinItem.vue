@@ -60,7 +60,7 @@
            <!-- 沸点类型 -->
           <div v-else>
             <div class="pin-content">
-              <span v-for="item in pinContent" :key="item.id">
+              <span class="pre" v-for="item in pinContent" :key="item.id">
                 <template v-if="item.type === 'text'">{{ item.value }}</template>
                 <a class="url" v-if="item.type === 'url'" :href="item.url" target="_blank" rel="noopener noreferrer">
                   <img src="https://b-gold-cdn.xitu.io/v3/static/img/pin-url-link.3f843e8.svg">{{ item.value }}
@@ -371,10 +371,14 @@ export default {
 
   .pin-content{
     margin: 5px 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #17181a;
-    word-break: break-word;
+    
+    .pre{
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #17181a;
+    }
 
     .url{
       color: $theme;
