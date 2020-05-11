@@ -38,7 +38,7 @@ export default {
   /**
    * 处理文本（分割文本和链接）
    * @param {string} str
-   * @return {array}} 
+   * @return {array}
    */
   splitContentToArray(str) {
     if (typeof str !== 'string') {
