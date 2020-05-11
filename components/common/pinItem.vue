@@ -60,7 +60,12 @@
            <!-- 沸点类型 -->
           <div v-else>
             <div class="pin-content">
-              {{ item.content }}
+              <span v-for="item in pinContent" :key="item.id">
+                <template v-if="item.type === 'text'">{{ item.value }}</template>
+                <a class="url" v-if="item.type === 'url'" :href="item.url" target="_blank" rel="noopener noreferrer">
+                  <img src="https://b-gold-cdn.xitu.io/v3/static/img/pin-url-link.3f843e8.svg">{{ item.value }}
+                </a>
+              </span>
             </div>
             <!-- 网页链接 -->
             <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">
@@ -165,6 +170,10 @@ export default {
     likeCount() {
       let fields = ['likeCount', 'likedCount']
       return fields.filter(key => this.item[key] != undefined)[0]
+    },
+    // 格式化内容为数组
+    pinContent() {
+      return this.$utils.splitContentToArray(this.item.content)
     }
   },
   filters: {
@@ -366,6 +375,14 @@ export default {
     line-height: 1.6;
     color: #17181a;
     word-break: break-word;
+
+    .url{
+      color: $theme;
+
+      >img{
+        vertical-align: middle;
+      }
+    }
   }
 
   .pin-link{
@@ -375,6 +392,10 @@ export default {
     max-width: 100%;
     border: 1px solid #ebebeb;
     border-radius: 4px;
+
+    &:hover{
+      box-shadow: 1px 1px 6px 1px #eee;
+    }
 
     .link-info{
       flex: 1;
