@@ -22,7 +22,7 @@
             <span>{{ userInfo.selfDescription }}</span>
           </div>
         </div>
-        <div class="user-block__action">
+        <div class="user-block__action" v-if="$store.state.auth.userId != userInfo.uid">
           <follow-btn :is-follow.sync="isFollowed" type="user" :followee-id="userInfo.uid"></follow-btn>
         </div>
       </div>
