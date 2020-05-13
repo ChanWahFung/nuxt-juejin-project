@@ -16,20 +16,6 @@
 import reachBottom from '~/mixins/reachBottom'
 
 export default {
-  head () {
-    return {
-      title: `${this.$route.query.keyword} - 搜索 - 掘金`
-    }
-  },
-  watchQuery: ['keyword', 'type', 'period'],
-  validate ({ query }) {
-    let types = [undefined, 'all', 'article', 'tag', 'user']
-    let periods = [undefined, 'all', 'd1', 'w1', 'm3']
-    if (types.includes(query.type) && periods.includes(query.period)) {
-      return true
-    }
-    return false
-  },
   async asyncData({ app, query }) {
     let res = await app.$api.searchList({
       after: 0,
@@ -43,6 +29,20 @@ export default {
       searchList: res.edges || []
     }
   },
+  head () {
+    return {
+      title: `${this.$route.query.keyword} - 搜索 - 掘金`
+    }
+  },
+  validate ({ query }) {
+    let types = [undefined, 'all', 'article', 'tag', 'user']
+    let periods = [undefined, 'all', 'd1', 'w1', 'm3']
+    if (types.includes(query.type) && periods.includes(query.period)) {
+      return true
+    }
+    return false
+  },
+  watchQuery: ['keyword', 'type', 'period'],
   mixins: [reachBottom],
   data() {
     return {
