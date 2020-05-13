@@ -89,10 +89,10 @@ export default {
       $cookies.set('clientId', res.clientId, { expires })
       $cookies.set('token', res.token, { expires })
       $cookies.set('userInfo', res.user, { expires })
-      $store.commit('auth/updateUserInfo', res.user)
-      $store.commit('auth/updateClientId', res.clientId)
-      $store.commit('auth/updateToken', res.token)
-      $store.commit('auth/updateUserId', res.userId)
+      $store.commit('auth/UPDATE_USERINFO', res.user)
+      $store.commit('auth/UPDATE_CLIENTID', res.clientId)
+      $store.commit('auth/UPDATE_TOKEN', res.token)
+      $store.commit('auth/UPDATE_USERID', res.userId)
     }
   },
   /**
@@ -116,10 +116,10 @@ export default {
       $cookies.remove('clientId')
       $cookies.remove('token')
       $cookies.remove('userId')
-      $store.commit('auth/updateUserInfo', null)
-      $store.commit('auth/updateClientId', '')
-      $store.commit('auth/updateToken', '')
-      $store.commit('auth/updateUserId', '')
+      $store.commit('auth/UPDATE_USERINFO', null)
+      $store.commit('auth/UPDATE_CLIENTID', '')
+      $store.commit('auth/UPDATE_TOKEN', '')
+      $store.commit('auth/UPDATE_USERID', '')
     }
   }
 }

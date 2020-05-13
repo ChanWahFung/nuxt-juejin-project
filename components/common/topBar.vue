@@ -80,13 +80,13 @@ export default {
     let scrollTop = 0
     window.addEventListener('scroll', () => {
       if (scrollingElement.scrollTop < 300) {
-        this.isTopbarBlock === false && this.updateTopbarBlock(true)
+        this.isTopbarBlock === false && this.UPDATE_TOPBAR_BLOCK(true)
         return
       }
       if (scrollingElement.scrollTop > scrollTop) {
-        this.updateTopbarBlock(false)
+        this.UPDATE_TOPBAR_BLOCK(false)
       } else if (scrollingElement.scrollTop < scrollTop) {
-        this.updateTopbarBlock(true)
+        this.UPDATE_TOPBAR_BLOCK(true)
       }
       scrollTop = scrollingElement.scrollTop
     })
@@ -112,7 +112,7 @@ export default {
             this.$api.setUserNotificationNum()
             this.getUserNotificationNum()
           }
-          this.updateTopbarBlock(true)
+          this.UPDATE_TOPBAR_BLOCK(true)
         }
       },
       immediate: true
@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'updateTopbarBlock'
+      'UPDATE_TOPBAR_BLOCK'
     ]),
     sreachHandler () {
       this.$router.push({

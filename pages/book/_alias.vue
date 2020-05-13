@@ -38,7 +38,7 @@ export default {
     } else {
       bookCategoryList = await app.$api.getBookChannel()
         .then(res => res.s === 1 ? initBookCategoryList.concat(res.d) : initBookCategoryList)
-      store.commit('category/updateBookCategoryList', bookCategoryList)
+      store.commit('category/UPDATE_BOOK_CATEGORY_LIST', bookCategoryList)
     }
     return params.alias === undefined || bookCategoryList.includes(params.alias)
   },

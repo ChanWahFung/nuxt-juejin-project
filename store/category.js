@@ -57,13 +57,13 @@ export const state = () => ({
 })
 
 export const mutations = {
-  updateTimelineCategoryList(state, payload){
+  UPDATE_TIMELINE_CATEGORY_LIST(state, payload){
     state.timelineCategoryList = payload
   },
-  updateRecommendCategoryList(state, payload){
+  UPDATE_RECOMMEND_CATEGORY_LIST(state, payload){
     state.recommendCategoryList = payload
   },
-  updateBookCategoryList(state, payload){
+  UPDATE_BOOK_CATEGORY_LIST(state, payload){
     state.bookCategoryList = payload
   }
 }
