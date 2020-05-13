@@ -35,10 +35,12 @@ module.exports = function (options){
       body: res.body
     }))
     .catch(err=> {
-      console.log(err)
+      console.error(err)
       return {
+        statusCode: -1,
+        statusMessage: err,
+        headers: res.headers,
         body: { s: 0 },
-        err
       }
     })
 }
