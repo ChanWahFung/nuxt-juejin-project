@@ -3,7 +3,7 @@ export default function (context) {
   const cookiesToken = app.$cookies.get('token')
   if (cookiesToken) {
     // 每次跳转路由 验证登录状态是否过期
-    app.$api.isAuth().then(res => {
+    return app.$api.isAuth().then(res => {
       if (res.s === 1) {
         if (res.d.isExpired) {   // 过期 移除登陆验证信息
           app.$utils.removeAuthInfo(context)
@@ -19,4 +19,5 @@ export default function (context) {
       }
     })
   }
+  return Promise.resolve()
 }
