@@ -1,6 +1,7 @@
 const fs = require('fs')
 const Koa = require('koa')
 const cors = require('koa2-cors')
+const helmet = require('koa-helmet')
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 const consola = require('consola')
@@ -13,16 +14,17 @@ const config = require('../nuxt.config.js')
 config.dev = app.env !== 'production'
 
 function useMiddleware(){
+  app.use(helmet())
   app.use(bodyParser())
   //设置全局返回头
   app.use(cors({
     origin: function(ctx) {
-      return '*';//cors
+      return 'http://localhost:8000'; //cors
     },
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 86400,
     credentials: true,  // 允许携带头部验证信息
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Token', 'X-Device-Id', 'X-Uid'],
   }))
 }
