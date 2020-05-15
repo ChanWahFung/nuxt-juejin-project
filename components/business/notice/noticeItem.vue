@@ -21,7 +21,8 @@
       <p class="info__reply" v-if="item.type == 'comment' || item.type == 'pin-reply' || item.type == 'pin-comment'">{{ item | reply }}</p>
       <p class="info__entry ellipsis">
         <span class="info__type">{{ item | type }}:</span>
-        <nuxt-link class="info__content" :to="'/detail/'+detailId" target="_blank">{{ item | content }}</nuxt-link>
+        <nuxt-link v-if="detailId" class="info__content" :to="'/detail/'+detailId" target="_blank">{{ item | content }}</nuxt-link>
+        <nuxt-link v-else class="info__content" :to="'/pin/'+pinId" target="_blank">{{ item | content }}</nuxt-link>
       </p>
     </div>
     <template v-if="item.count > 1">
@@ -46,6 +47,9 @@ export default {
   computed: {
     detailId() {
       return this.item.entry.originalUrl ? this.item.entry.originalUrl.split('/').pop() : ''
+    },
+    pinId() {
+      return this.item.pin.objectId
     }
   },
   filters: {
