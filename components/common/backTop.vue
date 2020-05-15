@@ -10,14 +10,14 @@ import { mapMutations } from 'vuex'
 export default {
   methods: {
     ...mapMutations([
-      'updateTopbarBlock'
+      'UPDATE_TOPBAR_BLOCK'
     ]),
     backTop() {
       window.scrollTo({
         top: 0
       })
       // 解决置顶后导航栏不显示
-      this.updateTopbarBlock(true)
+      this.UPDATE_TOPBAR_BLOCK(true)
     }
   }
 }

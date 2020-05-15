@@ -3,7 +3,7 @@ export const state = () => ({
 })
 
 export const mutations = {
-  updateTopbarBlock(state, payload){
+  UPDATE_TOPBAR_BLOCK(state, payload){
     state.isTopbarBlock = payload
   }
 }

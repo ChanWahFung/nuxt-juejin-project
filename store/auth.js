@@ -7,16 +7,16 @@ export const state = () => ({
 })
 
 export const mutations = {
-  updateUserInfo(state, payload){
+  UPDATE_USERINFO(state, payload){
     state.userInfo = payload
   },
-  updateUserId(state, payload){
+  UPDATE_USERID(state, payload){
     state.userId = payload
   },
-  updateClientId(state, payload){
+  UPDATE_CLIENTID(state, payload){
     state.clientId = payload
   },
-  updateToken(state, payload){
+  UPDATE_TOKEN(state, payload){
     state.token = payload
   }
 }

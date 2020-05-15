@@ -71,7 +71,7 @@ export default {
       categoryList = store.state.category.timelineCategoryList
     } else {
       categoryList = await app.$api.getCategories().then(res => res.s === 1 ? initCategoryList.concat(res.d.categoryList) : initCategoryList)
-      store.commit('category/updateTimelineCategoryList', categoryList)
+      store.commit('category/UPDATE_TIMELINE_CATEGORY_LIST', categoryList)
     }
     return params.title === undefined || categoryList.filter(item => item.title === params.title).length
   },

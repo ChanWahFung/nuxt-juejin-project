@@ -21,7 +21,7 @@ export default {
       categoryList = store.state.category.recommendCategoryList
     } else {
       categoryList = await app.$api.getAuthorChannel().then(res => res.s === 1 ? res.d : [])
-      store.commit('category/updateRecommendCategoryList', categoryList)
+      store.commit('category/UPDATE_RECOMMEND_CATEGORY_LIST', categoryList)
     }
     // 作者榜单
     let res = await app.$api.getAuthorRank({

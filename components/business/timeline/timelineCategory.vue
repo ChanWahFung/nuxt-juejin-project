@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'updateTopbarBlock'
+      'UPDATE_TOPBAR_BLOCK'
     ]),
     async getTagByCategories(categoryId) {
       await this.$api.getTagByCategories({
@@ -41,7 +41,7 @@ export default {
     },
     navItemClick(item) {
       if (this.paramsTitle != item.title) {
-        this.isTopbarBlock === false && this.updateTopbarBlock(true)
+        this.isTopbarBlock === false && this.UPDATE_TOPBAR_BLOCK(true)
         window.scrollTo({ top: 0 })
         this.$router.push({
           name: 'timeline-title',

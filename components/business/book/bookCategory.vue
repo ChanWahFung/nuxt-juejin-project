@@ -27,11 +27,11 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'updateTopbarBlock'
+      'UPDATE_TOPBAR_BLOCK'
     ]),
     navItemClick(item) {
       if (this.paramsAlias != item.alias) {
-        this.isTopbarBlock === false && this.updateTopbarBlock(true)
+        this.isTopbarBlock === false && this.UPDATE_TOPBAR_BLOCK(true)
         window.scrollTo({ top: 0 })
         if (item.alias) {
           this.$router.push({

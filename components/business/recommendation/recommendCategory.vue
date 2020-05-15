@@ -27,11 +27,11 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'updateTopbarBlock'
+      'UPDATE_TOPBAR_BLOCK'
     ]),
     navItemClick(item) {
       if (this.paramsName != item.name) {
-        this.isTopbarBlock === false && this.updateTopbarBlock(true)
+        this.isTopbarBlock === false && this.UPDATE_TOPBAR_BLOCK(true)
         window.scrollTo({ top: 0 })
         this.$router.push({
           name: 'recommendation-authors-name',
