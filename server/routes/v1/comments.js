@@ -89,7 +89,7 @@ router.get('/reply', validator({
  * @param {number} pageNum - 页码
  * @param {number} pageSize - 条数
  */
-router.get('/pin', validator({
+router.get('/pinComment', validator({
   pinId: { type: 'string', required: true },
   pageNum: { 
     type: 'string', 

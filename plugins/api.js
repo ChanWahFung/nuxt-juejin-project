@@ -346,7 +346,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getPinCommentList(params = {}){
-      return $request.get('/v1/comments/pins', params)
+      return $request.get('/v1/comments/pinComment', params)
     },
     /**
      * 沸点回复列表
