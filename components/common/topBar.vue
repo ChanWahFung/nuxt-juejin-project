@@ -6,10 +6,10 @@
           <img src="https://b-gold-cdn.xitu.io/v3/static/img/logo.a7995ad.svg" alt="掘金">
         </nuxt-link>
         <ul class="navs">
-          <nuxt-link v-for="item in navs" :key="item.id" :to="item.link" tag="li" class="nav-item">{{ item.name }}</nuxt-link>
+          <nuxt-link v-for="item in navs" :key="item.id" :to="item.link" tag="li" class="nav-item">{{ $t('topbar.'+item.name) }}</nuxt-link>
         </ul>
         <div class="search-form" :class="[searchFormClass]">
-          <input class="search-input" type="text" @focus="searchFormClass = 'search-form--focus'" @blur="searchFormClass = ''" maxlength="32" v-model="keyword" placeholder="搜索" @keydown.enter="sreachHandler" />
+          <input class="search-input" type="text" @focus="searchFormClass = 'search-form--focus'" @blur="searchFormClass = ''" maxlength="32" v-model="keyword" :placeholder="$t('topbar.search')" @keydown.enter="sreachHandler" />
           <img v-show="searchFormClass" src="~/assets/images/search-icon-active.svg" class="search-icon" />
           <img v-show="searchFormClass == ''" src="~/assets/images/search-icon.svg" class="search-icon" />
         </div>
@@ -22,21 +22,26 @@
             <ul v-show="isShowNavMenu" class="nav-menu shadow">
               <li class="nav-item">
                 <nuxt-link :to="'/user/'+userInfo.objectId">
-                  <img class="nav-item__icon" src="~/assets/images/menu-user.svg" alt="">我的主页
+                  <img class="nav-item__icon" src="~/assets/images/menu-user.svg" alt="">{{ $t('menu.home') }}
                 </nuxt-link>
               </li>
               <li class="nav-item">
                 <nuxt-link to="/subscribe">
-                  <img class="nav-item__icon" src="~/assets/images/menu-tag.svg" alt="">标签管理
+                  <img class="nav-item__icon" src="~/assets/images/menu-tag.svg" alt="">{{ $t('menu.label') }}
                 </nuxt-link>
               </li>
+              <li class="nav-item" @click="switchLocale">
+                <img class="nav-item__icon" src="~/assets/images/menu-locale.svg" alt="">
+                <span :style="{'font-weight': locale === 'zh' ? '600' : ''}">zh</span>/
+                <span :style="{'font-weight': locale === 'en' ? '600' : ''}">en</span>
+              </li>
               <li class="nav-item" @click.stop="logout">
-                <img class="nav-item__icon" src="~/assets/images/menu-logout.svg" alt="">登出
+                <img class="nav-item__icon" src="~/assets/images/menu-logout.svg" alt="">{{ $t('menu.logout') }}
               </li>
             </ul>
           </div>
         </template>
-        <div v-else class="login-btn" @click="showLoginModal">登录</div>
+        <div v-else class="login-btn" @click="showLoginModal">{{ $t('menu.login') }}</div>
       </div>
     </div>
   </header>
@@ -51,19 +56,19 @@ export default {
     return {
       navs: [
         {
-          name: '首页',
+          name: 'home',
           link: '/timeline'
         },
         {
-          name: '沸点',
+          name: 'pin',
           link: '/pins/recommended'
         },
         {
-          name: '话题',
+          name: 'topic',
           link: '/topic'
         },
         {
-          name: '小册',
+          name: 'book',
           link: '/book'
         }
       ],
@@ -98,6 +103,9 @@ export default {
     ...mapState('auth', [
       'userInfo'
     ]),
+    ...mapState('locale', [
+      'locale'
+    ]),
     noticeNumTip(){
       return this.noticeNum > 99 ? '99+' : this.noticeNum
     }
@@ -119,9 +127,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations([
-      'UPDATE_TOPBAR_BLOCK'
-    ]),
+    ...mapMutations({
+      'UPDATE_TOPBAR_BLOCK': 'UPDATE_TOPBAR_BLOCK',
+      'SET_LANG': 'locale/SET_LANG'
+    }),
     sreachHandler () {
       this.$router.push({
         name: 'search',
@@ -138,6 +147,13 @@ export default {
     },
     showLoginModal() {
       this.$loginModal(this)
+    },
+    // 切换语言
+    switchLocale() {
+      let locale = this.locale === 'zh' ? 'en' : 'zh'
+      this.$i18n.locale = locale
+      this.SET_LANG(locale)
+      this.$cookies.set('lang', locale)
     },
     // 登出
     logout() {
@@ -284,7 +300,7 @@ export default {
     position: absolute;
     top: 150%;
     right: 0;
-    width: 150px;
+    min-width: 150px;
     padding: 10px 0;
     border-radius: 3px;
     border: 1px solid #ddd;

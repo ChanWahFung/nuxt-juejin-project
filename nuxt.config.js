@@ -18,7 +18,7 @@ module.exports = {
   ** Router configuration
   */
   router: {
-    middleware: ['auth'],
+    middleware: ['auth', 'i18n'],
     extendRoutes (routes, resolve) {
       routes.push({
         path: '/',
@@ -70,6 +70,7 @@ module.exports = {
     '~/plugins/request.js',
     '~/plugins/api.js',
     '~/plugins/vue-global.js',
+    '~/plugins/i18n.js'
   ],
   /*
   ** Nuxt.js dev-modules
