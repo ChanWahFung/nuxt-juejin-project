@@ -26,6 +26,7 @@
     "moment": "^2.24.0",
     "nuxt": "^2.0.0",
     "request": "^2.88.2",
+    "vue-i18n": "^8.17.6",
     "vuex": "^3.1.3"
   },
   "devDependencies": {
@@ -36,7 +37,7 @@
     "babel-plugin-component": "^1.1.1",
     "eslint": "^6.1.0",
     "eslint-plugin-nuxt": ">=0.4.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "nodemon": "^1.18.9",
     "sass-loader": "^8.0.2",
     "scss-loader": "0.0.1"
