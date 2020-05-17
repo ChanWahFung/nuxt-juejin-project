@@ -9,5 +9,5 @@ export default function ({ isHMR, app, store, error }) {
   }
   // 设置语言
   store.commit('locale/SET_LANG', locale)
-  app.i18n.locale = store.state.locale
+  app.i18n.locale = locale
 }
