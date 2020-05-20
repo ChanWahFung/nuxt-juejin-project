@@ -6,13 +6,13 @@ module.exports = {
   */
   server: {
     port: 8000,
-    host: '127.0.0.1'
+    host: '0.0.0.0'
   },
   /*
   ** Environment variable configuration
   */
   env: {
-    baseUrl: process.env.NODE_ENV === 'production' ? 'http://test.com' : 'http://127.0.0.1:8000'
+    baseUrl: 'http://127.0.0.1:8000'
   },
   /*
   ** Router configuration
