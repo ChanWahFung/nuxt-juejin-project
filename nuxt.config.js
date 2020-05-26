@@ -9,6 +9,12 @@ module.exports = {
     host: '127.0.0.1'
   },
   /*
+  ** Render configuration
+  */
+  render: {
+    csp: true
+  },
+  /*
   ** Environment variable configuration
   */
   env: {
