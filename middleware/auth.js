@@ -14,7 +14,6 @@ export default function (context) {
             store.commit('auth/UPDATE_USERID', app.$cookies.get('userId'))
             store.commit('auth/UPDATE_CLIENTID', app.$cookies.get('clientId'))
             store.commit('auth/UPDATE_TOKEN', app.$cookies.get('token'))
-            store.commit('auth/UPDATE_TOKEN', 123)
           }
         }
       }
