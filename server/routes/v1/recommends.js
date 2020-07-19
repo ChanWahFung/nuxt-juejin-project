@@ -16,7 +16,7 @@ router.get('/recommendAuthor', validator({
     message: 'limit 需传入正整数'
   }
 }), async (ctx, next)=>{
-  ctx.set('Cache-Control', 'max-age=300')
+  ctx.set('Cache-Control', 'max-age=60')
   const headers = ctx.headers
   const options = {
     url: 'https://web-api.juejin.im/query',
