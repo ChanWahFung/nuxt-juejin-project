@@ -6,13 +6,13 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} phoneNumber - 手机号码
      */
     loginAuth(data) {
-      return $request.post('/v1/auth/login', data)
+      return $request.post('/v2/auth/login', data)
     },
     /**
      * 身份验证
      */
     isAuth() {
-      return $request.get('/v1/auth/authentication')
+      return $request.get('/v2/auth/authentication')
     },
     /**
      * 获取首页列表
@@ -21,7 +21,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
      */
     getIndexList (data = {}) {
-      return $request.post('/v1/articles/indexList', data)
+      return $request.post('/v2/articles/indexList', data)
     },
     /**
      * 搜索
@@ -32,7 +32,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} period - ALL：全部、D1：一天内、W1：一周内、M3：三个月内
      */
     searchList (params = {}) {
-      return $request.get('/v1/articles/search', params)
+      return $request.get('/v2/articles/search', params)
     },
     /**
      * 获取详情页信息
@@ -40,7 +40,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} postId - 文章id 
      */
     getDetail (params = {}) {
-      return $request.get('/v1/articles/detail', params)
+      return $request.get('/v2/articles/detail', params)
     },
     /**
      * 获取文章评论
@@ -50,7 +50,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getCommentList (params = {}) {
-      return $request.get('/v1/comments/entry', params)
+      return $request.get('/v2/comments/entry', params)
     },
     /**
      * 获取回复列表
@@ -60,28 +60,28 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 页数
      */
     getReplyList (params = {}){
-      return $request.get('/v1/comments/reply', params)
+      return $request.get('/v2/comments/reply', params)
     },
     /**
      * 获取用户信息
      * @param {string} ids - 需要获取的用户id（多个以|分割）
      */
     getMultiUser(params = {}){
-      return $request.get('/v1/users/multiUser', params)
+      return $request.get('/v2/users/multiUser', params)
     },
     /**
      * 获取用户消息
      * @param {string} before - 最后一条消息的 beforeAtString
      */
     getUserNotification(params = {}){
-      return $request.get('/v1/users/notification', params)
+      return $request.get('/v2/users/notification', params)
     },
     /**
      * 获取标签详情
      * @param {string} tagName
      */
     getTagDetail(params = {}){
-      return $request.get('/v1/tags/detail', params)
+      return $request.get('/v2/tags/detail', params)
     },
     /**
      * 获取对应标签的文章列表
@@ -91,7 +91,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} sort - rankIndex：热门；createdAt：最新；hotIndex：最热
      */
     getTagEntry(params = {}){
-      return $request.get('/v1/tags/entry', params)
+      return $request.get('/v2/tags/entry', params)
     },
     /**
      * 检查是否关注用户
@@ -99,14 +99,14 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} targetUids
      */
     isCurrentUserFollowed(params = {}){
-      return $request.get('/v1/users/isCurrentUserFollowed', params)
+      return $request.get('/v2/users/isCurrentUserFollowed', params)
     },
     /**
      * 是否点赞文章
      * @param {string} entryId - 文章entryId
      */
     isArticleLike(params = {}){
-      return $request.get('/v1/users/isArticleLike', params)
+      return $request.get('/v2/users/isArticleLike', params)
     },
     /**
      * 获取用户专栏文章
@@ -116,14 +116,14 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} order - 排序 - rankIndex：热门、createdAt：最新
      */
     getUserPost(params = {}){
-      return $request.get('/v1/articles/userPost', params)
+      return $request.get('/v2/articles/userPost', params)
     },
     /**
      * 获取推荐作者
      * @param {number} limit - 条数
      */
     getRecommendAuthor(params = {}){
-      return $request.get('/v1/recommends/recommendAuthor', params)
+      return $request.get('/v2/recommends/recommendAuthor', params)
     },
     /**
      * 获取相关文章
@@ -131,7 +131,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} entryId - 文章objectId
      */
     getRelatedEntry(params = {}){
-      return $request.get('/v1/articles/relatedEntry', params)
+      return $request.get('/v2/articles/relatedEntry', params)
     },
     /**
      * 根据标签id获取相关推荐文章
@@ -139,7 +139,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} before - 最后一条的rankIndex，下一页时传入
      */
     getRecommendEntryByTagIds(params = {}){
-      return $request.get('/v1/articles/recommendEntryByTagIds', params)
+      return $request.get('/v2/articles/recommendEntryByTagIds', params)
     },
     /**
      * 点赞文章
@@ -147,19 +147,19 @@ export default ({ app: { $request } }, inject) => {
      */
     articleLike(data = {}){
       let method = data.isCollected ? 'put' : 'delete'
-      return $request[method]('/v1/users/like', { entryId: data.entryId })
+      return $request[method]('/v2/users/like', { entryId: data.entryId })
     },
     /**
      * 获取未读消息数量
      */
     getUserNotificationNum(){
-      return $request.get('/v1/users/userNotificationNum')
+      return $request.get('/v2/users/userNotificationNum')
     },
     /**
      * 获取未读消息数量
      */
     setUserNotificationNum(){
-      return $request.put('/v1/users/userNotificationNum')
+      return $request.put('/v2/users/userNotificationNum')
     },
     /**
      * 关注、取消关注
@@ -167,7 +167,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} followee - 被关注者id
      */
     followUser(data = {}){
-      return $request[data.method]('/v1/users/follow', { 
+      return $request[data.method]('/v2/users/follow', { 
         follower: data.follower, 
         followee: data.followee
       })
@@ -176,7 +176,7 @@ export default ({ app: { $request } }, inject) => {
      * 获取类目
      */
     getCategories(){
-      return $request.get('/v1/categories/entry')
+      return $request.get('/v2/categories/entry')
     },
     /**
      * 获取类目下的标签
@@ -184,13 +184,13 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} limit 
      */
     getTagByCategories(params = {}){
-      return $request.post('/v1/categories/tags', params)
+      return $request.post('/v2/categories/tags', params)
     },
     /**
      * 获取已关注的标签
      */
     getTagBySubscribed(){
-      return $request.get('/v1/tags/subscribed')
+      return $request.get('/v2/tags/subscribed')
     },
     /**
      * 获取全部标签
@@ -199,7 +199,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 页数
      */
     getTagByAll(params = {}){
-      return $request.get('/v1/tags/all', params)
+      return $request.get('/v2/tags/all', params)
     },
     /**
      * 搜索标签
@@ -209,14 +209,14 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 页数
      */
     getTagBySearch(params = {}){
-      return $request.get('/v1/tags/search', params)
+      return $request.get('/v2/tags/search', params)
     },
     /**
      * 关注标签
      * @param {string} tagId 
      */
     followTag(data = {}){
-      return $request[data.method]('/v1/tags/subscribe', { 
+      return $request[data.method]('/v2/tags/subscribe', { 
         tagId: data.tagId
       })
     },
@@ -227,7 +227,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getTopics(params = {}) {
-      return $request.get('/v1/topics/list', params)
+      return $request.get('/v2/topics/list', params)
     },
     /**
      * 获取已关注话题列表
@@ -236,14 +236,14 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getFollowedTopics(params = {}) {
-      return $request.get('/v1/topics/followedList', params)
+      return $request.get('/v2/topics/followedList', params)
     },
     /**
      * 关注话题
      * @param {string} topicId 
      */
     followTopic(data = {}){
-      return $request[data.method]('/v1/topics/follow', { 
+      return $request[data.method]('/v2/topics/follow', { 
         topicIds: data.topicIds
       })
     },
@@ -251,7 +251,7 @@ export default ({ app: { $request } }, inject) => {
      * 获取小册类目
      */
     getBookChannel() {
-      return $request.get('/v1/books/channel')
+      return $request.get('/v2/books/channel')
     },
     /**
      * 获取小册列表
@@ -259,19 +259,19 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageNum
      */
     getBooks(params = {}) {
-      return $request.get('/v1/books/getListByLastTime', params)
+      return $request.get('/v2/books/getListByLastTime', params)
     },
     /**
      * 推荐小册
      */
     getRecommendBook() {
-      return $request.get('/v1/recommends/books')
+      return $request.get('/v2/recommends/books')
     },
     /**
      * 作者排行类目
      */
     getAuthorChannel() {
-      return $request.get('/v1/recommends/channel')
+      return $request.get('/v2/recommends/channel')
     },
     /**
      * 作者榜单
@@ -280,7 +280,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} first - 条数
      */
     getAuthorRank(params = {}) {
-      return $request.get('/v1/recommends/authorRank', params)
+      return $request.get('/v2/recommends/authorRank', params)
     },
     /**
      * 沸点（推荐、热门、关注）
@@ -289,20 +289,20 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} after - 分页标识
      */
     getPinList(params = {}) {
-      return $request.get('/v1/pins/list', params)
+      return $request.get('/v2/pins/list', params)
     },
     /**
      * 单条沸点
      * @param {string} pinId
      */
     getPinById(params = {}) {
-      return $request.get('/v1/pins/byId', params)
+      return $request.get('/v2/pins/byId', params)
     },
     /**
      * 推荐沸点
      */
     getPinListByRecommend() {
-      return $request.get('/v1/pins/hotRecommendList')
+      return $request.get('/v2/pins/hotRecommendList')
     },
     /**
      * 沸点 - 话题列表
@@ -311,14 +311,14 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getPinListByTopic(params = {}) {
-      return $request.get('/v1/pins/topicList', params)
+      return $request.get('/v2/pins/topicList', params)
     },
     /**
      * 话题详情
      * @param {string} topicId - 话题标签
      */
     getTopicDetail(params = {}) {
-      return $request.get('/v1/topics/detail', params)
+      return $request.get('/v2/topics/detail', params)
     },
     /**
      * 话题详情列表
@@ -328,7 +328,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {string} sortType - 排序
      */
     getTopicPinList(params = {}) {
-      return $request.get('/v1/topics/pinList', params)
+      return $request.get('/v2/topics/pinList', params)
     },
     /**
      * 话题参与者列表
@@ -337,7 +337,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getTopicAttenderList(params = {}) {
-      return $request.get('/v1/topics/attenders', params)
+      return $request.get('/v2/topics/attenders', params)
     },
     /**
      * 沸点评论列表
@@ -346,7 +346,7 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getPinCommentList(params = {}){
-      return $request.get('/v1/comments/pinComment', params)
+      return $request.get('/v2/comments/pinComment', params)
     },
     /**
      * 沸点回复列表
@@ -355,13 +355,13 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 条数
      */
     getPinReplyList(params = {}){
-      return $request.get('/v1/comments/pinReply', params)
+      return $request.get('/v2/comments/pinReply', params)
     },
     /**
      * 沸点点赞、取消点赞
      */
     likePin(data = {}) {
-      return $request[data.method]('/v1/pins/like', { 
+      return $request[data.method]('/v2/pins/like', { 
         pinId: data.pinId
       })
     },
