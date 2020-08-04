@@ -14,43 +14,22 @@ router.get('/recommendAuthor', validator({
     required: true,
     validator: (rule, value) => Number(value) > 0,
     message: 'limit 需传入正整数'
-  }
+  },
+  cursor: { type: 'string' },
+  category_id: { type: 'string' }
 }), async (ctx, next)=>{
   ctx.set('Cache-Control', 'max-age=60')
-  const headers = ctx.headers
   const options = {
-    url: 'https://web-api.juejin.im/query',
-    method: "POST",
-    headers: {
-      'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': headers['x-device-id'],
-      'X-Legacy-Token': headers['x-token'],
-      'X-Legacy-Uid': headers['x-uid']
-    },
-    body: {
-      operationName: "",
-      query: "",
-      variables: {
-        limit: ctx.query.limit || 10, 
-        excluded: []
-      },
-      extensions: {query: {id: "b031bf7f8b17b1a173a38807136cc20e"}},
+    url: 'https://apinew.juejin.im/user_api/v1/author/recommend',
+    method: "GET",
+    params: {
+      category_id: ctx.query.category_id || '',
+      cursor: ctx.query.cursor || 0,
+      limit: ctx.query.limit || 20,
     }
   };
   let { body } = await request(options)
-  body = toObject(body)
-  try {
-    ctx.body = {
-      s: body.data.recommendationCard.items ? 1 : 0,
-      d: body.data.recommendationCard.items
-    } 
-  } catch (error) {
-    ctx,body = {
-      s: 0,
-      d: [],
-      errors: [body]
-    }
-  }
+  ctx.body = body
 })
 
 /**

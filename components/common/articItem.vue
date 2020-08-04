@@ -2,43 +2,39 @@
   <div class="artic-item" @click="toDetail()">
     <div class="artic-item__info">
       <ul class="artic-item__meta">
-        <li class="meta-item mate-item--hot" v-if="item.type === 'post' && item.hot">
+        <!-- <li class="meta-item mate-item--hot" v-if="item.type === 'post' && item.hot">
           <span>荐</span>
         </li>
         <li class="meta-item mate-item--post" v-if="item.type === 'post'">
           <span>专栏</span>
-        </li>
+        </li> -->
         <li class="meta-item">
           <span class="meta-item__username">
-            <nuxt-link :to="'/user/'+uid" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.user.username }}</nuxt-link>
+            <nuxt-link :to="'/user/'+uid" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.author_user_info.user_name }}</nuxt-link>
           </span>
         </li>
-        <li class="meta-item">{{ item.createdAt | formatTime }}</li>
+        <li class="meta-item">{{ item.article_info.ctime | formatTime }}</li>
         <li class="meta-item">
-          <span v-if="item.tags.length && item.category" class="meta-item__tag">
-            <nuxt-link :to="'/tag?name='+item.tags[0].title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ item.tags[0].title }}</nuxt-link>
-          </span>
-          <span v-else v-for="tag in item.tags.slice(0, 2)" :key="tag.id" class="meta-item__tag">
-            <nuxt-link :to="'/tag?name='+tag.title" target="_blank" @click.native="(e) => e.stopPropagation()">{{ tag.title }}</nuxt-link>
-          </span>
-          <span v-if="item.category" class="meta-item__tag" :to="'/tag?name='+item.category.name" target="_blank">{{ item.category.name }}</span>
+          <template v-if="item.tags.length">
+            <nuxt-link class="meta-item__tag" :to="'/tag?name='+tag.tag_name" v-for="tag in item.tags" :key="tag.id" target="_blank" @click.native="(e) => e.stopPropagation()">{{ tag.tag_name }}</nuxt-link>
+          </template>
         </li>
       </ul>
-      <p class="artic-item__title ellipsis" v-html="highlight.title || item.title"></p>
-      <p v-if="hasDesc" class="artic-item__desc" v-html="highlight.description || highlight.text || item.content"></p>
+      <p class="artic-item__title ellipsis" v-html="highlight.title || item.article_info.title"></p>
+      <p v-if="hasDesc" class="artic-item__desc" v-html="highlight.description || highlight.text || item.article_info.brief_content"></p>
       <ul class="artic-item__action">
-        <li class="action-item" :class="{active: item[likeField]}" @click.stop="articleLike">
-          <img v-if="item[likeField]" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
+        <li class="action-item" :class="{active: item.article_info[likeField]}" @click.stop="articleLike">
+          <img v-if="item.article_info[likeField]" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
           <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-          {{ item[likeCountField] }}
+          {{ item.article_info[likeCountField] }}
         </li>
         <li class="action-item" @click.stop="toDetail('#comment')">
           <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
-          {{ item.commentsCount }}
+          {{ item.article_info.comment_count }}
         </li>
       </ul>
     </div>
-    <div v-if="item.screenshot" class="artic-item__cover" :style="'background-image: url('+item.screenshot+')'"></div>
+    <div v-if="item.article_info.cover_image" class="artic-item__cover" :style="'background-image: url('+item.article_info.cover_image+')'"></div>
   </div>
 </template>
 
@@ -59,18 +55,19 @@ export default {
     }
   },
   computed: {
-    // 点赞状态和点赞数字段不一致  此处筛选出对应字段
+    // 点赞状态字段不一致  此处筛选出对应字段
     likeField() {
-      let fields = ['isCollected', 'viewerHasLiked', 'liked']
+      let fields = ['is_digg']
       return fields.filter(key => this.item[key] == undefined ? false : key)[0]
     },
+    // 点赞数字段不一致  此处筛选出对应字段
     likeCountField() {
-      let fields = ['collectionCount', 'likeCount']
-      return fields.filter(key => this.item[key] == undefined ? false : key)[0]
+      let fields = ['digg_count']
+      return fields.filter(key => this.item.article_info[key] == undefined ? false : key)[0]
     },
     // 统一 uid值
     uid() {
-      return this.item.user.id || this.item.user.objectId
+      return this.item.author_user_info.user_id
     },
     detailId() {
       return this.item.originalUrl ? this.item.originalUrl.split('/').pop() : ''
@@ -195,7 +192,7 @@ export default {
 .artic-item__title {
   display: block;
   margin: 10px 0 16px;
-  line-height: 1.2;
+  line-height: 1.3;
   font-size: 17px;
   font-weight: 700;
   color: inherit;

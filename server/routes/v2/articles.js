@@ -32,67 +32,51 @@ router.get('/detail', validator({
 
 /**
  * 获取首页列表
- * @param {string} first - 条数
- * @param {string} after - 分页标识，加载下一页传入
- * @param {string} order - POPULAR：热门、NEWEST：最新、THREE_DAYS_HOTTEST：3天内热榜、WEEKLY_HOTTEST：7天内热榜、MONTHLY_HOTTEST：30天内热榜、HOTTEST：全部热榜
- * @param {string} category - 类目id
- * @param {array} tags - 标签id
+ * @param {string} cate_id - 分类id
+ * @param {string} cursor - 分页标识，加载下一页传入
+ * @param {string} limit - 条数
+ * @param {string} sort_type - 0：全部、3：三天内、7：7天内、30：30天内、200：热门、300：最新
+ * @param {string} feed_type - all：推荐，cate：分类
  */
 router.post('/indexList', validator({
-  first: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'first 需传入正整数'
+  cate_id: { 
+    type: 'string'
   },
-  after: { type: 'string' },
-  category: { type: 'string' },
-  order: {
+  cursor: { 
+    type: 'string'
+  },
+  limit: { 
+    type: 'string', 
+    requried: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'limit 需传入正整数'
+  },
+  sort_type: {
+    type: 'enum',
+    requried: true,
+    enum: [0, 3, 7, 30, 200, 300]
+  },
+  feed_type: {
     type: 'enum',
     required: true,
-    enum: ['POPULAR', 'NEWEST', 'THREE_DAYS_HOTTEST', 'WEEKLY_HOTTEST', 'MONTHLY_HOTTEST', 'HOTTEST']
-  },
-  tags: { type: 'array' }
+    enum: ['all', 'cate']
+  }
 }), async (ctx, next) => {
-  ctx.set('Cache-Control', 'max-age=60')
   const data = ctx.request.body
-  const headers = ctx.headers
+  const apiName = data.feed_type == 'all' ? 'recommend_all_feed' : 'recommend_cate_feed'
   const options = {
-    url: 'https://web-api.juejin.im/query',
+    url: 'https://apinew.juejin.im/recommend_api/v1/article/'+apiName,
     method: "POST",
-    headers: {
-      'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': headers['x-device-id'],
-      'X-Legacy-Token': headers['x-token'],
-      'X-Legacy-Uid': headers['x-uid']
-    },
     body: { 
-      operationName: "", 
-      query: "", 
-      variables: { 
-        first: data.first || 20, 
-        after: data.after || '',
-        order: data.order || 'POPULAR',
-        category: data.category || '',
-        tags: data.tags || []
-      }, 
-      extensions: { query: { id: "653b587c5c7c8a00ddf67fc66f989d42" } } 
+      cate_id: data.cate_id || '',
+      limit: data.limit || 20, 
+      sort_type: Number(data.sort_type) || 200,
+      cursor: data.cursor || '0',
+      id_type: 2
     }
   };
   let { body } = await request(options)
-  body = toObject(body)
-  try {
-    ctx.body = {
-      s: body.data.articleFeed.items ? 1 : 0,
-      d: body.data.articleFeed.items
-    }
-  } catch (error) {
-    ctx.body = {
-      s: 0,
-      d: {},
-      errors: [body]
-    }
-  }
+  ctx.body = body
 })
 
 /**

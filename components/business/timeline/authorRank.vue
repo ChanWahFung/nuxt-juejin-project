@@ -1,22 +1,22 @@
 <template>
   <div class="author-block shadow">
     <div class="author-block__title">🎖️ 作者榜</div>
-    <nuxt-link :to="'/user/'+item.author.id" target="_blank" v-for="item in list" :key="item.id">
+    <nuxt-link :to="'/user/'+item.user_id" target="_blank" v-for="item in list" :key="item.user_id">
       <div class="author-item">
         <div class="author__avatar">
-          <user-avatar :url="item.author.avatarLarge" :round="true"></user-avatar>
+          <user-avatar :url="item.avatar_large" :round="true"></user-avatar>
         </div>
         <div class="author__info">
           <div class="author__name">
-            {{ item.author.username }}
-            <level :level="item.author.level"></level>
+            {{ item.user_name }}
+            <level :level="item.level"></level>
           </div>
           <div class="ellipsis">
-            {{ item.author.jobTitle }}
-            {{ item.author.jobTitle && item.author.company ? '@' : '' }}
-            {{ item.author.company }}
+            {{ item.job_title }}
+            {{ item.job_title && item.company ? '@' : '' }}
+            {{ item.company }}
           </div>
-          <div class="ellipsis">{{ item.description }}</div>
+          <!-- <div class="ellipsis">{{ item.description }}</div> -->
         </div>
       </div>
     </nuxt-link>
