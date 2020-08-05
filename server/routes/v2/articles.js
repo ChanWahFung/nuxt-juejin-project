@@ -6,24 +6,17 @@ const { toObject } = require('../../../utils')
 
 /**
  * 获取详情页信息
- * @param {string} type - entry：用户等信息，entryView：文章信息
- * @param {string} postId - 文章id 
+ * @param {string} article_id - 文章id 
  */
 router.get('/detail', validator({
-  type: { type: 'enum', enum: ['entry', 'entryView'], required: true },
-  postId: { type: 'string', required: true }
+  article_id: { type: 'string', required: true }
 }), async (ctx, next)=>{
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://post-storage-api-ms.juejin.im/v1/getDetailData',
-    method: "GET",
-    params: {
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      src: 'web',
-      type: ctx.query.type || 'entryView',
-      postId: ctx.query.postId
+    url: 'https://apinew.juejin.im/content_api/v1/article/detail',
+    method: "POST",
+    body: {
+      article_id: data.article_id
     }
   };
   let { body } = await request(options);
@@ -123,71 +116,79 @@ router.get('/userPost', validator({
 
 /**
  * 获取相关文章
- * @param {number} limit - 条数
- * @param {string} entryId - 文章objectId
+ * @param {string} item_id - 文章id
+ * @param {string} user_id - 用户id
+ * @param {array} tag_ids - 标签id
  */
-router.get('/relatedEntry', validator({
-  limit: { 
+router.post('/relatedEntry', validator({
+  item_id: { 
     type: 'string', 
     required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'limit 需传入正整数'
   },
-  entryId: { type: 'string', reuqired: true }
+  tag_ids: {
+    type: 'array',
+    required: true
+  },
+  user_id: { 
+    type: 'string', 
+    required: true,
+  },
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.request.body
   const options = {
-    url: 'https://timeline-merger-ms.juejin.im/v1/get_related_entry',
-    method: "GET",
-    params: { 
-      src: "web",
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      limit: ctx.query.limit || 5,
-      entryId: ctx.query.entryId
+    url: 'https://apinew.juejin.im/recommend_api/v1/article/recommend_article_detail_feed',
+    method: "POST",
+    body: { 
+      cursor: "0",
+      id_type: 2,
+      item_id: data.item_id,
+      tag_ids: data.tag_ids,
+      user_id: data.user_id
     }
   };
   let { body } = await request(options)
-  body = toObject(body)
-  ctx.body = {
-    s: body.s,
-    d: body.d.entrylist || []
-  }
+  ctx.body = body
 })
 
 /**
  * 根据标签id获取相关推荐文章
- * @param {string} tagIds - 多个id以|分隔
- * @param {number} before - 最后一条的rankIndex，下一页时传入
+ * @param {string} item_id - 文章id
+ * @param {string} cursor - 分页标识
+ * @param {number} sort_type - 排序
+ * @param {array} tag_ids - 标签id
  */
-router.get('/recommendEntryByTagIds', validator({
-  tagIds: { type: 'string', required: true },
-  before: { 
-    type: 'string', 
-    validator: (rule, value) => Number(value) > 0 || value === '',
-    message: 'before 为number类型'
+router.post('/recommendEntryByTagIds', validator({
+  item_id: { 
+    type: 'string',
+    required: true
+  },
+  cursor: { 
+    type: 'string'
+  },
+  sort_type: {
+    type: 'enum',
+    requried: true,
+    enum: [0, 3, 7, 30, 200, 300]
+  },
+  tag_ids: {
+    type: 'array',
+    required: true
   }
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.request.body
   const options = {
-    url: 'https://post-storage-api-ms.juejin.im/v1/getRecommendEntryByTagIds',
-    method: "GET",
-    params: { 
-      src: "web",
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      tagIds: ctx.query.tagIds,
-      before: ctx.query.before || ''
+    url: 'https://apinew.juejin.im/recommend_api/v1/article/recommend_tag_feed',
+    method: "POST",
+    body: { 
+      cursor: data.cursor || '',
+      id_type: 2,
+      item_id: data.item_id,
+      sort_type: data.sort_type,
+      tag_ids: data.tag_ids
     }
   };
   let { body } = await request(options)
-  body = toObject(body)
-  ctx.body = {
-    s: body.s,
-    d: body.d.entrylist || []
-  }
+  ctx.body = body
 })
 
  /**

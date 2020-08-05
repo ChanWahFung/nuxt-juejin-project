@@ -70,7 +70,7 @@ export default {
       return this.item.author_user_info.user_id
     },
     detailId() {
-      return this.item.originalUrl ? this.item.originalUrl.split('/').pop() : ''
+      return this.item.article_id
     }
   },
   methods: {

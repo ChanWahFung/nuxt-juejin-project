@@ -5,36 +5,34 @@ const validator = require('../../middleware/validator')
 
 /**
  * 文章评论
- * @param {string} entryId - 在文章详情内获取
- * @param {string} createdAt - 最后一条的createdAt，下一页时传入
- * @param {string} rankType - new
- * @param {number} pageSize - 条数
+ * @param {string} cursor - 分页标识
+ * @param {string} item_id - 文章id
+ * @param {number} limit - 条数
  */
 router.get('/entry', validator({
-  entryId: { type: 'string', required: true },
-  createdAt: { type: 'string' },
-  rankType: { type: 'enum', required: true, enum: ['new'] },
-  pageSize: { 
+  cursor: {
+    type: 'string'
+  },
+  item_id: { 
     type: 'string', 
     required: true,
+  },
+  limit: { 
+    type: 'string', 
+    requried: true,
     validator: (rule, value) => Number(value) > 0,
-    message: 'pageSize 需传入正整数'
-  }
+    message: 'limit 需传入正整数'
+  },
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://comment-wrapper-ms.juejin.im/v1/comments/entry/'+ctx.query.entryId,
-    method: "GET",
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
-    },
-    params: { 
-      createdAt: ctx.query.createdAt || '',
-      rankType: ctx.query.rankType || 'new',
-      pageSize: ctx.query.pageSize || '5',
+    url: 'https://apinew.juejin.im/interact_api/v1/comment/list',
+    method: "POST",
+    body: { 
+      cursor: data.cursor || "0",
+      item_id: data.item_id,
+      item_type: 2,
+      limit: Number(data.limit),
     }
   };
   let { body } = await request(options)
@@ -43,40 +41,39 @@ router.get('/entry', validator({
 
 /**
  * 文章回复列表
- * @param {string} entryId - 在文章详情内获取
- * @param {string} commentId - 评论id
- * @param {number} pageNum - 页码
- * @param {number} pageSize - 条数
+ * @param {string} cursor - 分页标识
+ * @param {string} item_id - 文章id
+ * @param {number} limit - 条数
  */
 router.get('/reply', validator({
-  entryId: { type: 'string', required: true },
-  commentId: { type: 'string', required: true },
-  pageNum: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'pageNum 需传入正整数'
+  cursor: {
+    type: 'string'
   },
-  pageSize: { 
+  item_id: { 
     type: 'string', 
     required: true,
+  },
+  comment_id: {
+    type: 'string', 
+    required: true,
+  },
+  limit: { 
+    type: 'string', 
+    requried: true,
     validator: (rule, value) => Number(value) > 0,
-    message: 'pageSize 需传入正整数'
-  }
+    message: 'limit 需传入正整数'
+  },
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://comment-wrapper-ms.juejin.im/v1/comments/entry/'+ctx.query.entryId+'/comment/'+ctx.query.commentId,
-    method: "GET",
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
-    },
-    params: { 
-      pageNum: ctx.query.pageNum || 1,
-      pageSize: ctx.query.pageSize || 10
+    url: 'https://apinew.juejin.im/interact_api/v1/reply/list',
+    method: "POST",
+    body: { 
+      cursor: data.cursor || "0",
+      item_id: data.item_id,
+      comment_id: data.comment_id,
+      item_type: 2,
+      limit: Number(data.limit),
     }
   };
   let { body } = await request(options)

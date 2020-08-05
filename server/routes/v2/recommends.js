@@ -7,6 +7,8 @@ const { toObject } = require('../../../utils')
 /**
  * 获取推荐作者
  * @param {number} limit - 条数
+ * @param {number} cursor - 分页标识
+ * @param {string} category_id - 类目
  */
 router.get('/recommendAuthor', validator({
   limit: { 
@@ -19,13 +21,14 @@ router.get('/recommendAuthor', validator({
   category_id: { type: 'string' }
 }), async (ctx, next)=>{
   ctx.set('Cache-Control', 'max-age=60')
+  const data = ctx.query
   const options = {
     url: 'https://apinew.juejin.im/user_api/v1/author/recommend',
     method: "GET",
     params: {
-      category_id: ctx.query.category_id || '',
-      cursor: ctx.query.cursor || 0,
-      limit: ctx.query.limit || 20,
+      category_id: data.category_id || '',
+      cursor: data.cursor || 0,
+      limit: data.limit || 20,
     }
   };
   let { body } = await request(options)

@@ -1,17 +1,17 @@
 <template>
   <div class="about-article shadow">
     <div class="about-article__title">相关文章</div>
-    <nuxt-link v-for="item in list" :key="item.objectId" :to="'/detail/'+item.originalUrl.split('/').pop()" target="_blank">
+    <nuxt-link v-for="item in list" :key="item.article_id" :to="'/detail/'+item.article_id" target="_blank">
       <div class="article-item">
-        <div class="article__title">{{ item.title }}</div>
+        <div class="article__title">{{ item.article_info.title }}</div>
         <div class="article__meta">
           <div class="meta-item">
             <img class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-            {{ item.collectionCount }}
+            {{ item.article_info.digg_count }}
           </div>
           <div class="meta-item">
             <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
-            {{ item.commentsCount }}
+            {{ item.article_info.comment_count }}
           </div>
         </div>
       </div>

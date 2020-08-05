@@ -130,16 +130,16 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} limit - 条数
      * @param {string} entryId - 文章objectId
      */
-    getRelatedEntry(params = {}){
-      return $request.get('/v2/articles/relatedEntry', params)
+    getRelatedEntry(data = {}){
+      return $request.post('/v2/articles/relatedEntry', data)
     },
     /**
      * 根据标签id获取相关推荐文章
      * @param {string} tagIds - 多个id以|分隔
      * @param {number} before - 最后一条的rankIndex，下一页时传入
      */
-    getRecommendEntryByTagIds(params = {}){
-      return $request.get('/v2/articles/recommendEntryByTagIds', params)
+    getRecommendEntryByTagIds(data = {}){
+      return $request.post('/v2/articles/recommendEntryByTagIds', data)
     },
     /**
      * 点赞文章

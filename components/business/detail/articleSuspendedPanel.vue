@@ -1,9 +1,9 @@
 <template>
   <div class="article-suspended-panel">
     <ul class="btn-list">
-      <li class="panel-btn panel-btn-count" :class="[isLike ? 'panel-like-btn--active' : 'panel-like-btn']" @click="$emit('setgood-handler')" :data-count="likeCount">
+      <li class="panel-btn panel-btn-count" :class="[articDetail.user_interact.is_digg ? 'panel-like-btn--active' : 'panel-like-btn']" @click="$emit('setgood-handler')" :data-count="articDetail.article_info.digg_count">
       </li>
-      <li class="panel-btn panel-comment-btn panel-btn-count" @click="scrollIntoComment" :data-count="commentCount">
+      <li class="panel-btn panel-comment-btn panel-btn-count" @click="scrollIntoComment" :data-count="articDetail.article_info.comment_count">
       </li>
       <li class="panel-btn panel-collect-btn">
       </li>
@@ -20,18 +20,10 @@
 import { mapState } from 'vuex'
 export default {
   props: {
-    likeCount: {
-      type: Number,
-      default: 0
+    articDetail: {
+      type: Object,
+      default: () => ({})
     },
-    commentCount: {
-      type: Number,
-      default: 0
-    },
-    isLike: {
-      type: Boolean,
-      default: false
-    }
   },
   computed: {
     ...mapState([
@@ -54,23 +46,22 @@ export default {
     },
     // qq分享
     qqShare() {
-      let info = this.$parent.articInfo
-      if (info && info.originalUrl) {
-        let title = `${info.title} - ${info.user.username} - 掘金专栏`
-        let url = info.originalUrl
-        let summary = info.content
-        let pic = encodeURIComponent(info.screenshot || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
-        window.open(`https://connect.qq.com/widget/shareqq/index.html?title=${title}&url=${url}&summary=${summary}&pics=${pic}&site=掘金`, '_blank', 'noopener noreferrer')
+      if (this.articDetail.article_id) {
+        let { title, cover_image, link_url, brief_content } = this.articDetail.article_info
+        let { user_name } = this.articDetail.author_user_info
+        title = `${title} - ${user_name} - 掘金专栏`
+        let pic = encodeURIComponent(cover_image || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
+        window.open(`https://connect.qq.com/widget/shareqq/index.html?title=${title}&url=${link_url}&summary=${brief_content}&pics=${pic}&site=掘金`, '_blank', 'noopener noreferrer')
       }
     },
     // 微博分享
     weiboShare() {
-      let info = this.$parent.articInfo
-      if (info && info.originalUrl) {
-        let title = `${info.title} - ${info.user.username} - 掘金专栏`
-        let url = info.originalUrl
-        let pic = encodeURIComponent(info.screenshot || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
-        window.open(`https://service.weibo.com/share/share.php?title=${title}&url=${url}&pic=${pic}`, '_blank', 'noopener noreferrer')
+      if (this.articDetail.article_id) {
+        let { title, cover_image, link_url } = this.articDetail.article_info
+        let { user_name } = this.articDetail.author_user_info
+        title = `${title} - ${user_name} - 掘金专栏`
+        let pic = encodeURIComponent(cover_image || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
+        window.open(`https://service.weibo.com/share/share.php?title=${title}&url=${link_url}&pic=${pic}`, '_blank', 'noopener noreferrer')
       }
     }
   },
