@@ -2,14 +2,14 @@
   <div>
     <div class="tag-info-box">
       <div class="tag-info">
-        <div class="tag-title">{{ tagInfo.title }}</div>
-        <div class="tag-meta">{{ tagInfo.subscribersCount }} 关注，{{ tagInfo.entryCount }} 文章</div>
+        <div class="tag-title">{{ tagInfo.tag.tag_name }}</div>
+        <div class="tag-meta">{{ tagInfo.tag.concern_user_count }} 关注，{{ tagInfo.tag.post_article_count }} 文章</div>
       </div>
     </div>
     <main class="main">
       <div class="list-header">
-        <img class="list-header__icon" :src="tagInfo.icon" />
-        <follow-btn type="tag" :is-follow.sync="tagInfo.isSubscribe" :followee-id="tagInfo.id"></follow-btn>
+        <img class="list-header__icon" :src="tagInfo.tag.icon" />
+        <follow-btn type="tag" :is-follow.sync="tagInfo.user_interact.is_follow" :followee-id="tagInfo.tag_id"></follow-btn>
         <div class="list-header__nav">
           <span v-for="item in sortList" :key="item.sort" :class="{'nav--active': sort === item.sort}" @click="changeSort(item.sort)">{{ item.title }}</span>
         </div>
@@ -27,10 +27,10 @@ export default {
   async asyncData({ app, query, error }) {
     // 标签详情
     const tagInfo = await app.$api.getTagDetail({
-      tagName: encodeURIComponent(query.name)
+      key_word: encodeURIComponent(query.name)
     }).then(res => {
-      if (res.s === 1) {
-        return res.d
+      if (res.err_no === 0) {
+        return res.data
       } else {
         error({
           statusCode: 404,
@@ -40,15 +40,23 @@ export default {
       }
     })
     // 标签下的文章
-    const articleList = await app.$api.getTagEntry({
-      tagId: tagInfo.id,
-      page: 1,
-      pageSize: 20,
-      sort: 'rankIndex'
-    }).then(res => res.s === 1 ? res.d : {})
+    const articleListRes = await app.$api.getTagEntry({
+      sort_type: 200,
+      tag_ids: [tagInfo.tag_id]
+    })
+    let articleList = []
+    let articleListInfo = {}
+    if (articleListRes.err_no == 0) {
+      articleList = articleListRes.data
+      articleListInfo = {
+        hasMore: articleListRes.has_more,
+        cursor: articleListRes.cursor
+      }
+    }
     return {
       tagInfo,
-      articleList
+      articleList,
+      articleListInfo
     }
   },
   head(){
@@ -66,32 +74,32 @@ export default {
   mixins: [reachBottom],
   data() {
     return {
+      articleListInfo: {},
       articleList: [],
       tagInfo: null,
       sortList: [
         {
           title: '热门',
-          sort: 'rankIndex'
+          sort: 200
         },
         {
           title: '最新',
-          sort: 'createdAt'
+          sort: 300
         },
         {
           title: '最热',
-          sort: 'hotIndex'
+          sort: 0
         }
       ],
-      sort: 'rankIndex',
-      page: 1,
-      pageSize: 20,
+      sort: 200,
       isReachBottomFetching: false,  // 防止触底多次请求
     }
   },
   methods: {
     reachBottom() {
-      this.page++
-      this.getTagEntry({ isLoadMore: true })
+      if (this.articleListInfo.hasMore) {
+        this.getTagEntry({ isLoadMore: true })
+      }
     },
     changeSort(sort) {
       if (this.sort !== sort) {
@@ -105,12 +113,17 @@ export default {
       }
       this.isReachBottomFetching = true
       let list = await this.$api.getTagEntry({
-        tagId: this.tagInfo.id,
-        page: this.page,
-        pageSize: this.pageSize,
-        sort: this.sort
-      }).then(res => res.s === 1 ? res.d : [])
-      this.articleList = isLoadMore ? this.articleList.concat(list) : list
+        sort_type: this.sort,
+        tag_ids: [this.tagInfo.tag_id]
+      }).then(res => {
+        if (res.err_no === 0) {
+          this.articleList = isLoadMore ? this.articleList.concat(res.data) : res.data
+          this.articleListInfo = {
+            hasMore: res.has_more,
+            cursor: res.cursor
+          }
+        }
+      })
       this.isReachBottomFetching = false
     }
   }

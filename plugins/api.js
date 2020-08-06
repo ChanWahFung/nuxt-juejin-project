@@ -90,8 +90,8 @@ export default ({ app: { $request } }, inject) => {
      * @param {number} pageSize - 页数
      * @param {string} sort - rankIndex：热门；createdAt：最新；hotIndex：最热
      */
-    getTagEntry(params = {}){
-      return $request.get('/v2/tags/entry', params)
+    getTagEntry(data = {}){
+      return $request.post('/v2/tags/entry', data)
     },
     /**
      * 检查是否关注用户
