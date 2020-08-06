@@ -4,15 +4,11 @@ const request = require('../../request')
 const validator = require('../../middleware/validator')
 
 router.get('/entry', async (ctx, next) => {
-  const headers = ctx.headers
   const options = {
-    url: 'https://gold-tag-ms.juejin.im/v1/categories',
+    url: 'https://apinew.juejin.im/tag_api/v1/query_category_briefs',
     method: "GET",
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
+    params: {
+      show_type: 0
     }
   };
   let { body } = await request(options)

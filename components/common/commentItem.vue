@@ -1,56 +1,55 @@
 <template>
   <div class="comment-item">
-    <nuxt-link class="comment-item__avatar" :to="'/user/'+data.userId" target="_blank">
-      <user-avatar :url="data.userInfo.avatarLarge" :round="true"></user-avatar>
+    <nuxt-link class="comment-item__avatar" :to="'/user/'+data.user_info.user_id" target="_blank">
+      <user-avatar :url="data.user_info.avatar_large" :round="true"></user-avatar>
     </nuxt-link>
     <div class="comment-item__main">
       <div class="comment-item__userinfo ellipsis">
-        <nuxt-link :to="'/user/'+data.userId" class="comment-item__username" target="_blank">
-          <span style="margin-right:5px">{{ data.userInfo.username }}</span>
-          <level :level="data.userInfo.level"></level>
+        <nuxt-link :to="'/user/'+data.user_info.user_id" class="comment-item__username" target="_blank">
+          <span style="margin-right:5px">{{ data.user_info.user_name }}</span>
+          <level :level="data.user_info.level"></level>
         </nuxt-link>
         <p style="margin-left: 5px">
-          {{ data.userInfo.jobTitle }}
-          {{ data.userInfo.jobTitle && data.userInfo.company ? ' @ ' : '' }}
-          {{ data.userInfo.company }}
+          {{ data.user_info.job_title }}
+          {{ data.user_info.job_title && data.user_info.company ? ' @ ' : '' }}
+          {{ data.user_info.company }}
         </p>
       </div>
-      <p class="comment-item__content">{{ data.content }}</p>
+      <p class="comment-item__content">{{ data.comment_info.comment_content }}</p>
       <div class="comment-item__meta">
-        <span class="comment-item__meta__time">{{ data.createdAt | formatTime }}</span>
+        <span class="comment-item__meta__time">{{ data.comment_info.ctime | formatTime }}</span>
       </div>
-      <div v-if="data.topComment && data.topComment.length" class="comment-item__reply-area">
-        <div class="reply-item" v-for="item in data.topComment" :key="item.id">
-          <nuxt-link :to="'/user/'+item.userInfo.objectId" class="comment-item__avatar" target="_blank">
-            <user-avatar :url="item.userInfo.avatarLarge" :round="true"></user-avatar>
+      <div v-if="data.reply_infos && data.reply_infos.length" class="comment-item__reply-area">
+        <div class="reply-item" v-for="(item, index) in data.reply_infos" :key="index">
+          <nuxt-link :to="'/user/'+item.user_info.user_id" class="comment-item__avatar" target="_blank">
+            <user-avatar :url="item.user_info.avatar_large" :round="true"></user-avatar>
           </nuxt-link>
           <div class="comment-item__main">
             <div class="comment-item__userinfo ellipsis">
-              <nuxt-link :to="'/user/'+item.userInfo.objectId" class="comment-item__username" target="_blank">
-                <span style="margin-right:5px">{{ item.userInfo.username }}</span>
-                <level :level="item.userInfo.level"></level>
-                <span v-if="item.userInfo.objectId === authorId" style="margin-left:5px">(作者)</span>
+              <nuxt-link :to="'/user/'+item.user_info.user_id" class="comment-item__username" target="_blank">
+                <span style="margin-right:5px">{{ item.user_info.user_name }}</span>
+                <level :level="item.user_info.level"></level>
+                <span v-if="item.is_author" style="margin-left:5px">(作者)</span>
               </nuxt-link>
               <p style="margin-left: 5px">
-                {{ item.userInfo.jobTitle }}
-                {{ item.userInfo.jobTitle && item.userInfo.company ? ' @ ' : '' }}
-                {{ item.userInfo.company }}
+                {{ item.user_info.job_title }}
+                {{ item.user_info.job_title && item.user_info.company ? ' @ ' : '' }}
+                {{ item.user_info.company }}
               </p>
             </div>
             <p class="comment-item__content">
-              <span class="comment-item__resp-userinfo">
+              <span v-if="item.reply_user.user_id > 0" class="comment-item__resp-userinfo">
                 回复 
-                <nuxt-link class="comment-item__resp-username" :to="'/user/'+item.respUserInfo.objectId" target="_blank"> {{ item.respUserInfo.username }} </nuxt-link>
-                <level :level="item.respUserInfo.level"></level>:
+                <nuxt-link class="comment-item__resp-username" :to="'/user/'+item.reply_user.user_id" target="_blank"> {{ item.reply_user.user_name }}:</nuxt-link>
               </span>
-              <span>{{ item.content }}</span>
+              <span>{{ item.reply_info.reply_content }}</span>
             </p>
             <div class="comment-item__meta">
-              <span class="comment-item__meta__time">{{ item.createdAt | formatTime }}</span>
+              <span class="comment-item__meta__time">{{ item.reply_info.ctime | formatTime }}</span>
             </div>
           </div>
         </div>
-        <div v-if="data.replyCount > data.topComment.length" class="reply__more" @click="replyMore">加载更多</div>
+        <div v-if="data.comment_info.reply_count > data.reply_infos.length" class="reply__more" @click="replyMore">加载更多</div>
       </div>
     </div>
   </div>
@@ -80,11 +79,12 @@ export default {
   },
   methods: {
     replyMore() {
-      this.$emit('reply-more', {
-        index: this.index,
-        pageNum: this.pageNum++,
-        pageSize: this.pageSize
-      })
+      // has_reply_more 初次为undefined
+      if (this.data.has_reply_more === undefined || this.data.has_reply_more === true) {
+        this.$emit('reply-more', {
+          index: this.index
+        })
+      }
     }
   }
 }

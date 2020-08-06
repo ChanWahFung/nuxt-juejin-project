@@ -2,8 +2,8 @@
   <div>
     <recommend-category :channels="categoryList"></recommend-category>
     <div class="authors-main shadow">
-      <div class="user-wrap" v-for="item in authors" :key="item.node.id">
-        <user-item2 :item="item.node"></user-item2>
+      <div class="user-wrap" v-for="item in authors" :key="item.user_id">
+        <user-item2 :item="item"></user-item2>
       </div>
     </div>
   </div>
@@ -20,24 +20,36 @@ export default {
     if (store.state.category.recommendCategoryList.length) {
       categoryList = store.state.category.recommendCategoryList
     } else {
-      categoryList = await app.$api.getAuthorChannel().then(res => res.s === 1 ? res.d : [])
+      let initCategoryList = [{ category_id: 0, category_name: '推荐', category_url: 'recommended' }]
+      categoryList = await app.$api.getCategories().then(res => res.err_no === 0 ? res.data : [])
+      categoryList = initCategoryList.concat(categoryList)
       store.commit('category/UPDATE_RECOMMEND_CATEGORY_LIST', categoryList)
     }
+    let currentCategoryItem = categoryList.filter(item => item.category_url == params.name)[0] || {}
     // 作者榜单
-    let res = await app.$api.getAuthorRank({
-      channel: params.name,
-      after: '',
-      first: 20
-    }).then(res => res.s === 1 ? res.d : {})
+    let res = await app.$api.getRecommendAuthor({
+      category_id: currentCategoryItem.category_id,
+      cursor: '0',
+      limit: 20
+    })
+    let authors = []
+    let pageInfo = {}
+    if (res.err_no == 0) {
+      authors = res.data
+      pageInfo = {
+        hasMore: res.has_more,
+        cursor: res.cursor
+      }
+    }
     return {
       categoryList,
-      authors: res.edges,
-      pageInfo: res.pageInfo
+      authors,
+      pageInfo
     }
   },
   head () {
     return {
-      title: `${this.currentCategoryItem.title ? this.currentCategoryItem.title + ' - ' : ''}掘金`
+      title: `${this.currentCategoryItem.category_name ? this.currentCategoryItem.category_name + ' - ' : ''}掘金`
     }
   },
   validate ({ params }) {
@@ -59,24 +71,27 @@ export default {
   },
   computed: {
     currentCategoryItem() {
-      return this.categoryList.filter(item => item.name === this.$route.params.name)[0] || {}
+      return this.categoryList.filter(item => item.category_url === this.$route.params.name)[0] || {}
     }
   },
   methods: {
     reachBottom() {
-      if (this.pageInfo.hasNextPage) {
+      if (this.pageInfo.hasMore) {
         this.getAuthorRank({ isLoadMore: true })
       }
     },
     async getAuthorRank({ isLoadMore = false } = {}) {
-      let res = await this.$api.getAuthorRank({
-        channel: this.$route.params.name,
-        after: this.pageInfo.endCursor,
-        first: 20
+      let res = await this.$api.getRecommendAuthor({
+        category_id: this.currentCategoryItem.category_id,
+        cursor: this.pageInfo.cursor,
+        limit: 20
       })
-      if (res.s === 1) {
-        this.authors = isLoadMore ? this.authors.concat(res.d.edges) : res.d.edges
-        this.pageInfo = res.d.pageInfo
+      if (res.err_no === 0) {
+        this.authors = isLoadMore ? this.authors.concat(res.data) : res.data
+        this.pageInfo = {
+          hasMore: res.has_more,
+          cursor: res.cursor
+        }
       }
     }
   }

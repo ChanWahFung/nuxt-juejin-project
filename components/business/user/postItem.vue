@@ -2,31 +2,31 @@
   <div class="post-item">
     <div class="post-item__user">
       <div class="user__avatar">
-        <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
+        <user-avatar :url="item.author_user_info.avatar_large" :round="true"></user-avatar>
       </div>
-      <span>{{ item.user.username }} · {{ item.createdAt | formatTime }}</span>
+      <span>{{ item.author_user_info.user_name }} · {{ item.article_info.ctime | formatTime }}</span>
     </div>
-    <nuxt-link :to="'/detail/'+detailId" class="post-item__cover" v-if="item.screenshot" :style="{'background-image': `url(${item.screenshot})`}" target="_blank"></nuxt-link>
+    <nuxt-link :to="'/detail/'+detailId" class="post-item__cover" v-if="item.author_user_info.cover_image" :style="{'background-image': `url(${item.author_user_info.cover_image})`}" target="_blank"></nuxt-link>
     <h1 class="post-item__title">
-      <nuxt-link :to="'/detail/'+detailId" target="_blank">{{ item.title }}</nuxt-link>
+      <nuxt-link :to="'/detail/'+detailId" target="_blank">{{ item.article_info.title }}</nuxt-link>
     </h1>
     <p class="post-item__content">
-      <nuxt-link :to="'/detail/'+detailId" target="_blank">{{ item.content }}</nuxt-link>
+      <nuxt-link :to="'/detail/'+detailId" target="_blank">{{ item.article_info.brief_content }}</nuxt-link>
     </p>
     <div class="post-item__mate">
       <ul class="meta__action">
-        <li class="action-item" :class="{active: item.isCollected}" @click.stop="articleLike">
-          <img v-if="item.isCollected" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
+        <li class="action-item" :class="{active: item.user_interact.is_collect}" @click.stop="articleLike">
+          <img v-if="item.user_interact.is_collect" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
           <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
-          {{ item.collectionCount }}
+          {{ item.article_info.digg_count }}
         </li>
         <li class="action-item">
           <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
-          {{ item.commentsCount }}
+          {{ item.article_info.comment_count }}
         </li>
       </ul>
       <div class="meta__info">
-        <span class="meta__count">阅读 {{ item.viewsCount }}</span>
+        <span class="meta__count">阅读 {{ item.article_info.view_count }}</span>
         <nuxt-link class="meta__original" :to="'/detail/'+detailId" target="_blank">阅读原文</nuxt-link>
       </div>
     </div>
@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     detailId() {
-      return this.item.originalUrl ? this.item.originalUrl.split('/').pop() : ''
+      return this.item.article_id
     }
   },
   methods: {

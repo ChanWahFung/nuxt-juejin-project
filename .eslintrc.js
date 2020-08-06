@@ -36,6 +36,7 @@ module.exports = {
     'vue/no-v-html': 'off',
     'no-multi-spaces': 'off',
     'object-shorthand': 'warn',
-    'no-unused-vars': 'warn'
+    'no-unused-vars': 'warn',
+    'camelcase': 'off'
   }
 }

@@ -5,57 +5,57 @@
         <div class="detail">
           <div class="detail__header">
             <div class="detail__userInfo">
-              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__avatar" target="_blank">
-                <user-avatar :url="articInfo.user.avatarLarge" :round="true"></user-avatar>
+              <nuxt-link :to="'/user/' + articDetail.author_user_info.user_id" class="detail__user__avatar" target="_blank">
+                <user-avatar :url="articDetail.author_user_info.avatar_large" :round="true"></user-avatar>
               </nuxt-link>
-              <nuxt-link :to="'/user/' + authorInfo.uid" class="detail__user__name" target="_blank">
-                <span style="margin-right: 10px">{{ articInfo.user.username }}</span>
-                <level :level="articInfo.user.level"></level>
+              <nuxt-link :to="'/user/' + articDetail.author_user_info.user_id" class="detail__user__name" target="_blank">
+                <span style="margin-right: 10px">{{ articDetail.author_user_info.user_name }}</span>
+                <level :level="articDetail.author_user_info.level"></level>
               </nuxt-link>
               <div class="detail__user__meta">
-                <span class="meta__time">{{ articInfo.create_date }}</span>
-                <span>阅读{{ articInfo.viewsCount }}</span>
+                <span class="meta__time">{{ articDetail.article_info.ctime | formatTime }}</span>
+                <span>阅读{{ articDetail.article_info.view_count }}</span>
               </div>
             </div>
-            <follow-btn :is-follow.sync="isFollowed" type="user" :followee-id="authorInfo.uid"></follow-btn>
+            <follow-btn :is-follow.sync="articDetail.user_interact.is_follow" type="user" :followee-id="articDetail.author_user_info.user_id"></follow-btn>
           </div>
-          <div v-if="articInfo.screenshot" class="detail__cover" :style="`background-image: url(${articInfo.screenshot})`"></div>
-          <h1 class="detail__title">{{ articInfo.title }}</h1>
-          <div class="detail__content" v-html="articDetail.content"></div>
+          <div v-if="articDetail.article_info.cover_image" class="detail__cover" :style="`background-image: url(${articDetail.article_info.cover_image})`"></div>
+          <h1 class="detail__title">{{ articDetail.article_info.title }}</h1>
+          <div class="detail__content" v-html="content"></div>
         </div>
         <div class="tags">
           <p class="tags__title">关注下面的标签，发现更多相似文章</p>
-          <nuxt-link :to="'/tag?name='+item.title" v-for="item in articInfo.tags" :key="item.id" class="tag" target="_blank">
+          <nuxt-link :to="'/tag?name='+item.tag_name" v-for="item in articDetail.tags" :key="item.tag_id" class="tag" target="_blank">
             <img class="tag__icon" :src="item.icon" />
-            <span class="tag__title">{{ item.title }}</span>
+            <span class="tag__title">{{ item.tag_name }}</span>
           </nuxt-link>
         </div>
-        <nuxt-link :to="'/user/' + authorInfo.uid" v-if="authorInfo" class="author-info" target="_blank">
+        <nuxt-link :to="'/user/' + articDetail.author_user_info.user_id" class="author-info" target="_blank">
           <div class="author__avatar">
-            <user-avatar :url="authorInfo.avatarLarge" :round="true"></user-avatar>
+            <user-avatar :url="articDetail.author_user_info.avatar_large" :round="true"></user-avatar>
           </div>
           <div class="author-info__main">
             <div>
-              <span class="author__name">{{ authorInfo.username }}</span>
-              <level :level="authorInfo.level"></level>
+              <span class="author__name">{{ articDetail.author_user_info.user_name }}</span>
+              <level :level="articDetail.author_user_info.level"></level>
               <span>
-                {{ authorInfo.jobTitle }}
-                {{ authorInfo.jobTitle && authorInfo.company ? ' @ ' : '' }}
-                {{ authorInfo.company }}
+                {{ articDetail.author_user_info.job_title }}
+                {{ articDetail.author_user_info.job_title && articDetail.author_user_info.company ? ' @ ' : '' }}
+                {{ articDetail.author_user_info.company }}
               </span>
             </div>
             <div>
-              <span>发布了 {{ authorInfo.postedPostsCount }} 篇专栏 · </span>
-              <span>获取点赞 {{ authorInfo.totalCollectionsCount }} · </span>
-              <span>获取阅读 {{ authorInfo.totalViewsCount }}</span>
+              <span>发布了 {{ articDetail.author_user_info.post_article_count }} 篇专栏 · </span>
+              <span>获取点赞 {{ articDetail.author_user_info.got_digg_count }} · </span>
+              <span>获取阅读 {{ articDetail.author_user_info.got_view_count }}</span>
             </div>
           </div>
         </nuxt-link>
         <div class="comment-area">
           <p class="comment-area__title">评论</p>
           <div style="padding-left: 50px">
-            <comment-item v-for="(item, index) in comments" :key="item.id" :index="index" :author-id="authorInfo.uid" :data="item" @reply-more="getMoreReply"></comment-item>
-            <div v-if="hasComments" class="comment__more-btn" @click="getMoreComment">查看更多</div>
+            <comment-item v-for="(item, index) in comments" :key="item.id" :index="index" :author-id="articDetail.author_user_info.user_id" :data="item" @reply-more="getMoreReply"></comment-item>
+            <div v-if="commentInfo.hasMore" class="comment__more-btn" @click="getMoreComment">查看更多</div>
           </div>
         </div>
       </div>
@@ -65,15 +65,16 @@
       </div>
     </div>
     <div class="detail-side">
-      <about-author :info="authorInfo"></about-author>
+      <about-author :info="articDetail"></about-author>
       <about-article :list="aboutArticles"></about-article>
       <catalog></catalog>
     </div>
-    <article-suspended-panel ref="panel" :like-count="articInfo.collectionCount" :comment-count="articInfo.commentsCount" :is-like="isLike" @setgood-handler="setGood"></article-suspended-panel>
+    <article-suspended-panel ref="panel" :articDetail="articDetail" @setgood-handler="setGood"></article-suspended-panel>
   </div>
 </template>
 
 <script>
+import markdownit from 'markdown-it'
 import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
 import aboutAuthor from '~/components/business/detail/aboutAuthor.vue'
@@ -83,53 +84,42 @@ import catalog from '~/components/business/detail/catalog.vue'
 
 export default {
   async asyncData ({ app, params }) {
-    // 内容
-    const articDetail = await app.$api.getDetail({
-      type: 'entryView',
-      postId: params.id
-    }).then(res => res.s === 1 ? res.d : {})
     // 文章信息
-    const articInfo = await app.$api.getDetail({
-      type: 'entry',
-      postId: params.id
-    }).then(res => {
-      if (res.s === 1) {
-        return {
-          ...res.d,
-          create_date: app.$utils.formatDate('Y年MM月DD日', res.d.createdAt)
-        }
-      }
-      return {}
-    })
+    const articDetail = await app.$api.getDetail({
+      article_id: params.id
+    }).then(res => res.err_no === 0 ? res.data : {})
+    // 格式化文章内容
+    let content = ''
+    let info = articDetail.article_info
+    if (info) {
+      content = info.mark_content 
+        ? markdownit({
+          html: true,
+          linkify: true,
+          typographer: true
+        }).render(info.mark_content) 
+        : info.content
+    }
     // 相关文章
-    const aboutArticles = await app.$api.getRelatedEntry({
-      limit: 5,
-      entryId: articInfo.objectId
-    }).then(res => res.s === 1 ? res.d : [])
-    let authorInfo = null
-    if (articInfo.user) {
-      // 用户信息
-      authorInfo = await app.$api.getMultiUser({
-        ids: articInfo.user.objectId,
-        cols: ''
-      }).then(res => {
-        if (res.s === 1) {
-          return res.d[articInfo.user.objectId]
-        }
-      })
+    let aboutArticles = null
+    if (articDetail.author_user_info && articDetail.tags) {
+      aboutArticles = await app.$api.getRelatedEntry({
+        item_id: params.id,
+        user_id: articDetail.author_user_info.user_id,
+        tag_ids: articDetail.tags.map(item => item.tag_id)
+      }).then(res => res.err_no === 0 ? res.data : [])
     }
     return {
+      content,
       articDetail,
-      articInfo,
-      authorInfo,
       aboutArticles
     }
   },
   head () {
     return {
-      title: this.articInfo.title,
+      title: this.articDetail.article_info.title,
       meta: [
-        { hid: 'description', name: 'description', content: this.articInfo.content }
+        { hid: 'description', name: 'description', content: this.articDetail.article_info.brief_content }
       ]
     }
   },
@@ -148,103 +138,113 @@ export default {
   mixins: [reachBottom, commonRequest],
   data () {
     return {
+      content: '',
       articDetail: {},
-      articInfo: {},
-      authorInfo: {},
       aboutArticles: [],
       recommendArticles: [],
-      hasComments: true, // 是否还有评论数据
-      tagIds: '',
-      isFollowed: false,
       comments: [],
-      isLike: false
+      // 评论分页信息
+      commentInfo: {
+        hasMore: true,
+        cursor: ''
+      },
+      // 末尾推荐文章信息
+      recommendArticlesInfo: {
+        hasMore: true,
+        cursor: ''
+      },
+      tagIds: '',
     }
   },
   mounted () {
-    this.$api.getRelatedEntry({
-      limit: 5,
-      entryId: this.articInfo.objectId
-    })
-    this.getCommentList({
-      pageSize: 5
-    })
-    this.isCurrentUserFollowed(this.authorInfo.uid).then(res => (this.isFollowed = res))
-    this.isArticleLike(this.articDetail.entryId).then(res => (this.isLike = res))
-    if (this.articInfo.tags) {
-      this.tagIds = this.articInfo.tags.map(item => item.id)
-    }
+    this.setTagIds()
+    this.getCommentList()
+    this.getRecommendEntryByTagIds()
     if (location.hash === '#comment') {
       this.$refs.panel.scrollIntoComment()
     }
   },
   methods: {
     reachBottom(){
-      this.getRecommendEntryByTagIds()
+      if (this.recommendArticlesInfo.hasMore) {
+        this.getRecommendEntryByTagIds()
+      }
     },
     getMoreComment() {
-      this.getCommentList({
-        pageSize: 20
-      })
+      if (this.commentInfo.hasMore) {
+        this.getCommentList()
+      }
     },
-    getCommentList({ pageSize }) {
-      let last = this.comments.slice(-1)[0]
-      let createdAt = last ? last.createdAt : ''
+    setTagIds() {
+      if (this.articDetail.tags) {
+        this.tagIds = this.articDetail.tags.map(item => item.tag_id)
+      }
+    },
+    // 获取评论
+    getCommentList() {
       this.$api.getCommentList({
-        entryId: this.articDetail.entryId,
-        rankType: 'new',
-        createdAt,
-        pageSize
+        item_id: this.$route.params.id,
+        limit: 10,
+        cursor: this.commentInfo.cursor
       }).then(res => {
-        if (res.s === 1) {
-          this.commentCount = res.d.count
-          this.comments = this.comments.concat(res.d.comments)
-          if (res.d.comments.length === 0) {
-            this.hasComments = false
+        if (res.err_no === 0) {
+          this.comments.push(...res.data)
+          this.commentInfo = {
+            hasMore: res.has_more,
+            cursor: res.cursor
           }
         }
       })
     },
     // 推荐文章
     getRecommendEntryByTagIds(){
-      let last = this.recommendArticles.slice(-1)[0]
-      let before = last ? last.rankIndex : ''
       this.$api.getRecommendEntryByTagIds({
-        tagIds: this.tagIds.join('|'),
-        before,
+        item_id: this.$route.params.id,
+        user_id: this.articDetail.author_user_info.user_id,
+        cursor: this.recommendArticlesInfo.cursor,
+        sort_type: 200,
+        tag_ids: this.tagIds
       }).then(res => {
-        if (res.s === 1) {
-          this.recommendArticles = this.recommendArticles.concat(res.d)
+        if (res.err_no === 0) {
+          this.recommendArticles = this.recommendArticles.concat(res.data)
+          this.recommendArticlesInfo = {
+            hasMore: res.has_more,
+            cursor: res.cursor
+          }
         }
       })
     },
-    // 点赞
+    // 点赞（暂时废了）
     setGood() {
       if (!this.$store.state.auth.token) {
         this.$loginModal(this)
         return
       }
+      let isLike = this.articDetail.user_interact.is_digg
+      let count = this.articDetail.article_info.digg_count
       this.$api.articleLike({
-        isCollected: !this.isLike,
+        isCollected: !isLike,
         entryId: this.articDetail.entryId
       }).then(res => {
         if (res.s === 1) {
-          this.isLike = !this.isLike
-          this.isLike ? this.articInfo.collectionCount++ : this.articInfo.collectionCount--
+          isLike = !isLike
+          isLike ? count++ : count--
         }
       })
     },
     // 更多回复
-    getMoreReply({ index, pageNum, pageSize }) {
+    getMoreReply({ index }) {
       let comment = this.comments[index]
       this.$api.getReplyList({
-        entryId: this.articDetail.entryId,
-        commentId: comment.id,
-        pageNum,
-        pageSize
+        item_id: this.$route.params.id,
+        limit: 5,
+        cursor: comment.cursor || '',
+        comment_id: comment.comment_id,
       }).then(res => {
-        if (res.s === 1) {
-          let data = pageNum == 1 ? res.d.comments : comment.topComment.concat(res.d.comments)
-          this.$set(comment, 'topComment', data)
+        if (res.err_no === 0) {
+          comment.reply_infos = comment.cursor ? comment.reply_infos.concat(res.data) : res.data
+          comment.cursor = res.cursor
+          comment.has_reply_more = res.has_more
         }
       })
     }
@@ -317,6 +317,10 @@ export default {
       width: 100%;
     }
 
+    /deep/ strong{
+      font-weight: bold;
+    }
+
     /deep/ p{
       margin: 22px 0;
 
@@ -342,6 +346,7 @@ export default {
       margin-bottom: 12px;
       font-size: 24px;
       font-weight: 700;
+      border-bottom: 1px solid rgb(236, 236, 236);
     }
 
     /deep/ h3{

@@ -6,20 +6,17 @@ const { toObject } = require('../../../utils')
 
 /**
  * 获取标签详情
- * @param {string} tagName
+ * @param {string} key_word
  */
 router.get('/detail', validator({
-  tagName: { type: 'string', required: true }
+  key_word: { type: 'string', required: true }
 }), async(ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://gold-tag-ms.juejin.im/v1/tag/'+ctx.query.tagName,
-    method: "GET",
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
+    url: 'https://apinew.juejin.im/tag_api/v1/query_tag_detail',
+    method: "POST",
+    body: {
+      key_word: data.key_word
     }
   };
   let { body } = await request(options)
@@ -28,58 +25,32 @@ router.get('/detail', validator({
 
 /**
  * 获取对应标签的文章列表
- * @param {string} tagId - 标签id
- * @param {number} page - 页码
- * @param {number} pageSize - 页数
- * @param {string} sort - rankIndex：热门；createdAt：最新；hotIndex：最热
+ * @param {string} cursor - 分页标识
+ * @param {number} sort_type - 排序: 0-最热、200-热门，300-最新
+ * @param {array} tag_ids - 标签
  */
-router.get('/entry', validator({
-  tagId: { type: 'string', required: true },
-  page: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'page 需传入正整数'
+router.post('/entry', validator({
+  cursor: { type: 'string' },
+  sort_type: { 
+    type: 'enum',
+    enum: [0, 200, 300],
+    required: true
   },
-  pageSize: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'pageSize 需传入正整数'
-  },
-  sort: { 
-    type: 'enum', 
-    required: true,
-    enum: ['rankIndex', 'createdAt', 'hotIndex']
-  }
+  tag_ids: { type: 'array', required: true }
 }), async(ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.request.body
   const options = {
-    url: 'https://timeline-merger-ms.juejin.im/v1/get_tag_entry',
-    method: "GET",
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
-    },
-    params: {
-      src: 'web',
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      tagId: ctx.query.tagId,
-      page: ctx.query.page || 0,
-      pageSize: ctx.query.pageSize || 20,
-      sort: ctx.query.sort || 'rankIndex',
+    url: 'https://apinew.juejin.im/recommend_api/v1/article/recommend_tag_feed',
+    method: "POST",
+    body: {
+      cursor: data.cursor || "0",
+      id_type: 2,
+      sort_type: Number(data.sort_type),
+      tag_ids: data.tag_ids,
     }
   };
   let { body } = await request(options)
-  body = toObject(body)
-  ctx.body = {
-    s: body.s,
-    d: body.d.entrylist || []
-  }
+  ctx.body = body
 })
 
 /**

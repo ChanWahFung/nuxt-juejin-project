@@ -2,30 +2,30 @@
   <div class="about-author shadow" v-if="info">
     <div class="about-author__title">关于作者</div>
     <div class="author__main">
-      <nuxt-link :to="'/user/'+info.uid" class="author__info-block" target="_blank">
+      <nuxt-link :to="'/user/'+info.author_user_info.user_id" class="author__info-block" target="_blank">
         <div class="author__avatar">
-          <user-avatar :url="info.avatarLarge" :round="true"></user-avatar>
+          <user-avatar :url="info.author_user_info.avatar_large" :round="true"></user-avatar>
         </div>
         <div class="author__info">
           <div class="author__username">
-            {{ info.username }}
-            <level :level="info.level"></level>
+            {{ info.author_user_info.user_name }}
+            <level :level="info.author_user_info.level"></level>
           </div>
           <div class="author__job ellipsis">
-            {{ info.jobTitle }}
-            {{ info.jobTitle && info.company ? '@' : '' }}
-            {{ info.company }}
+            {{ info.author_user_info.job_title }}
+            {{ info.author_user_info.job_title && info.author_user_info.company ? '@' : '' }}
+            {{ info.author_user_info.company }}
           </div>
         </div>
       </nuxt-link>
       <div class="author__meta">
         <div class="honor-item">
           <img class="honor-item__icon shadow" src="~/assets/images/honor-4.svg" />
-          <span class="honor-item__title">获得点赞 {{ info.totalCollectionsCount }}</span>
+          <span class="honor-item__title">获得点赞 {{ info.author_user_info.got_digg_count }}</span>
         </div>
         <div class="honor-item">
           <img class="honor-item__icon shadow" src="~/assets/images/honor-5.svg" />
-          <span class="honor-item__title">文章被阅读 {{ info.totalViewsCount }}</span>
+          <span class="honor-item__title">文章被阅读 {{ info.author_user_info.got_view_count }}</span>
         </div>
       </div>
     </div>
