@@ -2,49 +2,49 @@
   <div class="topic-detail-container">
     <div class="topic-main">
       <div class="nav-list shadow">
-        <nuxt-link :to="`/topic/${$route.params.id}?sortType=rank`" class="nav-item" :class="{'nav-item--active': sortType === 'rank'}">热门</nuxt-link>
-        <nuxt-link :to="`/topic/${$route.params.id}?sortType=newest`" class="nav-item" :class="{'nav-item--active': sortType === 'newest'}">最新</nuxt-link>
+        <nuxt-link :to="`/topic/${$route.params.id}?sortType=rank`" class="nav-item" :class="{'nav-item--active': sortType === 200}">热门</nuxt-link>
+        <nuxt-link :to="`/topic/${$route.params.id}?sortType=newest`" class="nav-item" :class="{'nav-item--active': sortType === 500}">最新</nuxt-link>
       </div>
-      <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.objectId">
-        <pin-item :item.sync="item"></pin-item>
+      <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.msg_id">
+        <!-- <pin-item :item.sync="item"></pin-item> -->
       </div>
     </div>
     <div class="topic-aside">
       <div class="topic-detail-block shadow">
         <div class="topic-wallpaper">
-          <div class="wallpaper" :style="`background-image: url(${topicDetail.icon})`"></div>
+          <div class="wallpaper" :style="`background-image: url(${topicDetail.topic.icon})`"></div>
         </div>
         <div class="topic-info">
-          <div class="topic-icon" :style="`background-image: url(${topicDetail.icon})`"></div>
-          <div class="topic-title">{{ topicDetail.title }}</div>
-          <follow-btn :is-follow.sync="topicDetail.followed"></follow-btn>
+          <div class="topic-icon" :style="`background-image: url(${topicDetail.topic.icon})`"></div>
+          <div class="topic-title">{{ topicDetail.topic.title }}</div>
+          <follow-btn :is-follow.sync="topicDetail.user_interact.is_follow"></follow-btn>
         </div>
         <div class="topic-desc">
           <p class="desc-title">话题介绍:</p>
-          <p class="desc-content">{{ topicDetail.description }}</p>
+          <p class="desc-content">{{ topicDetail.topic.description }}</p>
         </div>
         <div class="topic-meta">
           <div class="meta-item">
-            <span class="meta-item__count">{{ topicDetail.msgsCount }}</span>
+            <span class="meta-item__count">{{ topicDetail.topic.msg_count }}</span>
             <span>沸点</span>
           </div>
           <div class="meta-item">
-            <span class="meta-item__count">{{ topicDetail.followersCount }}</span>
+            <span class="meta-item__count">{{ topicDetail.topic.follower_count }}</span>
             <span>关注</span>
           </div>
         </div>
       </div>
       <div class="topic-attender shadow">
         <div class="topic-attender__header">
-          <span class="header-count">共有{{ topicDetail.attendersCount }}人参加</span>
+          <span class="header-count">共有{{ topicDetail.topic.attender_count }}人参加</span>
           <span class="header-allbtn" @click="isShowUserList = true">全部</span>
         </div>
         <div class="topic-attender__list">
-          <div class="attender-item" v-for="item in attenderList.slice(0,16)" :key="item.objectId">
+          <div class="attender-item" v-for="item in attenderList.slice(0,16)" :key="item.user_id">
             <div class="attender-avatar">
-              <user-avatar :url="item.avatarLarge" :round="true"></user-avatar>
+              <user-avatar :url="item.avatar_large" :round="true"></user-avatar>
             </div>
-            <span class="attender-name ellipsis">{{ item.username }}</span>
+            <span class="attender-name ellipsis">{{ item.user_name }}</span>
           </div>
         </div>
       </div>
@@ -58,31 +58,52 @@ import reachBottom from '~/mixins/reachBottom'
 
 export default {
   async asyncData({ app, params, query }) {
+    let pinListInfo = {}
+    let attenderListInfo = {}
     let [topicDetail, pinList, attenderList] = await Promise.all([
+      // 话题详情
       app.$api.getTopicDetail({
-        topicId: params.id
-      }).then(res => res.s === 1 ? res.d : {}),
+        topic_id: params.id
+      }).then(res => res.err_no === 0 ? res.data : {}),
+      // 沸点列表
       app.$api.getTopicPinList({
-        topicId: params.id,
-        page: 1,
-        pageSize: 20,
-        sortType: query.sortType || 'rank'
-      }).then(res => res.s === 1 ? res.d.list : []),
+        topic_id: params.id,
+        limit: 20,
+        sort_type: query.sortType || 500
+      }).then(res => {
+        if (res.err_no == 0) {
+          pinListInfo = {
+            cursor: res.cursor,
+            hasMore: res.has_more
+          }
+        }
+        return res.data || []
+      }),
+      // 话题参与者
       app.$api.getTopicAttenderList({
-        topicId: params.id,
-        page: 1,
-        pageSize: 20
-      }).then(res => res.s === 1 ? res.d.list : []),
+        item_id: params.id,
+        limit: 20
+      }).then(res => {
+        if (res.err_no == 0) {
+          attenderListInfo = {
+            cursor: res.cursor,
+            hasMore: res.has_more
+          }
+        }
+        return res.data || []
+      }),
     ])
     return {
       topicDetail,
       pinList,
-      attenderList
+      pinListInfo,
+      attenderList,
+      attenderListInfo
     }
   },
   head() {
     return {
-      title: `${this.topicDetail.title} - 话题 - 沸点`
+      title: `${this.topicDetail.topic.title} - 话题 - 沸点`
     }
   },
   validate ({ params }) {
@@ -97,45 +118,57 @@ export default {
     return {
       topicDetail: {},
       pinList: [],
+      pinListInfo: {},
       attenderList: [],
-      pinListPage: 1,
-      attenderListPage: 1,
+      attenderListInfo: {},
       isShowUserList: false
     }
   },
   computed: {
     sortType() {
-      return this.$route.query.sortType || 'rank'
+      return this.$route.query.sortType || 500
     }
   },
   methods: {
     reachBottom() {
-      this.pinListPage++
-      this.getTopicPinList({ isLoadMore: true })
-    },
-    modalReachBottom() {
-      this.attenderListPage++
-      this.getTopicAttenderList({ isLoadMore: true })
-    },
-    async getTopicPinList({ isLoadMore = false } = {}) {
-      let res = await this.$api.getTopicPinList({
-        topicId: this.$route.params.id,
-        page: this.pinListPage,
-        pageSize: 20,
-        sortType: this.sortType
-      })
-      if (res.s === 1) {
-        this.pinList = isLoadMore ? this.pinList.concat(res.d.list) : res.d.list
+      if (this.pinListInfo.hasMore) {
+        this.getTopicPinList({ isLoadMore: true })
       }
     },
+    modalReachBottom() {
+      if (this.attenderListInfo.hasMore) {
+        this.getTopicAttenderList({ isLoadMore: true })
+      }
+    },
+    // 沸点列表
+    async getTopicPinList({ isLoadMore = false } = {}) {
+      let res = await this.$api.getTopicPinList({
+        topic_id: this.$route.params.id,
+        limit: 20,
+        sort_type: this.$router.query.sortType || 500,
+        cursor: this.pinListInfo.cursor || '0'
+      })
+      if (res.err_no === 0) {
+        this.pinList = isLoadMore ? this.pinList.concat(res.data) : res.data
+        this.pinListInfo = {
+          cursor: res.cursor,
+          hasMore: res.has_more
+        }
+      }
+    },
+    // 参与者列表
     async getTopicAttenderList({ isLoadMore = false } = {}) {
       let res = await this.$api.getTopicAttenderList({
-        topicId: this.$route.params.id,
-        page: this.attenderListPage,
-        pageSize: 20,
+        item_id: this.$route.params.id,
+        limit: 20,
+        cursor: this.attenderListInfo.cursor
       })
-      if (res.s === 1) {
-        this.attenderList = isLoadMore ? this.attenderList.concat(res.d.list) : res.d.list
+      if (res.err_no === 0) {
+        this.attenderList = isLoadMore ? this.attenderList.concat(res.data) : res.data
+        this.attenderListInfo = {
+          cursor: res.cursor,
+          hasMore: res.has_more
+        }
       }
     }
   }
