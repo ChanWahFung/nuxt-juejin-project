@@ -1,13 +1,13 @@
 <template>
   <div class="artic-list">
-    <div v-for="(item, index) in list" :key="index" class="artic-item--border">
-      <template v-if="item.item_type == 2">
+    <template v-for="(item, index) in list" >
+      <div v-if="item.item_type == 2" class="artic-item--border" :key="index">
         <artic-item :item.sync="list[index].item_info"></artic-item>
-      </template>
-      <template v-else-if="item.item_type == undefined">
+      </div>
+      <div v-else-if="item.item_type == undefined" class="artic-item--border" :key="index">
         <artic-item :item.sync="list[index]"></artic-item>
-      </template>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 

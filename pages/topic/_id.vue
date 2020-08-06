@@ -2,11 +2,11 @@
   <div class="topic-detail-container">
     <div class="topic-main">
       <div class="nav-list shadow">
-        <nuxt-link :to="`/topic/${$route.params.id}?sortType=rank`" class="nav-item" :class="{'nav-item--active': sortType === 200}">热门</nuxt-link>
-        <nuxt-link :to="`/topic/${$route.params.id}?sortType=newest`" class="nav-item" :class="{'nav-item--active': sortType === 500}">最新</nuxt-link>
+        <nuxt-link :to="`/topic/${$route.params.id}?sortType=200`" class="nav-item" :class="{'nav-item--active': sortType == 200}">热门</nuxt-link>
+        <nuxt-link :to="`/topic/${$route.params.id}?sortType=500`" class="nav-item" :class="{'nav-item--active': sortType == 500}">最新</nuxt-link>
       </div>
-      <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.msg_id">
-        <!-- <pin-item :item.sync="item"></pin-item> -->
+      <div class="pin-item-wrap shadow" v-for="(item, index) in pinList" :key="item.msg_id">
+        <pin-item :item.sync="pinList[index]"></pin-item>
       </div>
     </div>
     <div class="topic-aside">
@@ -145,7 +145,7 @@ export default {
       let res = await this.$api.getTopicPinList({
         topic_id: this.$route.params.id,
         limit: 20,
-        sort_type: this.$router.query.sortType || 500,
+        sort_type: this.sortType,
         cursor: this.pinListInfo.cursor || '0'
       })
       if (res.err_no === 0) {

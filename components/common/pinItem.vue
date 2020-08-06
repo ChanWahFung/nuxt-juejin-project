@@ -29,21 +29,21 @@
       <div class="item-main">
         <!-- 用户信息区域 -->
         <nuxt-link class="user-avatar" :to="'/user/'+uid" target="_blank">
-          <user-avatar :url="item.user.avatarLarge" :round="true"></user-avatar>
+          <user-avatar :url="item.author_user_info.avatar_large" :round="true"></user-avatar>
         </nuxt-link>
         <div class="pin-info">
           <div class="user-info">
             <div style="width: 70%">
-              <nuxt-link class="user-name ellipsis" :to="'/user/'+uid" target="_blank">{{ item.user.username }}</nuxt-link>
+              <nuxt-link class="user-name ellipsis" :to="'/user/'+uid" target="_blank">{{ item.author_user_info.user_name }}</nuxt-link>
               <div class="user-job-title ellipsis">
-                {{ item.user.jobTitle }}
-                {{ item.user.jobTitle && item.user.company ? '@' : '' }}
-                {{ item.user.company }}
-                {{ item.user.jobTitle || item.user.company ? ' · ' : '' }}
-                {{ item.createdAt | formatTime }}
+                {{ item.author_user_info.job_title }}
+                {{ item.author_user_info.job_title && item.author_user_info.company ? '@' : '' }}
+                {{ item.author_user_info.company }}
+                {{ item.author_user_info.job_title || item.author_user_info.company ? ' · ' : '' }}
+                {{ item.msg_Info.ctime | formatTime }}
               </div>
             </div>
-            <follow-btn v-if="!item.user.viewerIsFollowing" size="small" :is-follow.sync="item.user.viewerIsFollowing" :followee-id="uid"></follow-btn>
+            <follow-btn v-if="!item.user_interact.is_follow" size="small" :is-follow.sync="item.user_interact.is_follow" :followee-id="uid"></follow-btn>
           </div>
           <!-- 文章类型 -->
           <div v-if="action === 'PUBLISH_ARTICLE' || action === 'LIKE_ARTICLE'">
@@ -68,18 +68,18 @@
               </span>
             </div>
             <!-- 网页链接 -->
-            <a v-if="item.url" :href="item.url" target="_blank" rel="noopener noreferrer">
-              <div v-if="item.url" class="pin-link">
+            <a v-if="item.msg_Info.url" :href="item.msg_Info.url" target="_blank" rel="noopener noreferrer">
+              <div v-if="item.msg_Info.url" class="pin-link">
                 <div class="link-info">
-                  <div class="link-title ellipsis">{{ item.urlTitle }}</div>
-                  <div class="link-domain ellipsis">{{ item.url | domainName }}</div>
+                  <div class="link-title ellipsis">{{ item.msg_Info.url_title }}</div>
+                  <div class="link-domain ellipsis">{{ item.msg_Info.url | domainName }}</div>
                 </div>
-                <div class="link-image" :style="`background-image: url(${item.urlPic})`"></div>
+                <div class="link-image" :style="`background-image: url(${item.msg_Info.url_pic})`"></div>
               </div>
             </a>
             <!-- 图片 -->
-            <div v-if="item.pictures && item.pictures.length" class="pin-images" :class="{'pin-images--more': item.pictures.length > 1}">
-              <div v-for="url in item.pictures" :key="url" class="pin-img" :style="`background-image: url(${url})`" @click="showPicturesModal(url, item.pictures)">
+            <div v-if="item.msg_Info && item.msg_Info.pic_list.length" class="pin-images" :class="{'pin-images--more': item.msg_Info.pic_list.length > 1}">
+              <div v-for="url in item.msg_Info.pic_list" :key="url" class="pin-img" :style="`background-image: url(${url})`" @click="showPicturesModal(url, item.msg_Info.pic_list)">
                 <div class="img-holder"></div>
               </div>
             </div>
@@ -93,20 +93,20 @@
       <!-- 底部栏 -->
       <div class="item-meta">
         <div class="meta-item" @click="pinLike">
-          <span class="meta-info" :class="{'meta-info--active': item[isLike]}">
-            <img v-if="item[isLike]" src="~/assets/images/pin-like-active.svg">
+          <span class="meta-info" :class="{'meta-info--active': item.user_interact.is_digg}">
+            <img v-if="item.user_interact.is_digg" src="~/assets/images/pin-like-active.svg">
             <img v-else src="~/assets/images/pin-like.svg">
-            &nbsp;{{ item[likeCount] }}
+            &nbsp;{{ item.msg_Info.digg_count }}
           </span>
         </div>
         <div class="meta-item">
           <nuxt-link v-if="pinId" :to="'/pin/'+pinId" target="_blank">
             <span class="meta-info">
-              <img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}
+              <img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.msg_Info.comment_count }}
             </span>
           </nuxt-link>
           <template v-else>
-            <img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.commentCount }}
+            <img src="~/assets/images/pin-comment.svg">&nbsp;{{ item.msg_Info.comment_count }}
           </template>
         </div>
         <div class="meta-item" @click="isSharePanelShow = !isSharePanelShow">
@@ -151,29 +151,19 @@ export default {
   computed: {
     // 统一 id值
     pinId() {
-      return this.item.id || this.item.objectId
+      return this.item.msg_id
     },
     // 统一 uid值
     uid() {
-      return this.item.uid || (this.item.user && this.item.user.id)
+      return this.item.author_user_info.user_id
     },
     // 统一 topicId值
     topicId() {
-      return this.item.topic.id || this.item.topic.objectId
-    },
-    // 统一 是否点赞字段
-    isLike() {
-      let fields = ['viewerHasLiked', 'isLiked']
-      return fields.filter(key => this.item[key] != undefined)[0]
-    },
-    // 统一 点赞数字段
-    likeCount() {
-      let fields = ['likeCount', 'likedCount']
-      return fields.filter(key => this.item[key] != undefined)[0]
+      return this.item.topic.topic_id
     },
     // 格式化内容为数组
     pinContent() {
-      return this.$utils.splitContentToArray(this.item.content)
+      return this.$utils.splitContentToArray(this.item.msg_Info.content)
     }
   },
   filters: {
@@ -190,13 +180,13 @@ export default {
         return
       }
       let res = await this.$api.likePin({
-        method: this.item[this.isLike] ? 'delete' : 'put',
+        method: this.item.user_interact.is_digg ? 'delete' : 'put',
         pinId: this.pinId
       })
-      if (res.s === 1) {
+      if (res.err_no === 0) {
         let item = JSON.parse(JSON.stringify(this.item))
-        item[this.isLike] = !item[this.isLike]
-        item[this.likeCount] = item[this.isLike] ? ++item[this.likeCount] : --item[this.likeCount]
+        item.user_interact.is_digg = !item.user_interact.is_digg
+        item.msg_Info.digg_count = item.user_interact.is_digg ? ++item.msg_Info.digg_count : --item.msg_Info.digg_count
         this.$emit('update:item', item)
       }
     },
@@ -212,15 +202,16 @@ export default {
         document.addEventListener('copy', copy)
         document.execCommand("Copy");
       }
-      let title = `${this.item.content.length > 40 ? this.item.content.slice(0, 40) + '...' : this.item.content}#掘金沸点#`
+      let content = this.item.msg_Info.content
+      let title = `${content.length > 40 ? content.slice(0, 40) + '...' : content}#掘金沸点#`
       let url = `https://juejin.im/pin/${this.pinId}`
       copyHandle(title + '\n' + url)
     },
     // 分享 - 微博
     weiboShare() {
-      let title = this.item.content
+      let title = this.item.msg_Info.content
       let url = `https://juejin.im/pin/${this.pinId}`
-      let pic = encodeURIComponent(this.item.pictures[0] || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
+      let pic = encodeURIComponent(this.item.msg_Info.pic_list[0] || 'https://user-gold-cdn.xitu.io/2019/11/29/16eb707805061e9e?w=1000&h=675&f=jpeg&s=99661')
       window.open(`https://service.weibo.com/share/share.php?title=${title}&url=${url}&pic=${pic}`, '_blank', 'noopener noreferrer')
     },
     // 预览大图
