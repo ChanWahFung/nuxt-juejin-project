@@ -74,44 +74,27 @@ router.post('/indexList', validator({
 
 /**
  * 获取用户专栏文章
- * @param {string} targetUid - 用户id
- * @param {string} before - 最后一条的createdAt，下一页传入
- * @param {number} limit - 条数
- * @param {string} order - rankIndex：热门、createdAt：最新
+ * @param {string} user_id - 用户id
+ * @param {string} cursor - 分页
+ * @param {number} sort_type - 1：热门、2：最新
  */
 router.get('/userPost', validator({
-  targetUid: { type: 'string', required: true },
-  before: { type: 'string' },
-  limit: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'limit 需传入正整数'
-  },
-  order: { type: 'enum', enum: ['rankIndex', 'createdAt'] }
+  user_id: { type: 'string', required: true },
+  cursor: { type: 'string' },
+  sort_type: { type: 'enum', required: true, enum: ['1', '2'] }
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://timeline-merger-ms.juejin.im/v1/get_entry_by_self',
-    method: "GET",
-    params: {
-      src: "web",
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      targetUid: ctx.query.targetUid,
-      type: ctx.query.type || 'post',
-      limit: ctx.query.limit || 20,
-      before: ctx.query.before,
-      order: ctx.query.order || 'createdAt'
+    url: 'https://apinew.juejin.im/content_api/v1/article/query_list',
+    method: "POST",
+    body: {
+      user_id: data.user_id,
+      cursor: data.cursor || '0',
+      sort_type: Number(data.sort_type)
     }
   };
-  let { body } = await request(options)
-  body = toObject(body)
-  ctx.body = {
-    s: body.s,
-    d: body.d.entrylist || []
-  }
+  let res = await request(options)
+  ctx.body = res.body
 })
 
 /**

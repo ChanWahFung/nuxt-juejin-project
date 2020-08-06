@@ -5,22 +5,20 @@ const validator = require('../../middleware/validator')
 
 /**
  * 获取用户信息
- * @param {string} ids - 需要获取的用户id（多个以|分割）
+ * @param {string} user_id - 用户id
+ * @param {string} not_self
  */
 router.get('/multiUser', validator({
-  ids: { type: 'string', required: true }
+  user_id: { type: 'string', required: true },
+  not_self: { type: 'enum', required: true, enum: ['0', '1'] }
 }), async (ctx, next)=>{
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://lccro-api-ms.juejin.im/v1/get_multi_user',
+    url: 'https://apinew.juejin.im/user_api/v1/user/get',
     method: "GET",
     params: {
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      src: 'web',
-      ids: ctx.query.ids,
-      cols: ''
+      user_id: data.user_id,
+      not_self: Number(data.not_self)
     }
   };
   let { body } = await request(options)
@@ -51,20 +49,17 @@ router.get('/notification', validator({
 
 /**
  * 是否关注用户
- * @param {string} currentUid
- * @param {string} targetUids
+ * @param {string} ids - 用户id
  */
 router.get('/isCurrentUserFollowed', validator({
-  currentUid: { type: 'string', required: true },
-  targetUids: { type: 'string', required: true }
+  ids: { type: 'string', required: true }
 }), async (ctx, next)=>{
   const options = {
-    url: 'https://follow-api-ms.juejin.im/v1/isCurrentUserFollowed',
+    url: 'https://apinew.juejin.im/user_api/v1/follow/isfollowed?ids=817692379985752&type=1',
     method: "GET",
     params: {
-      currentUid: ctx.query.currentUid,
-      targetUids: ctx.query.targetUids,
-      src: 'web',
+      ids: data.ids,
+      type: 1,
     }
   };
   let { body } = await request(options)

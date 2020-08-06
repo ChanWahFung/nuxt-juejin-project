@@ -21,7 +21,7 @@
           </div>
           <div v-if="articDetail.article_info.cover_image" class="detail__cover" :style="`background-image: url(${articDetail.article_info.cover_image})`"></div>
           <h1 class="detail__title">{{ articDetail.article_info.title }}</h1>
-          <div class="detail__content" v-html="articDetail.article_info.content"></div>
+          <div class="detail__content" v-html="content"></div>
         </div>
         <div class="tags">
           <p class="tags__title">关注下面的标签，发现更多相似文章</p>
@@ -88,6 +88,12 @@ export default {
     const articDetail = await app.$api.getDetail({
       article_id: params.id
     }).then(res => res.err_no === 0 ? res.data : {})
+    // 格式化文章内容
+    let content = ''
+    let info = articDetail.article_info
+    if (info) {
+      content = info.mark_content ? markdownit().render(info.mark_content) : info.content
+    }
     // 相关文章
     let aboutArticles = null
     if (articDetail.author_user_info && articDetail.tags) {
@@ -98,6 +104,7 @@ export default {
       }).then(res => res.err_no === 0 ? res.data : [])
     }
     return {
+      content,
       articDetail,
       aboutArticles
     }
@@ -125,6 +132,7 @@ export default {
   mixins: [reachBottom, commonRequest],
   data () {
     return {
+      content: '',
       articDetail: {},
       aboutArticles: [],
       recommendArticles: [],
