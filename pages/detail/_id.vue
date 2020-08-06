@@ -92,7 +92,13 @@ export default {
     let content = ''
     let info = articDetail.article_info
     if (info) {
-      content = info.mark_content ? markdownit().render(info.mark_content) : info.content
+      content = info.mark_content 
+        ? markdownit({
+          html: true,
+          linkify: true,
+          typographer: true
+        }).render(info.mark_content) 
+        : info.content
     }
     // 相关文章
     let aboutArticles = null
