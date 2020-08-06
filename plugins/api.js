@@ -268,21 +268,6 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v2/recommends/books')
     },
     /**
-     * 作者排行类目
-     */
-    getAuthorChannel() {
-      return $request.get('/v2/recommends/channel')
-    },
-    /**
-     * 作者榜单
-     * @param {string} channel - 类目名
-     * @param {string} after - 分页标识
-     * @param {number} first - 条数
-     */
-    getAuthorRank(params = {}) {
-      return $request.get('/v2/recommends/authorRank', params)
-    },
-    /**
      * 沸点（推荐、热门、关注）
      * @param {string} type
      * @param {number} first - 条数
