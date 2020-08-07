@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const { toObject } = require('../../../utils')
 
 /**
  * 沸点（推荐、热门、关注）
@@ -55,46 +54,6 @@ router.get('/list', validator({
 })
 
 /**
- * 沸点 - 话题列表
- * @param {string} topicId - 话题id 
- * @param {number} page - 页码
- * @param {number} pageSize - 条数
- */
-router.get('/topicList', validator({
-  topicId: { type: 'string', required: true },
-  page: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'page 需传入正整数'
-  },
-  pageSize: {
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'pageSize 需传入正整数'
-  },
-}), async (ctx, next) => {
-  const headers = ctx.headers
-  const options = {
-    url: 'https://short-msg-ms.juejin.im/v1/pinList/topic',
-    method: 'GET',
-    params: {
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      src: 'web',
-      topicId: ctx.query.topicId,
-      page: Number(ctx.query.page) + 1,
-      pageSize: ctx.query.pageSize,
-      sortType: 'rank',
-    }
-  }
-  let { body } = await request(options)
-  ctx.body = body
-})
-
-/**
  * 单条沸点
  * @param {string} msg_id
  */
@@ -113,7 +72,7 @@ router.get('/pinDetail', validator({
   ctx.body = body
 })
 
-// 点赞共有逻辑
+// 点赞共有逻辑（弃用）
 function like(ctx) {
   const headers = ctx.headers
   const action = ctx.method === 'PUT' ? 'like' : 'unlike'
@@ -132,7 +91,7 @@ function like(ctx) {
 }
 
 /**
- * 沸点点赞
+ * 沸点点赞（弃用）
  */
 router.put('/like', validator({
   pinId: { type: 'string', required: true}
@@ -142,7 +101,7 @@ router.put('/like', validator({
 })
 
 /**
- * 沸点取消点赞
+ * 沸点取消点赞（弃用）
  */
 router.delete('/like', validator({
   pinId: { type: 'string', required: true}

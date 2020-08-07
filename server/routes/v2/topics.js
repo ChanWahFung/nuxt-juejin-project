@@ -186,7 +186,7 @@ router.get('/attenders', validator({
   ctx.body = body
 })
 
-// 关注话题逻辑共有
+// 关注话题逻辑共有（弃用）
 function followTopics(ctx){
   const action = ctx.method === 'PUT' ? 'follow' : 'unfollow'
   const idField = ctx.method === 'PUT' ? 'topicIds' : 'topicId'
@@ -209,7 +209,7 @@ function followTopics(ctx){
 }
 
 /**
- * 关注话题
+ * 关注话题（弃用）
  * @param {string} topicId 
  */
 router.put('/follow', validator({
@@ -220,7 +220,7 @@ router.put('/follow', validator({
 })
 
 /**
- * 取消关注话题
+ * 取消关注话题（弃用）
  * @param {string} topicId 
  */
 router.delete('/follow', validator({

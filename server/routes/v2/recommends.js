@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const { toObject } = require('../../../utils')
 
 /**
  * 获取推荐作者

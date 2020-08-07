@@ -25,7 +25,7 @@ module.exports = function (descriptor) {
       .catch(err => err.errors)
     if (errors) {
       ctx.body = {
-        s: 0,
+        err_no: 1,
         errors
       }
     } else {

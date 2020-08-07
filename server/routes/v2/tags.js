@@ -2,7 +2,6 @@ const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
-const { toObject } = require('../../../utils')
 
 /**
  * 获取标签详情
@@ -54,7 +53,7 @@ router.post('/entry', validator({
 })
 
 /**
- * 获取已关注的标签
+ * 获取已关注的标签（弃用）
  */
 router.get('/subscribed', async (ctx, next) => {
   const headers = ctx.headers
@@ -73,7 +72,7 @@ router.get('/subscribed', async (ctx, next) => {
 })
 
 /**
- * 获取全部标签
+ * 获取全部标签（弃用）
  * @param {string} type - 类型： 最新、最热
  * @param {number} page - 页码
  * @param {number} pageSize - 页数
@@ -110,7 +109,7 @@ router.get('/all', validator({
 })
 
 /**
- * 搜索标签
+ * 搜索标签（弃用）
  * @param {string} type - 类型： 最新、最热
  * @param {string} keyword - 搜索词
  * @param {number} page - 页码
@@ -148,7 +147,7 @@ router.get('/search', validator({
   ctx.body = body
 })
 
-// 关注标签逻辑共有
+// 关注标签逻辑共有（弃用）
 function subscribe(ctx){
   const headers = ctx.headers
   const options = {
@@ -165,7 +164,7 @@ function subscribe(ctx){
 }
 
 /**
- * 关注
+ * 关注（弃用）
  * @param {string} tagId - 标签id
  */
 router.put('/subscribe', validator({
@@ -178,7 +177,7 @@ router.put('/subscribe', validator({
 })
 
 /**
- * 取消关注
+ * 取消关注（弃用）
  * @param {string} tagId - 标签id
  */
 router.delete('/subscribe', validator({

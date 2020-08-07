@@ -26,7 +26,7 @@ router.get('/multiUser', validator({
 })
 
 /**
- * 获取用户消息
+ * 获取用户消息（弃用）
  * @param {string} before - 下一页标识 beforeAtString
  */
 router.get('/notification', validator({
@@ -66,29 +66,7 @@ router.get('/isCurrentUserFollowed', validator({
   ctx.body = body
 })
 
-/**
- * 是否点赞文章
- * @param {string} entryId - 文章entryId
- */
-router.get('/isArticleLike', validator({
-  entryId: { type: 'string', required: true }
-}), async (ctx, next) => {
-  const headers = ctx.headers
-  const options = {
-    url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.query.entryId,
-    method: 'GET',
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
-    }
-  };
-  let { body } = await request(options)
-  ctx.body = body
-})
-
-// 点赞逻辑共用
+// 点赞逻辑共用（弃用）
 function like(ctx){
   const headers = ctx.headers
   const options = {
@@ -105,7 +83,7 @@ function like(ctx){
 }
 
 /**
- * 点赞 - 文章
+ * 点赞 - 文章（弃用）
  * @param {string} entryId - 文章objectId
  */
 router.put('/like', validator({
@@ -118,7 +96,7 @@ router.put('/like', validator({
 })
 
 /**
- * 取消点赞 - 文章
+ * 取消点赞 - 文章（弃用）
  * @param {string} entryId - 文章objectId
  */
 router.delete('/like', validator({
@@ -130,7 +108,7 @@ router.delete('/like', validator({
   ctx.body = body
 })
 
-// 未读消息状态逻辑共有
+// 未读消息状态逻辑共有（弃用）
 function userNotificationNum(ctx, url){
   const headers = ctx.headers
   const options = {
@@ -146,7 +124,7 @@ function userNotificationNum(ctx, url){
 }
 
 /**
- * 获取未读消息数量
+ * 获取未读消息数量（弃用）
  */
 router.get('/userNotificationNum', async (ctx, next)=>{
   let { body } = await userNotificationNum(ctx, 'getUserNotificationNum')
@@ -154,14 +132,14 @@ router.get('/userNotificationNum', async (ctx, next)=>{
 })
 
 /**
- * 设置未读消息数量
+ * 设置未读消息数量（弃用）
  */
 router.put('/userNotificationNum', async (ctx, next)=>{
   let { body } = await userNotificationNum(ctx, 'setUserNotificationNum')
   ctx.body = body
 })
 
-// 关注用户逻辑共有
+// 关注用户逻辑共有（弃用）
 function follow(ctx, url){
   const headers = ctx.headers
   const options = {
@@ -179,7 +157,7 @@ function follow(ctx, url){
 }
 
 /**
- * 关注
+ * 关注（弃用）
  * @param {string} follower - 关注者id
  * @param {string} followee - 被关注者id
  */
@@ -192,7 +170,7 @@ router.put('/follow', validator({
 })
 
 /**
- * 取消关注
+ * 取消关注（弃用）
  * @param {string} follower - 关注者id
  * @param {string} followee - 被关注者id
  */
