@@ -40,7 +40,8 @@ export default {
       app.$api.getFollowedTopics({ limit: 3 }).then(res => res.data),
     ])
     // 侧边推荐话题
-    if (store.state.category.pinCategoryList.length == 3) {
+    let pinCategoryList = store.state.category.pinCategoryList
+    if (!(pinCategoryList[pinCategoryList.length - 1].topic_id > 0)) {
       await app.$api.getRecommendTopics({
         limit: 7
       }).then(res => {

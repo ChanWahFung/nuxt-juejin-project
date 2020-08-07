@@ -13,11 +13,11 @@ export const state = () => ({
       title: '热门',
       path: '/pins/hot'
     },
-    {
-      topic_id: 'follow',
-      title: '关注',
-      path: '/pins/follow'
-    }
+    // {
+    //   topic_id: 'follow',
+    //   title: '关注',
+    //   path: '/pins/follow'
+    // }
   ]
 })
 

@@ -303,7 +303,7 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v2/topics/detail', params)
     },
     /**
-     * 话题详情列表
+     * 沸点列表（根据话题获取）
      * @param {string} topicId - 话题id
      * @param {number} page - 页码
      * @param {number} pageSize - 条数

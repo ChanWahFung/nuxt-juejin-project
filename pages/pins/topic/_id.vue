@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.objectId">
-      <pin-item :item.sync="item"></pin-item>
+    <div class="pin-item-wrap shadow" v-for="(item, index) in pinList" :key="item.msg_id">
+      <pin-item :item.sync="pinList[index]"></pin-item>
     </div>
   </div>
 </template>
@@ -12,13 +12,23 @@ import reachBottom from '~/mixins/reachBottom'
 
 export default {
   async asyncData({ app, params }) {
-    let pinList = await app.$api.getPinListByTopic({
-      topicId: params.id,
-      page: 1,
-      pageSize: 20
-    }).then(res => res.s === 1 ? res.d.list : [])
+    let pinListInfo = {}
+    let pinList = await app.$api.getTopicPinList({
+      topic_id: params.id,
+      limit: 20,
+      sort_type: 200
+    }).then(res => {
+      if (res.err_no === 0) {
+        pinListInfo = {
+          hasMore: res.has_more,
+          cursor: res.cursor
+        }
+      }
+      return res.data || []
+    })
     return {
-      pinList
+      pinList,
+      pinListInfo
     }
   },
   head() {
@@ -35,7 +45,7 @@ export default {
   mixins: [reachBottom],
   data() {
     return {
-      page: 1,
+      pinListInfo: {},
       pinList: []
     }
   },
@@ -44,23 +54,29 @@ export default {
       navList: 'pinCategoryList'
     }),
     categoryName() {
-      let item = this.navList.filter(item => item.id === this.$route.params.id)[0]
-      return  item ? item.name : ''
+      let item = this.navList.filter(item => item.topic_id === this.$route.params.id)[0]
+      return  item ? item.title : ''
     }
   },
   methods: {
     reachBottom() {
-      this.page++
-      this.getPinListByTopic()
+      if (this.pinListInfo.hasMore) {
+        this.getTopicPinList()
+      }
     },
-    async getPinListByTopic() {
-      let res = await this.$api.getPinListByTopic({
-        topicId: this.$route.params.id,
-        page: this.page,
-        pageSize: 20
+    async getTopicPinList() {
+      let res = await this.$api.getTopicPinList({
+        topic_id: this.$route.params.id,
+        limit: 20,
+        sort_type: 200,
+        cursor: this.pinListInfo.cursor
       })
-      if (res.s === 1) {
-        this.pinList = this.pinList.concat(res.d.list)
+      if (res.err_no === 0) {
+        this.pinList = this.pinList.concat(res.data)
+        this.pinListInfo = {
+          hasMore: res.has_more,
+          cursor: res.cursor
+        }
       }
     }
   },

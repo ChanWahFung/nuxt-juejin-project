@@ -114,7 +114,7 @@ router.get('/detail', validator({
 })
 
 /**
- * 话题详情-沸点列表
+ * 沸点列表（根据话题获取）
  * @param {string} topic_id - 话题id
  * @param {number} limit - 条数
  * @param {string} cursor - 分页标识

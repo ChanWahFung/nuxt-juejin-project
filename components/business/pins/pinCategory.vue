@@ -50,7 +50,7 @@ export default {
     border-radius: 3px;
     transition: background-color .2s, color .2s;
 
-    &:nth-of-type(3)::after{
+    &:nth-of-type(2)::after{
       content: '';
       position: absolute;
       bottom: -5px;
