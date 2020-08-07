@@ -3,12 +3,23 @@ const router = new Router()
 const request = require('../../request')
 const validator = require('../../middleware/validator')
 
-router.get('/entry', async (ctx, next) => {
+/**
+ * 获取类目
+ * @param {number} show_type 0：首页 1：作者排行榜 2：小册
+ */
+router.get('/entry', validator({
+  show_type: {
+    type: 'enum',
+    required: true,
+    enum: ['0', '1', '2']
+  }
+}), async (ctx, next) => {
+  let data = ctx.query 
   const options = {
     url: 'https://apinew.juejin.im/tag_api/v1/query_category_briefs',
     method: "GET",
     params: {
-      show_type: 0
+      show_type: data.show_type
     }
   };
   let { body } = await request(options)

@@ -4,42 +4,29 @@ const request = require('../../request')
 const validator = require('../../middleware/validator')
 
 /**
- * 小册类目
- */
-router.get('/channel', async (ctx, next) => {
-  const options = {
-    url: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getNavList',
-    method: 'GET'
-  }
-  let { body } = await request(options)
-  ctx.body = body
-})
-
-/**
  * 小册列表
- * @param {string} alias - 类目名
- * @param {number} pageNum
+ * @param {string} category_id - 类目id
+ * @param {number} limit - 条数
+ * @param {string} cursor - 分页条数
  */
-router.get('/getListByLastTime', validator({
-  alias: { type: 'string' },
-  pageNum: {
+router.get('/getBookList', validator({
+  category_id: { type: 'string', required: true },
+  cursor: { type: 'string' },
+  limit: {
     type: 'string', 
     required: true,
     validator: (rule, value) => Number(value) > 0,
-    message: 'pageNum 需传入正整数'
+    message: 'limit 需传入正整数'
   }
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://xiaoce-timeline-api-ms.juejin.im/v1/getListByLastTime',
-    method: 'GET',
-    params: {
-      src: 'web',
-      uid: headers['x-uid'],
-      client_id: headers['x-device-id'],
-      token: headers['x-token'],
-      alias: ctx.query.alias || '',
-      pageNum: ctx.query.pageNum || 1
+    url: 'https://apinew.juejin.im/booklet_api/v1/booklet/listbycategory',
+    method: 'POST',
+    body: {
+      category_id: data.category_id,
+      cursor: data.cursor || "0",
+      limit: Number(data.limit)
     }
   }
   let { body } = await request(options)

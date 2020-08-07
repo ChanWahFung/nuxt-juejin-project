@@ -40,7 +40,7 @@ module.exports = function (options){
         statusCode: -1,
         statusMessage: err,
         headers: res.headers,
-        body: { s: 0 },
+        body: { err_no: 1 },
       }
     })
 }

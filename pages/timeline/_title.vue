@@ -1,6 +1,6 @@
 <template>
   <div>
-    <timeline-category :channels="categoryList"></timeline-category>
+    <timeline-category :channels="timelineCategoryList"></timeline-category>
     <div class="index-container">
       <div class="index-main shadow">
         <div class="list__header">
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import reachBottom from '~/mixins/reachBottom'
 import authorRank from '~/components/business/timeline/authorRank'
 import recommendBook from '~/components/business/timeline/recommendBook'
@@ -32,8 +33,7 @@ export default {
   async asyncData({ app, params, store }) {
     // 分类列表
     let initCategoryList = [{ category_id: 0, category_name: '推荐', category_url: 'recommended' }]
-    let categoryList = store.state.category.timelineCategoryList
-    let currentCategoryItem = categoryList.filter(item => item.category_url === params.title)[0] || initCategoryList[0]
+    let currentCategoryItem = store.state.category.timelineCategoryList.filter(item => item.category_url === params.title)[0] || initCategoryList[0]
     let [indexData, recommendAuthors, recommendBooks] = await Promise.all([
       // 文章列表
       app.$api.getIndexList({
@@ -56,7 +56,6 @@ export default {
     }
     return {
       currentCategoryItem,
-      categoryList,
       list: indexData.data || [],
       pageInfo,
       recommendAuthors,
@@ -76,7 +75,7 @@ export default {
     if (store.state.category.timelineCategoryList.length) {
       categoryList = store.state.category.timelineCategoryList
     } else {
-      categoryList = await app.$api.getCategories().then(res => res.err_no === 0 ? initCategoryList.concat(res.data) : initCategoryList)
+      categoryList = await app.$api.getCategories({ show_type: 0 }).then(res => res.err_no === 0 ? initCategoryList.concat(res.data) : initCategoryList)
       store.commit('category/UPDATE_TIMELINE_CATEGORY_LIST', categoryList)
     }
     return params.title === undefined || categoryList.filter(item => item.category_url === params.title).length
@@ -127,7 +126,6 @@ export default {
       navId: 1,
       sort_type: 200,
       navTypes: [],
-      categoryList: [],
       currentCategoryItem: {},
       tags: [],
       list: [],
@@ -136,6 +134,9 @@ export default {
       recommendBooks: [],
       isReachBottomFetching: false,  // 防止触底多次请求
     };
+  },
+  computed: {
+    ...mapState('category', ['timelineCategoryList'])
   },
   methods: {
     reachBottom() {

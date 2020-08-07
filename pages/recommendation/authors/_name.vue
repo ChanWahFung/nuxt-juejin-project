@@ -21,7 +21,7 @@ export default {
       categoryList = store.state.category.recommendCategoryList
     } else {
       let initCategoryList = [{ category_id: 0, category_name: '推荐', category_url: 'recommended' }]
-      categoryList = await app.$api.getCategories().then(res => res.err_no === 0 ? res.data : [])
+      categoryList = await app.$api.getCategories({ show_type: 1 }).then(res => res.err_no === 0 ? res.data : [])
       categoryList = initCategoryList.concat(categoryList)
       store.commit('category/UPDATE_RECOMMEND_CATEGORY_LIST', categoryList)
     }

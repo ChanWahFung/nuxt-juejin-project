@@ -2,7 +2,7 @@
   <nav class="nav-view">
     <div class="nav-mian shadow" :class="{'nav-main--sticky': !isTopbarBlock}">
       <ul class="nav-list">
-        <li class="nav-item" :class="{'nav-item--active': item.alias === paramsAlias}" v-for="item in channels" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
+        <li class="nav-item" :class="{'nav-item--active': item.category_url === paramsAlias}" v-for="item in channels" :key="item.category_id" @click="navItemClick(item)">{{ item.category_name }}</li>
       </ul>
     </div>
   </nav>
@@ -22,7 +22,7 @@ export default {
       'isTopbarBlock'
     ]),
     paramsAlias() {
-      return this.$route.params.alias || ''
+      return this.$route.params.alias || 'recommended'
     }
   },
   methods: {
@@ -30,14 +30,14 @@ export default {
       'UPDATE_TOPBAR_BLOCK'
     ]),
     navItemClick(item) {
-      if (this.paramsAlias != item.alias) {
+      if (this.paramsAlias != item.category_url) {
         this.isTopbarBlock === false && this.UPDATE_TOPBAR_BLOCK(true)
         window.scrollTo({ top: 0 })
-        if (item.alias) {
+        if (item.category_url) {
           this.$router.push({
             name: 'book-alias',
             params: {
-              alias: item.alias
+              alias: item.category_url
             }
           })
         } else {

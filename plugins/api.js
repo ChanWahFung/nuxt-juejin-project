@@ -175,8 +175,8 @@ export default ({ app: { $request } }, inject) => {
     /**
      * 获取类目
      */
-    getCategories(){
-      return $request.get('/v2/categories/entry')
+    getCategories(params = {}){
+      return $request.get('/v2/categories/entry', params)
     },
     /**
      * 获取类目下的标签
@@ -248,18 +248,12 @@ export default ({ app: { $request } }, inject) => {
       })
     },
     /**
-     * 获取小册类目
-     */
-    getBookChannel() {
-      return $request.get('/v2/books/channel')
-    },
-    /**
      * 获取小册列表
      * @param {string} alias - 类目名
      * @param {number} pageNum
      */
     getBooks(params = {}) {
-      return $request.get('/v2/books/getListByLastTime', params)
+      return $request.get('/v2/books/getBookList', params)
     },
     /**
      * 推荐小册
