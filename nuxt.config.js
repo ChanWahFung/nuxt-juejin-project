@@ -18,7 +18,7 @@ module.exports = {
   ** Router configuration
   */
   router: {
-    middleware: ['auth', 'i18n'],
+    middleware: ['i18n'],
     extendRoutes (routes, resolve) {
       routes.push({
         path: '/',
