@@ -34,6 +34,37 @@ router.get('/list', validator({
 })
 
 /**
+ * 获取推荐话题列表
+ * @param {string} cursor - 分页标识
+ * @param {number} limit - 条数
+ * @param {string} sort_type - 排序
+ */
+router.get('/recommendList', validator({
+  cursor: { type: 'string' },
+  limit: { 
+    type: 'string', 
+    required: true,
+    validator: (rule, value) => Number(value) > 0,
+    message: 'limit 需传入正整数'
+  },
+  sort_type: { type: 'string', },
+}), async (ctx, next) => {
+  const data = ctx.query
+  const options = {
+    url: 'https://apinew.juejin.im/recommend_api/v1/tag/recommend_topic_list',
+    method: "POST",
+    body: {
+      cursor: data.cursor || '0',
+      id_type: 11,
+      limit: Number(data.limit),
+      sort_type: Number(data.sort_type) || 0,
+    }
+  };
+  let { body } = await request(options)
+  ctx.body = body
+})
+
+/**
  * 获取已关注话题列表
  * @param {string} cursor - 分页标识
  * @param {number} limit - 条数

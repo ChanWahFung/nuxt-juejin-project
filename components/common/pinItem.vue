@@ -84,7 +84,7 @@
               </div>
             </div>
             <!-- 话题 -->
-            <div class="pin-topic" v-if="item.topic">
+            <div class="pin-topic" v-if="item.topic.topic_id > 0">
               <nuxt-link class="topic-title" :to="'/topic/'+topicId" target="_blank">{{ item.topic.title }}</nuxt-link>
             </div>
           </div>

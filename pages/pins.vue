@@ -5,17 +5,17 @@
     </div>
     <nuxt-child class="pin-main" />
     <div class="pin-aside">
-      <recommend-pin :list="recommendPins"></recommend-pin>
+      <recommend-pin v-if="recommendPins.length" :list="recommendPins"></recommend-pin>
       <div v-if="followTopicList.length" class="followed-topics shadow">
         <div class="followed-topics__header">
           <div class="title">关注的话题</div>
           <nuxt-link to="/topic" class="all-btn" target="_blank">全部</nuxt-link>
         </div>
-        <nuxt-link :to="'/topic/'+item.objectId" class="topic-item" v-for="item in followTopicList" :key="item.objectId" target="_blank">
-          <div class="topic-icon" :style="`background-image: url(${item.icon})`"></div>
+        <nuxt-link :to="'/topic/'+item.objectId" class="topic-item" v-for="item in followTopicList" :key="item.topic_id" target="_blank">
+          <div class="topic-icon" :style="`background-image: url(${item.topic.icon})`"></div>
           <div class="topic-info">
-            <span class="topic-title">{{ item.title }}</span>
-            <span class="topic-mate">{{ item.followersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
+            <span class="topic-title">{{ item.topic.title }}</span>
+            <span class="topic-mate">{{ item.topic.follower_count }} 关注 · {{ item.topic.msg_count }} 沸点</span>
           </div>
         </nuxt-link>
       </div>
@@ -28,14 +28,34 @@ import pinCategory from '~/components/business/pins/pinCategory'
 import recommendPin from '~/components/business/pins/recommendPin'
 
 export default {
-  async asyncData({ app }) {
+  async asyncData({ app, store }) {
     let [recommendPins, followTopicList] = await Promise.all([
-      app.$api.getPinListByRecommend().then(res => res.s === 1 ? res.d.list.slice(0, 3) : []),
-      app.$api.getFollowedTopics({ page: 1, pageSize: 3 }).then(res => res.s === 1 ? res.d.list : [])
+      // 侧边推荐沸点
+      app.$api.getPinList({
+        type: 'hot',
+        limit: 3,
+        sort_type: 400
+      }).then(res => res.data),
+      // 侧边已关注话题
+      app.$api.getFollowedTopics({ limit: 3 }).then(res => res.data),
     ])
+    // 侧边推荐话题
+    if (store.state.category.pinCategoryList.length == 3) {
+      await app.$api.getRecommendTopics({
+        limit: 7
+      }).then(res => {
+        if (res.err_no === 0) {
+          let list = res.data.map(item => ({
+            ...item,
+            path: '/pins/topic/' + item.topic_id
+          }))
+          store.state.category.pinCategoryList.push(...list)
+        }
+      })
+    }
     return {
-      recommendPins,
-      followTopicList
+      recommendPins: recommendPins || [],
+      followTopicList: followTopicList || []
     }
   },
   head() {

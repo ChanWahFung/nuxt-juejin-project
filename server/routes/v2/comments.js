@@ -4,14 +4,20 @@ const request = require('../../request')
 const validator = require('../../middleware/validator')
 
 /**
- * 文章评论
+ * 评论列表
  * @param {string} cursor - 分页标识
+ * @param {number} item_type - 2: 文章 4：沸点
  * @param {string} item_id - 文章id
  * @param {number} limit - 条数
  */
 router.get('/entry', validator({
   cursor: {
     type: 'string'
+  },
+  item_type: { 
+    type: 'enum', 
+    required: true,
+    enum: ['2', '4']
   },
   item_id: { 
     type: 'string', 
@@ -31,7 +37,7 @@ router.get('/entry', validator({
     body: { 
       cursor: data.cursor || "0",
       item_id: data.item_id,
-      item_type: 2,
+      item_type: Number(data.item_type),
       limit: Number(data.limit),
     }
   };
@@ -40,14 +46,21 @@ router.get('/entry', validator({
 })
 
 /**
- * 文章回复列表
+ * 回复列表
  * @param {string} cursor - 分页标识
+ * @param {number} item_type - 2: 文章 4：沸点
  * @param {string} item_id - 文章id
+ * @param {string} comment_id - 评论id
  * @param {number} limit - 条数
  */
 router.get('/reply', validator({
   cursor: {
     type: 'string'
+  },
+  item_type: { 
+    type: 'enum', 
+    required: true,
+    enum: ['2', '4']
   },
   item_id: { 
     type: 'string', 
@@ -72,88 +85,8 @@ router.get('/reply', validator({
       cursor: data.cursor || "0",
       item_id: data.item_id,
       comment_id: data.comment_id,
-      item_type: 2,
+      item_type: Number(data.item_type),
       limit: Number(data.limit),
-    }
-  };
-  let { body } = await request(options)
-  ctx.body = body
-})
-
-/**
- * 沸点评论列表
- * @param {string} pinId 沸点id
- * @param {number} pageNum - 页码
- * @param {number} pageSize - 条数
- */
-router.get('/pinComment', validator({
-  pinId: { type: 'string', required: true },
-  pageNum: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'pageNum 需传入正整数'
-  },
-  pageSize: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'pageSize 需传入正整数'
-  }
-}), async (ctx, next) => {
-  const headers = ctx.headers
-  const options = {
-    url: 'https://hot-topic-comment-wrapper-ms.juejin.im/v1/comments/'+ctx.query.pinId,
-    method: "GET",
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
-    },
-    params: { 
-      pageNum: ctx.query.pageNum || 1,
-      pageSize: ctx.query.pageSize || 10
-    }
-  };
-  let { body } = await request(options)
-  ctx.body = body
-})
-
-/**
- * 沸点回复列表
- * @param {string} commentId
- * @param {number} pageNum - 页码
- * @param {number} pageSize - 条数
- */
-router.get('/pinReply', validator({
-  commentId: { type: 'string', required: true },
-  pageNum: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'pageNum 需传入正整数'
-  },
-  pageSize: { 
-    type: 'string', 
-    required: true,
-    validator: (rule, value) => Number(value) > 0,
-    message: 'pageSize 需传入正整数'
-  }
-}), async (ctx, next) => {
-  const headers = ctx.headers
-  const options = {
-    url: 'https://hot-topic-comment-wrapper-ms.juejin.im/v1/reply/'+ctx.query.commentId,
-    method: "GET",
-    headers: {
-      'X-Juejin-Src': 'web',
-      'X-Juejin-Client': headers['x-device-id'],
-      'X-Juejin-Token': headers['x-token'],
-      'X-Juejin-Uid': headers['x-uid'],
-    },
-    params: { 
-      pageNum: ctx.query.pageNum || 1,
-      pageSize: ctx.query.pageSize || 10
     }
   };
   let { body } = await request(options)

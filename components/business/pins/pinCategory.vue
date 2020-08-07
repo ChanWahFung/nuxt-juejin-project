@@ -1,7 +1,7 @@
 <template>
   <ul class="nav-list" :class="{'nav-list--sticky': !isTopbarBlock}">
-    <li class="nav-item" :class="{'nav-item--active': item.path == $route.path}" v-for="item in navList" :key="item.id" @click="changeCategory">
-      <nuxt-link :to="item.path">{{ item.name }}</nuxt-link>
+    <li class="nav-item" :class="{'nav-item--active': item.path == $route.path}" v-for="item in navList" :key="item.topic_id" :title="item.title" @click="changeCategory">
+      <nuxt-link :to="item.path">{{ item.title }}</nuxt-link>
     </li>
   </ul>
 </template>
@@ -27,6 +27,7 @@ export default {
 
 <style lang='scss' scoped>
 .nav-list{
+  width: 112px;
   position: fixed;
   top: 80px;
   padding: 16px 12px;
@@ -68,9 +69,12 @@ export default {
     >a{
       width: 100%;
       line-height: 30px;
-      padding: 0 12px;
+      padding: 0 5px;
       text-align: center;
       color: #909090;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     &:hover{

@@ -183,6 +183,7 @@ export default {
     // 获取评论
     getCommentList() {
       this.$api.getCommentList({
+        item_type: 2,
         item_id: this.$route.params.id,
         limit: 10,
         cursor: this.commentInfo.cursor
@@ -236,6 +237,7 @@ export default {
     getMoreReply({ index }) {
       let comment = this.comments[index]
       this.$api.getReplyList({
+        item_type: 2,
         item_id: this.$route.params.id,
         limit: 5,
         cursor: comment.cursor || '',

@@ -61,7 +61,7 @@ export default {
         },
         {
           name: 'pin',
-          link: '/pins/recommended'
+          link: '/pins/recommend'
         },
         {
           name: 'topic',

@@ -43,7 +43,7 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v2/articles/detail', params)
     },
     /**
-     * 获取文章评论
+     * 获取评论列表
      * @param {string} entryId - 在文章详情内获取
      * @param {string} createdAt - 最后一条的createdAt，下一页时传入
      * @param {string} rankType - new
@@ -230,6 +230,15 @@ export default ({ app: { $request } }, inject) => {
       return $request.get('/v2/topics/list', params)
     },
     /**
+     * 获取推荐话题列表
+     * @param {string} after
+     * @param {number} page - 页码
+     * @param {number} pageSize - 条数
+     */
+    getRecommendTopics(params = {}) {
+      return $request.get('/v2/topics/recommendList', params)
+    },
+    /**
      * 获取已关注话题列表
      * @param {string} after
      * @param {number} page - 页码
@@ -274,14 +283,8 @@ export default ({ app: { $request } }, inject) => {
      * 单条沸点
      * @param {string} pinId
      */
-    getPinById(params = {}) {
-      return $request.get('/v2/pins/byId', params)
-    },
-    /**
-     * 推荐沸点
-     */
-    getPinListByRecommend() {
-      return $request.get('/v2/pins/hotRecommendList')
+    getPinDetail(params = {}) {
+      return $request.get('/v2/pins/pinDetail', params)
     },
     /**
      * 沸点 - 话题列表
@@ -317,24 +320,6 @@ export default ({ app: { $request } }, inject) => {
      */
     getTopicAttenderList(params = {}) {
       return $request.get('/v2/topics/attenders', params)
-    },
-    /**
-     * 沸点评论列表
-     * @param {string} pinId 沸点id
-     * @param {number} pageNum - 页码
-     * @param {number} pageSize - 条数
-     */
-    getPinCommentList(params = {}){
-      return $request.get('/v2/comments/pinComment', params)
-    },
-    /**
-     * 沸点回复列表
-     * @param {string} commentId
-     * @param {number} pageNum - 页码
-     * @param {number} pageSize - 条数
-     */
-    getPinReplyList(params = {}){
-      return $request.get('/v2/comments/pinReply', params)
     },
     /**
      * 沸点点赞、取消点赞

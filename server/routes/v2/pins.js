@@ -7,89 +7,51 @@ const { toObject } = require('../../../utils')
 /**
  * 沸点（推荐、热门、关注）
  * @param {string} type
- * @param {number} first - 条数
- * @param {string} after - 分页标识
+ * @param {number} limit - 条数
+ * @param {string} sort_type - 排序
+ * @param {string} cursor - 分页标识
  */
 router.get('/list', validator({
-  type: { type: 'enum', enum: ['recommended', 'hot', 'following'], required: true },
-  first: { 
+  type: { type: 'enum', enum: ['recommend', 'hot', 'follow'], required: true },
+  limit: { 
     type: 'string', 
     required: true,
     validator: (rule, value) => Number(value) > 0,
-    message: 'first 需传入正整数'
+    message: 'limit 需传入正整数'
   },
-  after: { type: 'string' }
+  sort_type: { type: 'string' },
+  cursor: { type: 'string' }
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://web-api.juejin.im/query',
-    method: 'POST',
-    headers: {
-      'X-Agent': 'Juejin/Web',
-      'X-Legacy-Device-Id': headers['x-device-id'],
-      'X-Legacy-Token': headers['x-token'],
-      'X-Legacy-Uid': headers['x-uid']
-    }
+    url: 'https://apinew.juejin.im/recommend_api/v1/short_msg/'+data.type,
+    method: 'POST'
   }
   // 不同类型获取不同参数
   const strategyDatas = {
-    recommended:  {
-      field: 'recommendedActivityFeed',
-      body: {
-        extensions: {query: {id: "249431a8e4d85e459f6c29eb808e76d0"}},
-        operationName: "",
-        query: "",
-        variables: {
-          size: ctx.query.first || 20, 
-          after: ctx.query.after || '', 
-          afterPosition: ""
-        }
-      }
+    recommend:  {
+      cursor: data.cursor || "0",
+      id_type: 4,
+      limit: Number(data.limit),
+      sort_type: Number(data.sort_type) || 300,
     },
     hot: {
-      field: 'popularPinList',
-      body: {
-        extensions: {query: {id: "f0a2fbbc03d4d46266e40762139c414c"}},
-        operationName: "",
-        query: "",
-        variables: {
-          after: ctx.query.after || '', 
-          first: ctx.query.first || 20
-        },
-      }
+      cursor: data.cursor || "0",
+      id_type: 4,
+      limit: Number(data.limit),
+      sort_type: Number(data.sort_type) || 200,
     },
-    following: {
-      field: 'followingActivityFeed',
-      body: {
-        extensions: {query: {id: "648c28f5213f7d3601f4d5efa7fa3826"}},
-        operationName: "",
-        query: "",
-        variables: {
-          type: "MAIN", 
-          after: ctx.query.after || '', 
-          first: ctx.query.first || 20,
-          since: new Date().toISOString()
-        }
-      }
+    follow: {
+      cursor: data.cursor || "0",
+      id_type: 4,
+      limit: Number(data.limit)
     }
   }
-  const strategyData = strategyDatas[ctx.query.type]
+  const strategyData = strategyDatas[data.type]
   // 设置参数
-  strategyData && (options.body = strategyData.body)
+  strategyData && (options.body = strategyData)
   let { body } = await request(options)
-  body = toObject(body)
-  try {
-    ctx.body = {
-      s: body.data[strategyData.field].items ? 1 : 0,
-      d: body.data[strategyData.field].items
-    }
-  } catch (error) {
-    ctx.body = {
-      s: 0,
-      d: {},
-      errors: [body]
-    }
-  }
+  ctx.body = body
 })
 
 /**
@@ -133,41 +95,18 @@ router.get('/topicList', validator({
 })
 
 /**
- * 推荐沸点
- */
-router.get('/hotRecommendList', async (ctx, next) => {
-  const headers = ctx.headers
-  const options = {
-    url: 'https://short-msg-ms.juejin.im/v1/getHotRecommendList',
-    method: 'GET',
-    params: {
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      src: 'web'
-    }
-  }
-  let { body } = await request(options)
-  ctx.body = body
-})
-
-/**
  * 单条沸点
- * @param {string} pinId
+ * @param {string} msg_id
  */
-router.get('/byId', validator({
-  pinId: { type: 'string', required: true }
+router.get('/pinDetail', validator({
+  msg_id: { type: 'string', required: true }
 }), async (ctx, next) => {
-  const headers = ctx.headers
+  const data = ctx.query
   const options = {
-    url: 'https://short-msg-ms.juejin.im/v1/getByID',
-    method: 'GET',
-    params: {
-      uid: headers['x-uid'],
-      device_id: headers['x-device-id'],
-      token: headers['x-token'],
-      src: 'web',
-      msgId: ctx.query.pinId,
+    url: 'https://apinew.juejin.im/content_api/v1/short_msg/detail',
+    method: 'POST',
+    body: {
+      msg_id: data.msg_id
     }
   }
   let { body } = await request(options)

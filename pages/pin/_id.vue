@@ -15,19 +15,29 @@
 import reachBottom from '~/mixins/reachBottom'
 export default {
   async asyncData({ app, params }) {
+    let commentsInfo = {}
     let [pinDetail, comments] = await Promise.all([
-      app.$api.getPinById({
-        pinId: params.id
-      }).then(res => res.s === 1 ? res.d : {}),
-      app.$api.getPinCommentList({
-        pinId: params.id,
-        pageNum: 1,
-        pageSize: 20
-      }).then(res => res.s === 1 ? res.d.comments : []),
+      app.$api.getPinDetail({
+        msg_id: params.id
+      }).then(res => res.err_no === 0 ? res.data : {}),
+      app.$api.getCommentList({
+        item_type: 4,
+        item_id: params.id,
+        limit: 10,
+      }).then(res => {
+        if (res.err_no === 0) {
+          commentsInfo = {
+            hasMore: res.has_more,
+            cursor: res.cursor
+          }
+        }
+        return res.data || []
+      })
     ])
     return {
       pinDetail,
-      comments
+      comments,
+      commentsInfo
     }
   },
   head() {
@@ -45,36 +55,45 @@ export default {
   data() {
     return {
       pinDetail: {},
-      page: 1,
-      comments: []
+      comments: [],
+      commentsInfo: {}
     }
   },
   methods: {
     reachBottom() {
-      this.page++
-      this.getPinCommentList({ isLoadMore: true })
+      if (this.commentsInfo.hasMore) {
+        this.getCommentList({ isLoadMore: true })
+      }
     },
-    async getPinCommentList({ isLoadMore = false } = {}) {
-      let res = await this.$api.getPinCommentList({
-        pinId: this.$route.params.id,
-        pageNum: this.page,
-        pageSize: 20
+    async getCommentList({ isLoadMore = false } = {}) {
+      let res = await this.$api.getCommentList({
+        item_type: 4,
+        item_id: this.$route.params.id,
+        limit: 10,
+        cursor: this.commentsInfo.cursor
       })
-      if (res.s === 1) {
-        this.comments = isLoadMore ? this.comments.concat(res.d.comments) : res.d.comment
+      if (res.err_no === 0) {
+        this.comments = isLoadMore ? this.comments.concat(res.data) : res.data
+        this.commentsInfo = {
+          hasMore: res.hsa_more,
+          cursor: res.cursor
+        }
       }
     },
     // 更多回复
-    getMoreReply({ index, pageNum, pageSize }) {
+    getMoreReply({ index }) {
       let comment = this.comments[index]
-      this.$api.getPinReplyList({
-        commentId: comment.id,
-        pageNum,
-        pageSize
+      this.$api.getReplyList({
+        item_type: 4,
+        item_id: this.$route.params.id,
+        limit: 5,
+        cursor: comment.cursor || '',
+        comment_id: comment.comment_id,
       }).then(res => {
-        if (res.s === 1) {
-          let data = pageNum == 1 ? res.d.comments : comment.topComment.concat(res.d.comments)
-          this.$set(comment, 'topComment', data)
+        if (res.err_no === 0) {
+          comment.reply_infos = comment.cursor ? comment.reply_infos.concat(res.data) : res.data
+          comment.cursor = res.cursor
+          comment.has_reply_more = res.has_more
         }
       })
     }
