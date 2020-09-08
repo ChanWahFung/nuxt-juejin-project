@@ -41,7 +41,7 @@
             </ul>
           </div>
         </template>
-        <div v-else class="login-btn" @click="showLoginModal">{{ $t('menu.login') }}</div>
+        <!-- <div v-else class="login-btn" @click="showLoginModal">{{ $t('menu.login') }}</div> -->
       </div>
     </div>
   </header>
@@ -61,7 +61,7 @@ export default {
         },
         {
           name: 'pin',
-          link: '/pins/recommended'
+          link: '/pins/recommend'
         },
         {
           name: 'topic',

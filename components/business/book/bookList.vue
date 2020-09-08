@@ -1,23 +1,27 @@
 <template>
   <div class="books">
-    <div class="book-item" v-for="item in list" :key="item._id">
-      <div class="book__cover" :style="`background-image: url(${item.img})`"></div>
+    <div class="book-item" v-for="item in list" :key="item.booklet_id">
+      <div class="book__cover" :style="`background-image: url(${item.base_info.cover_img})`"></div>
       <div class="book__info">
-        <div class="book__title">{{ item.title }}</div>
-        <div class="book__desc ellipsis">{{ item.desc }}</div>
+        <div class="book__title">{{ item.base_info.title }}</div>
+        <div class="book__desc ellipsis">{{ item.base_info.summary }}</div>
         <div class="book__author">
-          <nuxt-link class="author__info" :to="'/user/'+item.userData.uid" target="_blank">
+          <nuxt-link class="author__info" :to="'/user/'+item.user_info.user_id" target="_blank">
             <div class="author__avatar">
-              <user-avatar :url="item.userData.avatarLarge" :round="true"></user-avatar>
+              <user-avatar :url="item.user_info.avatar_large" :round="true"></user-avatar>
             </div>
-            <span class="author__name">{{ item.userData.username }}</span>
-            <level :level="item.userData.level"></level>
+            <span class="author__name">{{ item.user_info.user_name }}</span>
+            <level :level="item.user_info.level"></level>
           </nuxt-link>
-          <span class="author__desc ellipsis">{{ item.profile }}</span>
+          <span class="author__desc ellipsis">
+            {{ item.user_info.job_title }}
+            {{ item.user_info.job_title && item.user_info.company ? '@' : '' }}
+            {{ item.user_info.company }}
+          </span>
         </div>
         <div class="book__data">
-          <span class="book__price" :class="{'book__buy': item.isBuy}">{{ item.isBuy ? '已购买' : '￥'+item.price }}</span>
-          <span class="book__meta">{{ item.lastSectionCount }}小节 · {{ item.buyCount }}人已购买</span>
+          <span class="book__price" :class="{'book__buy': item.is_buy}">{{ item.is_buy ? '已购买' : '￥'+item.base_info.price/100 }}</span>
+          <span class="book__meta">{{ item.base_info.section_count }}小节 · {{ item.base_info.buy_count }}人已购买</span>
         </div>
       </div>
     </div>

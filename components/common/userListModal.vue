@@ -4,24 +4,24 @@
     <div class="modal-main">
       <div class="modal-title">{{ title }}</div>
       <ul class="user-list">
-        <li v-for="userItem in list" :key="(userItem.uid || userItem.objectId)">
-          <nuxt-link class="user-item" :to="'/user/'+(userItem.uid || userItem.objectId)" target="_blank">
+        <li v-for="userItem in list" :key="userItem.user_id">
+          <nuxt-link class="user-item" :to="'/user/'+userItem.user_id" target="_blank">
             <div class="user-item__avatar">
-              <user-avatar :url="userItem.avatarLarge" :round="true"></user-avatar>
+              <user-avatar :url="userItem.avatar_large" :round="true"></user-avatar>
             </div>
             <div class="user-item__info">
               <div class="user-item__name ellipsis">
-                <span>{{ userItem.username }}</span>
+                <span>{{ userItem.user_name }}</span>
                 <level :level="userItem.level"></level>
               </div>
               <div class="user-item__job ellipsis">
-                {{ userItem.jobTitle }}
-                {{ userItem.jobTitle && userItem.company ? ' @ ' : '' }}
+                {{ userItem.job_title }}
+                {{ userItem.job_title && userItem.company ? ' @ ' : '' }}
                 {{ userItem.company }}
               </div>
             </div>
             <div class="user-item__follow">
-              <follow-btn :is-follow.sync="userItem.isFollowerFollowed" :followee-id="(userItem.uid || userItem.objectId)"></follow-btn>
+              <follow-btn :is-follow.sync="userItem.isfollowed" :followee-id="userItem.user_id"></follow-btn>
             </div>
           </nuxt-link>
         </li>

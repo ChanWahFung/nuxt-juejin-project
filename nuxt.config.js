@@ -9,12 +9,6 @@ module.exports = {
     host: '127.0.0.1'
   },
   /*
-  ** Render configuration
-  */
-  render: {
-    csp: true
-  },
-  /*
   ** Environment variable configuration
   */
   env: {
@@ -24,7 +18,7 @@ module.exports = {
   ** Router configuration
   */
   router: {
-    middleware: ['auth', 'i18n'],
+    middleware: ['i18n'],
     extendRoutes (routes, resolve) {
       routes.push({
         path: '/',
@@ -51,7 +45,7 @@ module.exports = {
       { rel: 'stylesheet', href: '//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/atom-one-light.min.css' },
     ],
     script: [
-      { src: '//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/highlight.min.js' }
+      { src: '//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/highlight.min.js' },
     ]
   },
   /*

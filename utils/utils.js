@@ -7,7 +7,11 @@ export default {
    * @param {number} timestamp - 13位时间戳
    */
   formatTime(timestamp) {
-    const date = new Date(timestamp)
+    if (!timestamp) {
+      return ''
+    }
+    timestamp = timestamp.toString()
+    const date = new Date(timestamp.length == 10 ? timestamp * 1000 : timestamp)
     if (date == 'Invalid Date') {
       return ''
     }

@@ -1,26 +1,26 @@
 <template>
-  <nuxt-link :to="'/user/'+item.id" target="_blank">
+  <nuxt-link :to="'/user/'+item.user_id" target="_blank">
     <div class="user-item">
       <div class="user-item__avatar">
-        <user-avatar :url="item.avatarLarge" :round="true"></user-avatar>
+        <user-avatar :url="item.avatar_large" :round="true"></user-avatar>
       </div>
       <div class="user-item__info">
         <p class="user-item__userinfo">
-          <span class="user-item__username" v-html="highlight.username || item.username"></span>
+          <span class="user-item__username" v-html="highlight.username || item.user_name"></span>
           <span v-if="item.level > 0" style="margin-right: 10px">
             <level :level="item.level"></level>
           </span>
-          <span v-if="highlight.jobTitle" v-html="highlight.jobTitle"></span>
+          <span v-if="highlight.job_title" v-html="highlight.job_title"></span>
           <span v-else>
-            {{ item.jobTitle }}
-            {{ item.jobTitle&&item.company ? ' @ ' : '' }}
+            {{ item.job_title }}
+            {{ item.job_title && item.company ? ' @ ' : '' }}
             {{ item.company }}
           </span>
         </p>
-        <p>{{ item.postedPostsCount }}专栏 · {{ item.followersCount }}个关注者</p>
+        <p>{{ item.post_article_count }}专栏 · {{ item.follower_count }}个关注者</p>
       </div>
       <div class="user-item__btn">
-        <follow-btn :is-follow.sync="item.viewerIsFollowing" type="user" :followee-id="item.id"></follow-btn>
+        <follow-btn :is-follow.sync="item.isfollowed" type="user" :followee-id="item.user_id"></follow-btn>
       </div>
     </div>
   </nuxt-link>

@@ -1,12 +1,7 @@
 <template>
   <div>
-    <div class="pin-item-wrap shadow" v-for="item in pinList" :key="item.node.id">
-      <template v-if="item.node.targets">
-        <pin-item :actors="item.node.actors" :item.sync="item.node.targets[0]" :action="item.node.action"></pin-item>
-      </template>
-      <template v-else>
-        <pin-item :actors="item.node.actors" :item.sync="item.node" :action="item.node.action"></pin-item>
-      </template>
+    <div class="pin-item-wrap shadow" v-for="(item, index) in pinList" :key="item.msg_id">
+      <pin-item :item.sync="pinList[index]"></pin-item>
     </div>
   </div>
 </template>
@@ -17,14 +12,22 @@ import reachBottom from '~/mixins/reachBottom'
 
 export default {
   async asyncData({ app, params }) {
-    let res = await app.$api.getPinList({
+    let pageInfo = {}
+    let pinList = await app.$api.getPinList({
       type: params.type,
-      first: 20,
-      after: ''
-    }).then(res => res.s === 1 ? res.d : {})
+      limit: 20,
+    }).then(res => {
+      if (res.err_no == 0) {
+        pageInfo = {
+          hasMore: res.has_more,
+          cursor: res.cursor
+        }
+      }
+      return res.data || []
+    })
     return {
-      pinList: res.edges,
-      pageInfo: res.pageInfo
+      pinList,
+      pageInfo
     }
   },
   head() {
@@ -33,7 +36,7 @@ export default {
     }
   },
   validate({ params }) {
-    let whiteList = ['recommended', 'hot', 'following']
+    let whiteList = ['recommend', 'hot', 'follow']
     return whiteList.includes(params.type)
   },
   mixins: [reachBottom],
@@ -48,25 +51,28 @@ export default {
       navList: 'pinCategoryList'
     }),
     categoryName() {
-      let item = this.navList.filter(item => item.id === this.$route.params.type)[0]
-      return  item ? item.name : ''
+      let item = this.navList.filter(item => item.topic_id === this.$route.params.type)[0]
+      return  item ? item.title : ''
     }
   },
   methods: {
     reachBottom() {
-      if (this.pageInfo.hasNextPage) {
+      if (this.pageInfo.hasMore) {
         this.getPinList()
       }
     },
     async getPinList() {
       let res = await this.$api.getPinList({
+        cursor: this.pageInfo.cursor,
         type: this.$route.params.type,
-        first: 20,
-        after: this.pageInfo.endCursor
+        limit: 20,
       })
-      if (res.s) {
-        this.pinList = this.pinList.concat(res.d.edges)
-        this.pageInfo = res.d.pageInfo
+      if (res.err_no === 0) {
+        this.pinList = this.pinList.concat(res.data)
+        this.pageInfo = {
+          hasMore: res.has_more,
+          cursor: res.cursor
+        }
       }
     }
   },

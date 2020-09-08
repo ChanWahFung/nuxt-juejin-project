@@ -1,13 +1,13 @@
 <template>
-  <nuxt-link :to="'/tag?name='+item.title" target="_blank">
+  <nuxt-link :to="'/tag?name='+item.tag.tag_name" target="_blank">
     <div class="tag-item">
-      <img :src="item.icon" class="tag-item__avatar">
+      <img :src="item.tag.icon" class="tag-item__avatar">
       <div class="tag-item__info">
-        <p class="tag-item__title" v-html="highlight.title || item.title"></p>
-        <p>{{ item.subscribersCount }}关注 · {{ item.entryCount }}文章</p>
+        <p class="tag-item__title" v-html="highlight.title || item.tag.tag_name"></p>
+        <p>{{ item.tag.concern_user_count }}关注 · {{ item.tag.post_article_count }}文章</p>
       </div>
       <div class="tag-item__btn">
-        <follow-btn type="tag" :is-follow.sync="item.viewerIsFollowing" :followee-id="item.id"></follow-btn>
+        <follow-btn type="tag" :is-follow.sync="item.user_interact.is_follow" :followee-id="item.tag_id"></follow-btn>
       </div>
     </div>
   </nuxt-link>

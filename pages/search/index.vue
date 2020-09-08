@@ -2,10 +2,10 @@
   <div class="search-container">
     <div class="list__header">
       <ul class="list__types">
-        <li class="list__type-item list-item" :class="{'list-item--active': item.type == type }" v-for="item in types" :key="item.title" @click="search({type: item.type})">{{ item.title }}</li>
+        <li class="list__type-item list-item" :class="{'list-item--active': item.idType == idType }" v-for="item in types" :key="item.title" @click="search({idType: item.idType})">{{ item.title }}</li>
       </ul>
       <ul class="list__periods">
-        <li class="list__period-item list-item" :class="{'list-item--active': item.period == period }" v-for="item in periods" :key="item.title" @click="search({period: item.period})">{{ item.title }}</li>
+        <li class="list__period-item list-item" :class="{'list-item--active': item.searchType == searchType }" v-for="item in searchTypes" :key="item.title" @click="search({searchType: item.searchType})">{{ item.title }}</li>
       </ul>
     </div>
     <search-result :list="searchList"></search-result>
@@ -18,15 +18,23 @@ import reachBottom from '~/mixins/reachBottom'
 export default {
   async asyncData({ app, query }) {
     let res = await app.$api.searchList({
-      after: 0,
-      first: 20,
-      type: query.type ? query.type.toUpperCase() : 'ALL',
-      keyword: query.keyword,
-      period: query.period ? query.period.toUpperCase() : 'ALL'
-    }).then(res => res.s == 1 ? res.d : {})
+      limit: 20,
+      id_type: query.idType || 0,
+      key_word: query.keyword,
+      search_type: query.searchType || 0
+    })
+    let pageInfo = {}
+    let searchList = []
+    if (res.err_no === 0) {
+      searchList = res.data
+      pageInfo = {
+        hasMore: res.has_more,
+        cursor: res.cursor
+      }
+    }
     return {
-      pageInfo: res.pageInfo || {},
-      searchList: res.edges || []
+      pageInfo,
+      searchList,
     }
   },
   head () {
@@ -35,65 +43,67 @@ export default {
     }
   },
   validate ({ query }) {
-    let types = [undefined, 'all', 'article', 'tag', 'user']
-    let periods = [undefined, 'all', 'd1', 'w1', 'm3']
-    if (types.includes(query.type) && periods.includes(query.period)) {
-      return true
+    let types = [0, 2, 9, 1]
+    let searchTypes = [0, 1, 2, 3]
+    if (query.idType !== undefined && !types.includes(Number(query.idType))) {
+      return false
     }
-    return false
+    if (query.searchTypes !== undefined && !searchTypes.includes(Number(query.searchType))) {
+      return false
+    }
+    return true
   },
-  watchQuery: ['keyword', 'type', 'period'],
+  watchQuery: ['keyword', 'idType', 'searchType'],
   mixins: [reachBottom],
   data() {
     return {
-      first: 20, // 一页数量
       pageInfo: {},
       searchList: [],
       types: [
         {
           title: '综合',
-          type: 'all'
+          idType: 0
         },
         {
           title: '文章',
-          type: 'article'
+          idType: 2
         },
         {
           title: '标签',
-          type: 'tag'
+          idType: 9
         },
         {
           title: '用户',
-          type: 'user'
+          idType: 1
         }
       ],
-      periods: [
+      searchTypes: [
         {
           title: '全部',
-          period: 'all'
+          searchType: 0
         },
         {
           title: '一天内',
-          period: 'd1'
+          searchType: 1
         },
         {
           title: '一周内',
-          period: 'w1'
+          searchType: 2
         },
         {
           title: '三月内',
-          period: 'm3'
+          searchType: 3
         }
       ],
       isReachBottomFetching: false,  // 防止触底多次请求
     }
   },
   computed: {
-    type() {
-      return this.$route.query.type ? this.$route.query.type : 'all'
+    idType() {
+      return this.$route.query.idType || 0
     },
-    period() {
-      return this.$route.query.period ? this.$route.query.period : 'all'
+    searchType() {
+      return this.$route.query.searchType || 0
     },
     keyword() {
       return this.$route.query.keyword
@@ -101,7 +111,7 @@ export default {
   },
   methods: {
     reachBottom(){
-      if (this.pageInfo.hasNextPage) {
+      if (this.pageInfo.hasMore) {
         this.getSearchList()
       }
     }, 
@@ -111,23 +121,28 @@ export default {
       }
       this.isReachBottomFetching = true
       let res = await this.$api.searchList({
-        after: this.pageInfo.endCursor,
-        first: this.first,
-        type: this.type.toUpperCase(),
-        keyword: this.keyword,
-        period: this.period.toUpperCase()
-      }).then(res => res.s == 1 ? res.d : {})
-      this.pageInfo = res.pageInfo || {}
-      this.searchList = this.searchList.concat(res.edges || [])
+        cursor: this.pageInfo.cursor,
+        limit: 20,
+        id_type: this.idType,
+        key_word: this.keyword,
+        search_type: this.searchType
+      })
+      if (res.err_no == 0) {
+        this.searchList = this.searchList.concat(res.data || [])
+        this.pageInfo = {
+          hasMore: res.has_more,
+          cursor: res.cursor
+        }
+      }
       this.isReachBottomFetching = false
     },
     search(item) {
       this.$router.push({
         name: 'search',
         query: {
-          type: item.type || this.type,
+          idType: item.idType === undefined ? this.idType : item.idType,
           keyword: this.keyword,
-          period: item.period || this.period
+          searchType: item.searchType  === undefined ? this.searchType : item.searchType
         }
       })
     }

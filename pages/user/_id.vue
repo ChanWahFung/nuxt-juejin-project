@@ -3,23 +3,23 @@
     <div class="major-area">
       <div class="user-block shadow">
         <div class="user-block__avatar">
-          <img v-if="userInfo.avatarLarge" :src="userInfo.avatarLarge">
+          <img v-if="userInfo.avatar_large" :src="userInfo.avatar_large">
           <img v-else src="~/assets/images/default-avatar.svg">
         </div>
         <div class="user-block__info">
           <div class="info__username">
             <h1>
-              {{ userInfo.username }}
+              {{ userInfo.user_name }}
               <level :level="userInfo.level"></level>
             </h1>
           </div>
           <div class="info__position">
             <img src="~/assets/images/position.svg">
-            <span>{{ userInfo.jobTitle }}{{ userInfo.jobTitle && userInfo.company ? ' | ' : '' }}{{ userInfo.company }}</span>
+            <span>{{ userInfo.job_title }}{{ userInfo.job_title && userInfo.company ? ' | ' : '' }}{{ userInfo.company }}</span>
           </div>
           <div class="info__intro">
             <img src="~/assets/images/intro.svg">
-            <span>{{ userInfo.selfDescription }}</span>
+            <span>{{ userInfo.description }}</span>
           </div>
         </div>
         <div class="user-block__action" v-if="$store.state.auth.userId != userInfo.uid">
@@ -28,63 +28,63 @@
       </div>
       <div class="user-post">
         <div class="list-header">
-          <span class="list-header__title">专栏 {{ userInfo.postedPostsCount }}</span>
+          <span class="list-header__title">专栏 {{ postListInfo.count }}</span>
           <div>
             <span class="order-item" :class="{'order-item--active': item.order == currentOrder}" v-for="item in orderOptions" :key="item.order" @click="changeOrder(item.order)">{{ item.title }}</span>
           </div>
         </div>
-        <post-item v-for="(item, index) in postList" :key="item.id" :item.sync="postList[index]"></post-item>
+        <post-item v-for="(item, index) in postList" :key="item.article_id" :item.sync="postList[index]"></post-item>
       </div>
     </div>
     <div class="minor-area">
       <div class="honor-block shadow">
         <div class="honor-block__title">个人成就</div>
         <div class="honor-block__list">
-          <template v-if="userInfo.roles">
-            <div class="honor-item" v-if="userInfo.roles.builder && userInfo.roles.builder.isGranted">
+          <template>
+            <div class="honor-item" v-if="userInfo.builder">
               <img class="honor-item__icon shadow" src="~/assets/images/honor-1.svg" />
               <span class="honor-item__title">掘金共建者</span>
             </div>
-            <div class="honor-item" v-if="userInfo.roles.bookAuthor && userInfo.roles.bookAuthor.isGranted">
+            <div class="honor-item" v-if="userInfo.book_author">
               <img class="honor-item__icon shadow" src="~/assets/images/honor-2.svg" />
               <span class="honor-item__title">掘金小册写作权限</span>
             </div>
-            <div class="honor-item" v-if="userInfo.roles.favorableAuthor && userInfo.roles.favorableAuthor.isGranted">
+            <div class="honor-item" v-if="userInfo.favorable_author">
               <img class="honor-item__icon shadow" src="~/assets/images/honor-3.svg" />
               <span class="honor-item__title">掘金优秀作者</span>
             </div>
           </template>
           <div class="honor-item">
             <img class="honor-item__icon shadow" src="~/assets/images/honor-4.svg" />
-            <span class="honor-item__title">获得点赞 {{ userInfo.totalCollectionsCount }}</span>
+            <span class="honor-item__title">获得点赞 {{ userInfo.got_digg_count }}</span>
           </div>
           <div class="honor-item">
             <img class="honor-item__icon shadow" src="~/assets/images/honor-5.svg" />
-            <span class="honor-item__title">文章被阅读 {{ userInfo.totalViewsCount }}</span>
+            <span class="honor-item__title">文章被阅读 {{ userInfo.got_view_count }}</span>
           </div>
           <div class="honor-item">
             <img class="honor-item__icon shadow" src="~/assets/images/honor-6.svg" />
-            <span class="honor-item__title">掘力值 {{ userInfo.juejinPower }}</span>
+            <span class="honor-item__title">掘力值 {{ userInfo.power }}</span>
           </div>
         </div>
       </div>
       <div class="follow-block shadow">
         <div class="follow-item">
-          关注了<span class="follow-count">{{ userInfo.followeesCount }}</span>
+          关注了<span class="follow-count">{{ userInfo.followee_count }}</span>
         </div>
         <div class="follow-item">
-          关注者<span class="follow-count">{{ userInfo.followersCount }}</span>
+          关注者<span class="follow-count">{{ userInfo.follower_count }}</span>
         </div>
       </div>
       <div class="more-block">
         <div class="more-item">
-          收藏集<span>{{ userInfo.collectionSetCount }}</span>
+          收藏集<span>{{ userInfo.create_collect_set_count }}</span>
         </div>
         <div class="more-item">
-          关注标签<span>{{ userInfo.subscribedTagsCount }}</span>
+          关注标签<span>{{ userInfo.subscribe_tag_count }}</span>
         </div>
         <div class="more-item">
-          加入于<span>{{ $utils.formatDate('Y-MM-DD', userInfo.createdAt) }}</span>
+          加入于<span>{{ $utils.formatDate('Y-MM-DD', userInfo.register_time * 1000) }}</span>
         </div>
       </div>
     </div>
@@ -98,27 +98,38 @@ import commonRequest from '~/mixins/commonRequest'
 
 export default {
   async asyncData({ app, params }) {
-    let [userInfo, postList] = await Promise.all([
+    let [userInfo, postListRes] = await Promise.all([
       // 用户信息
       app.$api.getMultiUser({
-        ids: params.id,
-        cols: ''
-      }).then(res => res.s === 1 ? res.d[params.id] : {}),
+        user_id: params.id,
+        not_self: 1
+      }).then(res => res.err_no === 0 ? res.data : {}),
       // 专栏
       app.$api.getUserPost({
-        targetUid: params.id,
-        limit: 20,
-        order: 'createdAt'
-      }).then(res => res.s === 1 ? res.d : [])
+        user_id: params.id,
+        sort_type: 2
+      })
     ])
+    // 专栏列表、专栏分页信息
+    let postList = []
+    let postListInfo = {}
+    if (postListRes.err_no == 0) {
+      postList = postListRes.data
+      postListInfo = {
+        count: postListRes.count,
+        hasMore: postListRes.has_more,
+        cursor: postListRes.cursor
+      }
+    }
     return {
       userInfo,
+      postListInfo,
       postList
     }
   },
   head() {
     return {
-      title: `${this.userInfo.username} 的个人主页 - 掘金`
+      title: `${this.userInfo.user_name} 的个人主页 - 掘金`
     }
   },
   validate ({ params }) {
@@ -135,26 +146,29 @@ export default {
     return {
       postList: [],
       userInfo: {},
+      postListInfo: {},
       orderOptions: [
         {
           title: '热门',
-          order: 'rankIndex'
+          order: 1
         },
         {
           title: '最新',
-          order: 'createdAt'
+          order: 2
         }
       ],
-      currentOrder: 'createdAt',
+      currentOrder: 2,
       isFollowed: false
     }
   },
   mounted() {
-    this.isCurrentUserFollowed(this.userInfo.uid).then(res => (this.isFollowed = res))
+    this.isCurrentUserFollowed(this.userInfo.user_id).then(res => (this.isFollowed = res))
   },
   methods: {
     reachBottom() {
-      this.getUserPost({ isLoadMore: true })
+      if (this.postListInfo.hasMore) {
+        this.getUserPost({ isLoadMore: true })
+      }
     },
     changeOrder(order) {
       if (this.currentOrder !== order) {
@@ -164,17 +178,17 @@ export default {
     },
     async getUserPost({ isLoadMore = false } = {}) {
       let params = {
-        targetUid: this.$route.params.id,
-        limit: 20,
-        order: this.currentOrder
+        user_id: this.$route.params.id,
+        sort_type: this.currentOrder,
       }
       if (isLoadMore) {
-        let last = this.postList[this.postList.length - 1]
-        params.before = isLoadMore && last ? last.createdAt : ''
+        params.cursor = this.postListInfo.cursor
       }
       let res = await this.$api.getUserPost(params)
-      if (res.s === 1){
-        this.postList = isLoadMore ? this.postList.concat(res.d) : res.d
+      if (res.err_no === 0){
+        this.postList = isLoadMore ? this.postList.concat(res.data) : res.data
+        this.postListInfo.hasMore = res.has_more 
+        this.postListInfo.cursoe = res.cursor 
       }
     }
   }

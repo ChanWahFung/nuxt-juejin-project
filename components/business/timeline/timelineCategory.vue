@@ -2,7 +2,7 @@
   <nav class="nav-view">
     <div class="nav-mian shadow" :class="{'nav-main--sticky': !isTopbarBlock}">
       <ul class="nav-list">
-        <li class="nav-item" :class="{'nav-item--active': item.title === paramsTitle}" v-for="item in channels" :key="item.id" @click="navItemClick(item)">{{ item.name }}</li>
+        <li class="nav-item" :class="{'nav-item--active': item.category_url === paramsTitle}" v-for="item in channels" :key="item.category_id" @click="navItemClick(item)">{{ item.category_name }}</li>
         <nuxt-link v-if="token" tag="li" to="/subscribe" class="nav-item" style="margin-left: auto;">标签管理</nuxt-link>
       </ul>
     </div>
@@ -40,13 +40,13 @@ export default {
       })
     },
     navItemClick(item) {
-      if (this.paramsTitle != item.title) {
+      if (this.paramsTitle != item.category_url) {
         this.isTopbarBlock === false && this.UPDATE_TOPBAR_BLOCK(true)
         window.scrollTo({ top: 0 })
         this.$router.push({
           name: 'timeline-title',
           params: {
-            title: item.title
+            title: item.category_url
           }
         })
       }

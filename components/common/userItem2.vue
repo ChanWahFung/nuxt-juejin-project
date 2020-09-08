@@ -1,23 +1,23 @@
 <template>
-  <nuxt-link :to="'/user/'+item.author.id" target="_blank">
+  <nuxt-link :to="'/user/'+item.user_id" target="_blank">
     <div class="user-item">
       <div class="user__avatar">
-        <user-avatar :url="item.author.avatarLarge" :round="true"></user-avatar>
+        <user-avatar :url="item.avatar_large" :round="true"></user-avatar>
       </div>
       <div class="user__info">
         <div class="user__name">
-          <span>{{ item.author.username }}</span>
-          <level :level="item.author.level"></level>
+          <span>{{ item.user_name }}</span>
+          <level :level="item.level"></level>
         </div>
         <div class="user__job-title ellipsis">
-          {{ item.author.jobTitle }}
-          {{ item.author.jobTitle && item.author.company ? '@' : '' }}
-          {{ item.author.company }}
+          {{ item.job_title }}
+          {{ item.job_title && item.company ? '@' : '' }}
+          {{ item.company }}
         </div>
         <div class="user__meta">{{ item.description }}</div>
       </div>
       <div class="user__follow-btn">
-        <follow-btn type="user" :is-follow.sync="item.author.viewerIsFollowing" :followee-id="item.author.id"></follow-btn>
+        <follow-btn type="user" :is-follow.sync="item.isfollowed" :followee-id="item.user_id"></follow-btn>
       </div>
     </div>
   </nuxt-link>

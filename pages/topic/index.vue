@@ -1,33 +1,33 @@
 <template>
   <div class="topics-container">
-    <div v-if="topicsFollowedList.length" class="topics-list">
+    <div v-if="topicsFollowedList && topicsFollowedList.length" class="topics-list">
       <div class="list__title">我关注的话题</div>
       <div class="list">
-        <div class="topics-item" v-for="item in topicsFollowedList" :key="item.objectId">
-          <nuxt-link :to="'/topic/'+item.objectId" :title="item.description" target="_blank">
-            <div class="item__icon" :style="`background-image: url(${item.icon})`">
-              <span class="itme__msgs-count">{{ item.msgsCount | formatCount }}</span>
+        <div class="topics-item" v-for="item in topicsFollowedList" :key="item.topic_id">
+          <nuxt-link :to="'/topic/'+item.topic_id" :title="item.topic.description" target="_blank">
+            <div class="item__icon" :style="`background-image: url(${item.topic.icon})`">
+              <span class="itme__msgs-count">{{ item.topic.msg_count | formatCount }}</span>
             </div>
           </nuxt-link>
           <div class="item__info">
-            <nuxt-link class="item__title" :to="'/topic/'+item.objectId" :title="item.description" target="_blank">{{ item.title }}</nuxt-link>
-            <span class="item__meta">{{ item.followersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
-            <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
+            <nuxt-link class="item__title" :to="'/topic/'+item.topic_id" :title="item.topic.description" target="_blank">{{ item.topic.title }}</nuxt-link>
+            <span class="item__meta">{{ item.topic.follower_count }} 关注 · {{ item.topic.msg_count }} 沸点</span>
+            <span class="item__followbtn" :class="{'item__followbtn--active': item.user_interact.is_follow}" @click="followTopics(item)">{{ item.user_interact.is_follow ? '已关注' : '+ 关注' }}</span>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="topicsList.length" class="topics-list">
+    <div v-if="topicsList && topicsList.length" class="topics-list">
       <div class="list__title">全部话题</div>
       <div class="list">
-        <div class="topics-item" v-for="item in topicsList" :key="item.objectId">
-          <nuxt-link :to="'/topic/'+item.objectId" :title="item.description" target="_blank">
-            <div class="item__icon" :style="`background-image: url(${item.icon})`"></div>
+        <div class="topics-item" v-for="item in topicsList" :key="item.topic_id">
+          <nuxt-link :to="'/topic/'+item.topic_id" :title="item.topic.description" target="_blank">
+            <div class="item__icon" :style="`background-image: url(${item.topic.icon})`"></div>
           </nuxt-link>
           <div class="item__info">
-            <nuxt-link class="item__title" :to="'/topic/'+item.objectId" :title="item.description" target="_blank">{{ item.title }}</nuxt-link>
-            <span class="item__meta">{{ item.followersCount }} 关注 · {{ item.msgsCount }} 沸点</span>
-            <span class="item__followbtn" :class="{'item__followbtn--active': item.followed}" @click="followTopics(item)">{{ item.followed ? '已关注' : '+ 关注' }}</span>
+            <nuxt-link class="item__title" :to="'/topic/'+item.topic_id" :title="item.topic.description" target="_blank">{{ item.topic.title }}</nuxt-link>
+            <span class="item__meta">{{ item.topic.follower_count }} 关注 · {{ item.topic.msg_count }} 沸点</span>
+            <span class="item__followbtn" :class="{'item__followbtn--active': item.user_interact.is_follow}" @click="followTopics(item)">{{ item.user_interact.is_follow ? '已关注' : '+ 关注' }}</span>
           </div>
         </div>
       </div>
@@ -47,16 +47,12 @@ export default {
     let [topicsList, topicsFollowedList] = await Promise.all([
       // 全部话题
       app.$api.getTopics({
-        sortType: 'hot',
-        page: 1,
-        pageSize: 100
-      }).then(res => res.s === 1 ? res.d.list : []),
+        limit: 100,
+      }).then(res => res.err_no === 0 ? res.data : []),
       // 我关注的话题
       app.$api.getFollowedTopics({
-        after: 0,
-        page: 1,
-        pageSize: 100
-      }).then(res => res.s === 1 ? res.d.list : [])
+        limit: 100,
+      }).then(res => res.err_no === 0 ? res.data : [])
     ])
     return {
       topicsList,
