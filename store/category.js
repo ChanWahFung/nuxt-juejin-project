@@ -30,5 +30,8 @@ export const mutations = {
   },
   UPDATE_BOOK_CATEGORY_LIST(state, payload){
     state.bookCategoryList = payload
+  },
+  UPDATE_PIN_CATEGORY_LIST(state, payload) {
+    state.pinCategoryList = payload
   }
 }
