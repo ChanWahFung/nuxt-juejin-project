@@ -144,7 +144,7 @@
 
 ``` bash
 # 克隆项目
-git clone https://github.com/ChanWahFung/nuxt-juejin-project.git
+git clone -b apinew https://github.com/ChanWahFung/nuxt-juejin-project.git
 
 # 进入项目目录
 cd nuxt-juejin-project
