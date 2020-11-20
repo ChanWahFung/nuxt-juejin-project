@@ -113,13 +113,7 @@ export default {
   watch: {
     '$route.path': {
       handler(newVal, oldVal) {
-        this.getUserNotificationNum()
         if (newVal != oldVal) {
-          // 当前页面为消息页时 更新未读消息状态
-          if (newVal.includes('/notice')) {
-            this.$api.setUserNotificationNum()
-            this.getUserNotificationNum()
-          }
           this.UPDATE_TOPBAR_BLOCK(true)
         }
       },
@@ -138,12 +132,6 @@ export default {
           keyword: this.keyword
         }
       })
-    },
-    async getUserNotificationNum(){
-      let res = await this.$api.getUserNotificationNum()
-      if (res.s === 1) {
-        this.noticeNum = res.d.notification_num
-      }
     },
     showLoginModal() {
       this.$loginModal(this)
