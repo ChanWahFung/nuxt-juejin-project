@@ -69,7 +69,7 @@
       <about-article :list="aboutArticles"></about-article>
       <catalog></catalog>
     </div>
-    <article-suspended-panel ref="panel" :articDetail="articDetail" @setgood-handler="setGood"></article-suspended-panel>
+    <article-suspended-panel ref="panel" :artic-detail="articDetail" @setgood-handler="setGood"></article-suspended-panel>
   </div>
 </template>
 

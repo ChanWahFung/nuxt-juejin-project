@@ -112,7 +112,7 @@ export default {
         return
       }
       this.isReachBottomFetching = true
-      let list = await this.$api.getTagEntry({
+      await this.$api.getTagEntry({
         sort_type: this.sort,
         tag_ids: [this.tagInfo.tag_id]
       }).then(res => {

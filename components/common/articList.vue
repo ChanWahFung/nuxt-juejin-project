@@ -1,6 +1,6 @@
 <template>
   <div class="artic-list">
-    <template v-for="(item, index) in list" >
+    <template v-for="(item, index) in list">
       <div v-if="item.item_type == 2" class="artic-item--border" :key="index">
         <artic-item :item.sync="list[index].item_info"></artic-item>
       </div>
