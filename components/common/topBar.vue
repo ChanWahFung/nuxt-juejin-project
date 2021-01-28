@@ -84,6 +84,9 @@ export default {
     let scrollingElement = document.scrollingElement
     let scrollTop = 0
     window.addEventListener('scroll', () => {
+      if (Math.abs(scrollingElement.scrollTop - scrollTop) < 100) {
+        return;
+      }
       if (scrollingElement.scrollTop < 300) {
         this.isTopbarBlock === false && this.UPDATE_TOPBAR_BLOCK(true)
         return
