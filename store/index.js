@@ -4,6 +4,8 @@ export const state = () => ({
 
 export const mutations = {
   UPDATE_TOPBAR_BLOCK(state, payload){
-    state.isTopbarBlock = payload
+    if (state.isTopbarBlock !== payload) {
+      state.isTopbarBlock = payload
+    }
   }
 }
