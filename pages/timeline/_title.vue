@@ -16,7 +16,6 @@
       </div>
       <div class="index-side">
         <author-rank :list="recommendAuthors"></author-rank>
-        <recommend-book :list="recommendBooks"></recommend-book>
       </div>
     </div>
   </div>
@@ -34,7 +33,7 @@ export default {
     // 分类列表
     let initCategoryList = [{ category_id: 0, category_name: '推荐', category_url: 'recommended' }]
     let currentCategoryItem = store.state.category.timelineCategoryList.filter(item => item.category_url === params.title)[0] || initCategoryList[0]
-    let [indexData, recommendAuthors, recommendBooks] = await Promise.all([
+    let [indexData, recommendAuthors] = await Promise.all([
       // 文章列表
       app.$api.getIndexList({
         cate_id: currentCategoryItem.category_id || '',
@@ -46,8 +45,6 @@ export default {
       app.$api.getRecommendAuthor({ 
         limit: 5
       }).then(res => res.err_no == 0 ? res.data : []),
-      // 推荐小册
-      app.$api.getRecommendBook().then(res => res.s === 1 ? res.d.data : []),
     ])
     // 列表下一页信息
     let pageInfo = {
@@ -58,8 +55,7 @@ export default {
       currentCategoryItem,
       list: indexData.data || [],
       pageInfo,
-      recommendAuthors,
-      recommendBooks
+      recommendAuthors
     };
   },
   head () {
@@ -83,7 +79,6 @@ export default {
   mixins: [reachBottom],
   components: {
     'author-rank': authorRank,
-    'recommend-book': recommendBook,
     'timeline-category': timelineCategory
   },
   data() {
@@ -131,7 +126,6 @@ export default {
       list: [],
       pageInfo: {},
       recommendAuthors: [],
-      recommendBooks: [],
       isReachBottomFetching: false,  // 防止触底多次请求
     };
   },
