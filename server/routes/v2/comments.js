@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
+const {apiJuejin} = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -32,7 +33,7 @@ router.get('/entry', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/interact_api/v1/comment/list',
+    url: `${apiJuejin}interact_api/v1/comment/list`,
     method: "POST",
     body: { 
       cursor: data.cursor || "0",
@@ -79,7 +80,7 @@ router.get('/reply', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/interact_api/v1/reply/list',
+    url: `${apiJuejin}interact_api/v1/reply/list`,
     method: "POST",
     body: { 
       cursor: data.cursor || "0",

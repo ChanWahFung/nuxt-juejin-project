@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
+const {apiJuejin} = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -12,7 +13,7 @@ router.get('/detail', validator({
 }), async (ctx, next)=>{
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/content_api/v1/article/detail',
+    url: `${apiJuejin}content_api/v1/article/detail`,
     method: "POST",
     body: {
       article_id: data.article_id
@@ -55,9 +56,9 @@ router.post('/indexList', validator({
   }
 }), async (ctx, next) => {
   const data = ctx.request.body
-  const apiName = data.feed_type == 'all' ? 'recommend_all_feed' : 'recommend_cate_feed'
+  const apiName = data.cate_id ? 'recommend_cate_feed' : 'recommend_all_feed'
   const options = {
-    url: 'https://apinew.juejin.im/recommend_api/v1/article/'+apiName,
+    url: `${apiJuejin}recommend_api/v1/article/${apiName}`,
     method: "POST",
     body: { 
       cate_id: data.cate_id || '',
@@ -84,7 +85,7 @@ router.get('/userPost', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/content_api/v1/article/query_list',
+    url: `${apiJuejin}content_api/v1/article/query_list`,
     method: "POST",
     body: {
       user_id: data.user_id,
@@ -118,7 +119,7 @@ router.post('/relatedEntry', validator({
 }), async (ctx, next) => {
   const data = ctx.request.body
   const options = {
-    url: 'https://apinew.juejin.im/recommend_api/v1/article/recommend_article_detail_feed',
+    url: `${apiJuejin}recommend_api/v1/article/recommend_article_detail_feed`,
     method: "POST",
     body: { 
       cursor: "0",
@@ -159,7 +160,7 @@ router.post('/recommendEntryByTagIds', validator({
 }), async (ctx, next) => {
   const data = ctx.request.body
   const options = {
-    url: 'https://apinew.juejin.im/recommend_api/v1/article/recommend_tag_feed',
+    url: `${apiJuejin}recommend_api/v1/article/recommend_tag_feed`,
     method: "POST",
     body: { 
       cursor: data.cursor || '',
@@ -195,7 +196,7 @@ router.get('/search', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/search_api/v1/search',
+    url: `${apiJuejin}search_api/v1/search`,
     method: "POST",
     body: { 
       cursor: data.cursor || "0",

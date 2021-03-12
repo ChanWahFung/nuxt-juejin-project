@@ -14,7 +14,7 @@ router.get('/multiUser', validator({
 }), async (ctx, next)=>{
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/user_api/v1/user/get',
+    url: `${apiJuejin}user_api/v1/user/get`,
     method: "GET",
     params: {
       user_id: data.user_id,
@@ -55,7 +55,7 @@ router.get('/isCurrentUserFollowed', validator({
   ids: { type: 'string', required: true }
 }), async (ctx, next)=>{
   const options = {
-    url: 'https://apinew.juejin.im/user_api/v1/follow/isfollowed?ids=817692379985752&type=1',
+    url: `${apiJuejin}user_api/v1/follow/isfollowed?ids=817692379985752&type=1`,
     method: "GET",
     params: {
       ids: data.ids,

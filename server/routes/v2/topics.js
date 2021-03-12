@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
+const {apiJuejin} = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -21,7 +22,7 @@ router.get('/list', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/tag_api/v1/query_topic_list',
+    url: `${apiJuejin}tag_api/v1/query_topic_list`,
     method: "POST",
     body: {
       cursor: data.cursor || '0',
@@ -51,7 +52,7 @@ router.get('/recommendList', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/recommend_api/v1/tag/recommend_topic_list',
+    url: `${apiJuejin}recommend_api/v1/tag/recommend_topic_list`,
     method: "POST",
     body: {
       cursor: data.cursor || '0',
@@ -82,7 +83,7 @@ router.get('/followedList', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/interact_api/v1/follow/topic_list',
+    url: `${apiJuejin}interact_api/v1/follow/topic_list`,
     method: "POST",
     body: {
       cursor: data.cursor || '0',
@@ -103,7 +104,7 @@ router.get('/detail', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/tag_api/v1/query_topic_detail',
+    url: `${apiJuejin}tag_api/v1/query_topic_detail`,
     method: "POST",
     body: {
       topic_id: data.topic_id
@@ -139,7 +140,7 @@ router.get('/pinList', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/recommend_api/v1/short_msg/topic',
+    url: `${apiJuejin}recommend_api/v1/short_msg/topic`,
     method: "POST",
     body: {
       cursor: data.cursor || "0",
@@ -173,7 +174,7 @@ router.get('/attenders', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/interact_api/v1/follow/follower_list',
+    url: `${apiJuejin}interact_api/v1/follow/follower_list`,
     method: "POST",
     body: {
       cursor: data.cursor || "0",

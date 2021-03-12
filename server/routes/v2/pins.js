@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
+const {apiJuejin} = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -23,7 +24,7 @@ router.get('/list', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/recommend_api/v1/short_msg/'+data.type,
+    url: `${apiJuejin}recommend_api/v1/short_msg/${data.type}`,
     method: 'POST'
   }
   // 不同类型获取不同参数
@@ -62,7 +63,7 @@ router.get('/pinDetail', validator({
 }), async (ctx, next) => {
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/content_api/v1/short_msg/detail',
+    url: `${apiJuejin}content_api/v1/short_msg/detail`,
     method: 'POST',
     body: {
       msg_id: data.msg_id

@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
+const {apiJuejin} = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -16,7 +17,7 @@ router.get('/entry', validator({
 }), async (ctx, next) => {
   let data = ctx.query 
   const options = {
-    url: 'https://apinew.juejin.im/tag_api/v1/query_category_briefs',
+    url: `${apiJuejin}tag_api/v1/query_category_briefs`,
     method: "GET",
     params: {
       show_type: data.show_type
@@ -35,7 +36,7 @@ router.post('/tags', validator({
 }), async (ctx, next) => {
   const data = ctx.request.body
   const options = {
-    url: 'https://apinew.juejin.im/recommend_api/v1/tag/recommend_tag_list',
+    url: `${apiJuejin}recommend_api/v1/tag/recommend_tag_list`,
     method: "POST",
     body: {
       cate_id: data.cate_id

@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
+const {apiJuejin} = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -22,7 +23,7 @@ router.get('/recommendAuthor', validator({
   ctx.set('Cache-Control', 'max-age=60')
   const data = ctx.query
   const options = {
-    url: 'https://apinew.juejin.im/user_api/v1/author/recommend',
+    url: `${apiJuejin}user_api/v1/author/recommend`,
     method: "GET",
     params: {
       category_id: data.category_id || '',
