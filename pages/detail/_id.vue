@@ -69,12 +69,13 @@
       <about-article :list="aboutArticles"></about-article>
       <catalog></catalog>
     </div>
-    <article-suspended-panel ref="panel" :articDetail="articDetail" @setgood-handler="setGood"></article-suspended-panel>
+    <article-suspended-panel ref="panel" :artic-detail="articDetail" @setgood-handler="setGood"></article-suspended-panel>
   </div>
 </template>
 
 <script>
 import markdownit from 'markdown-it'
+import highlight from 'highlight.js'
 import reachBottom from '~/mixins/reachBottom'
 import commonRequest from '~/mixins/commonRequest'
 import aboutAuthor from '~/components/business/detail/aboutAuthor.vue'
@@ -96,7 +97,16 @@ export default {
         ? markdownit({
           html: true,
           linkify: true,
-          typographer: true
+          typographer: true,
+          langPrefix: 'hljs hl',
+          highlight(str, lang) {
+            if (lang && highlight.getLanguage(lang)) {
+              try {
+                return highlight.highlight(lang, str).value;
+              } catch (__) {}
+            }
+            return ''; // 使用额外的默认转义
+          }
         }).render(info.mark_content) 
         : info.content
     }

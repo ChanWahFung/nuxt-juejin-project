@@ -25,7 +25,6 @@
 import { mapState } from 'vuex'
 import reachBottom from '~/mixins/reachBottom'
 import authorRank from '~/components/business/timeline/authorRank'
-import recommendBook from '~/components/business/timeline/recommendBook'
 import timelineCategory from '~/components/business/timeline/timelineCategory'
 
 export default {

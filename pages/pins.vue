@@ -50,7 +50,7 @@ export default {
             ...item,
             path: '/pins/topic/' + item.topic_id
           }))
-          store.state.category.pinCategoryList.push(...list)
+          store.commit('category/UPDATE_PIN_CATEGORY_LIST', store.state.category.pinCategoryList.concat(list))
         }
       })
     }

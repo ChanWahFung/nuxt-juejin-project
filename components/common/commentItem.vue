@@ -20,7 +20,7 @@
         <span class="comment-item__meta__time">{{ data.comment_info.ctime | formatTime }}</span>
       </div>
       <div v-if="data.reply_infos && data.reply_infos.length" class="comment-item__reply-area">
-        <div class="reply-item" v-for="(item, index) in data.reply_infos" :key="index">
+        <div class="reply-item" v-for="(item, i) in data.reply_infos" :key="i">
           <nuxt-link :to="'/user/'+item.user_info.user_id" class="comment-item__avatar" target="_blank">
             <user-avatar :url="item.user_info.avatar_large" :round="true"></user-avatar>
           </nuxt-link>

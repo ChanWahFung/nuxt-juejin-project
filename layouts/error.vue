@@ -7,7 +7,7 @@
         <img class="elem sea" src="https://b-gold-cdn.xitu.io/v3/static/img/sea.892cf5d.png">
         <img class="elem spray" src="https://b-gold-cdn.xitu.io/v3/static/img/spray.bc638d2.png">
       </div>
-      <div class="title">{{statusCode}} - {{ message }}</div>
+      <div class="title">{{ statusCode }} - {{ message }}</div>
       <nuxt-link class="error-link" to="/">回到首页</nuxt-link>
     </div>
   </div>
