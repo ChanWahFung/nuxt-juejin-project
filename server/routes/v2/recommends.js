@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
-const {apiJuejin} = require('../../config/url')
+const { apiJuejin } = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -19,7 +19,7 @@ router.get('/recommendAuthor', validator({
   },
   cursor: { type: 'string' },
   category_id: { type: 'string' }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   ctx.set('Cache-Control', 'max-age=60')
   const data = ctx.query
   const options = {

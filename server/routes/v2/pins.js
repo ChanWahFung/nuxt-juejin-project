@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
-const {apiJuejin} = require('../../config/url')
+const { apiJuejin } = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -29,7 +29,7 @@ router.get('/list', validator({
   }
   // 不同类型获取不同参数
   const strategyDatas = {
-    recommend:  {
+    recommend: {
       cursor: data.cursor || "0",
       id_type: 4,
       limit: Number(data.limit),
@@ -78,7 +78,7 @@ function like(ctx) {
   const headers = ctx.headers
   const action = ctx.method === 'PUT' ? 'like' : 'unlike'
   const options = {
-    url: 'https://short-msg-ms.juejin.im/v1/'+action,
+    url: 'https://short-msg-ms.juejin.im/v1/' + action,
     method: 'GET',
     params: {
       uid: headers['x-uid'],
@@ -95,7 +95,7 @@ function like(ctx) {
  * 沸点点赞（弃用）
  */
 router.put('/like', validator({
-  pinId: { type: 'string', required: true}
+  pinId: { type: 'string', required: true }
 }), async (ctx, next) => {
   let { body } = await like(ctx)
   ctx.body = body
@@ -105,11 +105,10 @@ router.put('/like', validator({
  * 沸点取消点赞（弃用）
  */
 router.delete('/like', validator({
-  pinId: { type: 'string', required: true}
+  pinId: { type: 'string', required: true }
 }), async (ctx, next) => {
   let { body } = await like(ctx)
   ctx.body = body
 })
-
 
 module.exports = router

@@ -38,7 +38,7 @@ export default {
     background: rgba(0,0,0,.01);
   }
 
-  /deep/ .tag-item__title em{
+   ::v-deep  .tag-item__title em{
     color: #e8001c;
   }
 

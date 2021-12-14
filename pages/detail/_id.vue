@@ -93,7 +93,7 @@ export default {
     let content = ''
     let info = articDetail.article_info
     if (info) {
-      content = info.mark_content 
+      content = info.mark_content
         ? markdownit({
           html: true,
           linkify: true,
@@ -107,7 +107,7 @@ export default {
             }
             return ''; // 使用额外的默认转义
           }
-        }).render(info.mark_content) 
+        }).render(info.mark_content)
         : info.content
     }
     // 相关文章
@@ -325,15 +325,15 @@ export default {
     line-height: 1.6;
     color: #333;
 
-    /deep/ img{
+     ::v-deep  img{
       width: 100%;
     }
 
-    /deep/ strong{
+     ::v-deep  strong{
       font-weight: bold;
     }
 
-    /deep/ p{
+     ::v-deep  p{
       margin: 22px 0;
 
       >code{
@@ -346,14 +346,14 @@ export default {
       }
     }
 
-    /deep/ h1{
+     ::v-deep  h1{
       margin-top: 40px;
       margin-bottom: 12px;
       font-size: 26px;
       font-weight: 700;
     }
 
-    /deep/ h2{
+     ::v-deep  h2{
       margin-top: 24px;
       margin-bottom: 12px;
       font-size: 24px;
@@ -361,47 +361,47 @@ export default {
       border-bottom: 1px solid rgb(236, 236, 236);
     }
 
-    /deep/ h3{
+     ::v-deep  h3{
       margin-top: 15px;
       margin-bottom: 12px;
       font-size: 18px;
       font-weight: 700;
     }
 
-    /deep/ h4{
+     ::v-deep  h4{
       margin-top: 15px;
       margin-bottom: 12px;
       font-size: 16px;
       font-weight: 700;
     }
 
-    /deep/ h5{
+     ::v-deep  h5{
       margin-top: 5px;
       margin-bottom: 5px;
       font-size: 14px;
       font-weight: 700;
     }
 
-    /deep/ code{
+     ::v-deep  code{
       font-size: 13px;
       line-height: 1.8;
       letter-spacing: .6px;
     }
 
-    /deep/ ol,
-    /deep/ ul{
+     ::v-deep  ol,
+     ::v-deep  ul{
       padding-left: 28px;
       list-style: initial;
       list-style-type: decimal;
     }
-    
-    /deep/ li{
+
+     ::v-deep  li{
       padding-left: 6px;
       list-style: initial;
       list-style-type: decimal;
     }
 
-    /deep/ blockquote{
+     ::v-deep  blockquote{
       color: #666;
       padding: 1px 23px;
       margin: 22px 0;
@@ -409,7 +409,7 @@ export default {
       background-color: #f8f8f8;
     }
 
-    /deep/ a{
+     ::v-deep  a{
       color: #0269c8;
       border-bottom: 1px solid #d1e9ff;
       word-break: break-all;

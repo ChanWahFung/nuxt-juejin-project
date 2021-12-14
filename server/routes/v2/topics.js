@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
-const {apiJuejin} = require('../../config/url')
+const { apiJuejin } = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -193,7 +193,7 @@ function followTopics(ctx){
   const idField = ctx.method === 'PUT' ? 'topicIds' : 'topicId'
   const headers = ctx.headers
   const options = {
-    url: 'https://short-msg-ms.juejin.im/v1/topic/'+action,
+    url: 'https://short-msg-ms.juejin.im/v1/topic/' + action,
     method: 'POST',
     body: {
       src: 'web',

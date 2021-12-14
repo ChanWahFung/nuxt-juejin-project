@@ -1,25 +1,25 @@
-const request = require('request')
 const util = require('util')
 const qs = require('querystring')
+const request = require('request')
 const requestPromise = util.promisify(request)
 
 module.exports = function (options){
   options.method = options.method.toUpperCase()
-  if(options.method === 'GET'){
-    if(options.params){
+  if (options.method === 'GET'){
+    if (options.params){
       let params = qs.stringify(options.params)
       options.url = `${options.url}?${params}`
     }
   }
-  if(
+  if (
     options.method === 'POST' ||
     options.method === 'PUT' ||
     options.method === 'DELETE'
   ){
-    if(options.body){
+    if (options.body){
       options.body = JSON.stringify(options.body)
     }
-    if(!options.headers){
+    if (!options.headers){
       options.headers = {}
     }
     options.headers = {
@@ -28,13 +28,13 @@ module.exports = function (options){
     }
   }
   return requestPromise(options)
-    .then(res=> ({
+    .then(res => ({
       statusCode: res.statusCode,
       statusMessage: res.statusMessage,
       headers: res.headers,
       body: res.body
     }))
-    .catch(err=> {
+    .catch(err => {
       console.error(err)
       return {
         statusCode: -1,

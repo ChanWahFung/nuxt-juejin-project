@@ -16,10 +16,10 @@ config.dev = app.env !== 'production'
 function useMiddleware(){
   app.use(helmet())
   app.use(bodyParser())
-  //设置全局返回头
+  // 设置全局返回头
   app.use(cors({
-    origin: function(ctx) {
-      return 'http://localhost:8000'; //cors
+    origin(ctx) {
+      return 'http://localhost:8000'; // cors
     },
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 86400,
@@ -31,7 +31,7 @@ function useMiddleware(){
 
 function useRouter(path){
   path = path || __dirname + '/routes'
-  //注册路由
+  // 注册路由
   let urls = fs.readdirSync(path)
   urls.forEach((element) => {
     const elementPath = path + '/' + element
@@ -42,11 +42,11 @@ function useRouter(path){
     } else {
       let module = require(elementPath)
       let routeRrefix = path.split('/routes')[1] || ''
-      //routes里的文件名作为 路由名
+      // routes里的文件名作为 路由名
       router.use(routeRrefix + '/' + element.replace('.js', ''), module.routes())
     }
   })
-  //使用路由
+  // 使用路由
   app.use(router.routes()).use(router.allowedMethods())
 }
 

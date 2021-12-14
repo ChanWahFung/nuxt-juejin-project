@@ -6,11 +6,11 @@
         <div class="article__title">{{ item.article_info.title }}</div>
         <div class="article__meta">
           <div class="meta-item">
-            <img class="meta-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
+            <img class="meta-item__icon" src="~assets/images/png/like.png">
             {{ item.article_info.digg_count }}
           </div>
           <div class="meta-item">
-            <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
+            <img class="action-item__icon" src="~assets/images/png/comment.png">
             {{ item.article_info.comment_count }}
           </div>
         </div>
@@ -41,7 +41,7 @@ export default {
     font-size: 14px;
     border-bottom: 1px solid #eee;
   }
-  
+
   .article-item{
     padding: 15px;
     font-size: 14px;

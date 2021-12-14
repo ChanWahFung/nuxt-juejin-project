@@ -3,7 +3,7 @@
     <div class="topbar" :class="['topbar--'+(isTopbarBlock ? 'show' : 'hidden')]">
       <div class="topbar__main">
         <nuxt-link to="/timeline" class="logo">
-          <img src="https://b-gold-cdn.xitu.io/v3/static/img/logo.a7995ad.svg" alt="掘金">
+          <img src="~assets/images/png/logo.svg" alt="掘金">
         </nuxt-link>
         <ul class="navs">
           <nuxt-link v-for="item in navs" :key="item.id" :to="item.link" tag="li" class="nav-item">{{ $t('topbar.'+item.name) }}</nuxt-link>
@@ -186,6 +186,12 @@ export default {
 
   .logo{
     margin-right: 20px;
+
+    img {
+        display: block;
+        width: 116.82px;
+        height: 24px;
+    }
   }
 }
 .navs{
