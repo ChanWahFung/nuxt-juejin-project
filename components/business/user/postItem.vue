@@ -17,11 +17,11 @@
       <ul class="meta__action">
         <li class="action-item" :class="{active: item.user_interact.is_collect}" @click.stop="articleLike">
           <img v-if="item.user_interact.is_collect" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
-          <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
+          <img v-else class="action-item__icon" src="~assets/images/png/like.png">
           {{ item.article_info.digg_count }}
         </li>
         <li class="action-item">
-          <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
+          <img class="action-item__icon" src="~assets/images/png/comment.png">
           {{ item.article_info.comment_count }}
         </li>
       </ul>
@@ -69,9 +69,9 @@ export default {
         })
         if (res.s === 1) {
           this.$emit('update:item', {
-            ...this.item, 
+            ...this.item,
             isCollected: !this.item.isCollected,
-            collectionCount: this.item.isCollected ? Number(this.item.collectionCount) - 1 : Number(this.item.collectionCount) + 1 
+            collectionCount: this.item.isCollected ? Number(this.item.collectionCount) - 1 : Number(this.item.collectionCount) + 1
           })
         }
         this.likeLoading = false
@@ -158,6 +158,9 @@ export default {
 
       .action-item__icon{
         margin-right: 3px;
+        display: block;
+        width: 16px;
+        height: 16px;
       }
 
       &.active{

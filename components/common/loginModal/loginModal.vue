@@ -60,7 +60,7 @@ export default {
         this.hideModal()
       } else {
         this.$message.error('登录失败，请重试')
-      }      
+      }
     },
     // 销毁弹窗
     hideModal() {
@@ -151,7 +151,7 @@ export default {
     .password-input{
       margin-bottom: 8px;
 
-      /deep/ input::placeholder{
+       ::v-deep  input::placeholder{
         color: #999;
       }
     }

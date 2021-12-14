@@ -82,7 +82,7 @@ export default {
         color: #2e3135;
       }
 
-      /deep/ em {
+      ::v-deep  em {
         color: #e8001c;
       }
     }

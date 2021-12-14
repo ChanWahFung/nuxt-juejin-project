@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
-const {apiJuejin} = require('../../config/url')
+const { apiJuejin } = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -12,7 +12,7 @@ const validator = require('../../middleware/validator')
 router.get('/multiUser', validator({
   user_id: { type: 'string', required: true },
   not_self: { type: 'enum', required: true, enum: ['0', '1'] }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   const data = ctx.query
   const options = {
     url: `${apiJuejin}user_api/v1/user/get`,
@@ -32,7 +32,7 @@ router.get('/multiUser', validator({
  */
 router.get('/notification', validator({
   before: { type: 'string' }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   const headers = ctx.headers
   const options = {
     url: 'https://ufp-api-ms.juejin.im/v1/getUserNotification',
@@ -54,7 +54,7 @@ router.get('/notification', validator({
  */
 router.get('/isCurrentUserFollowed', validator({
   ids: { type: 'string', required: true }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   const options = {
     url: `${apiJuejin}user_api/v1/follow/isfollowed?ids=817692379985752&type=1`,
     method: "GET",
@@ -71,7 +71,7 @@ router.get('/isCurrentUserFollowed', validator({
 function like(ctx){
   const headers = ctx.headers
   const options = {
-    url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/'+ctx.request.body.entryId,
+    url: 'https://user-like-wrapper-ms.juejin.im/v1/user/like/entry/' + ctx.request.body.entryId,
     method: ctx.method,
     headers: {
       'X-Juejin-Src': 'web',
@@ -113,7 +113,7 @@ router.delete('/like', validator({
 function userNotificationNum(ctx, url){
   const headers = ctx.headers
   const options = {
-    url: 'https://ufp-api-ms.juejin.im/v1/'+url,
+    url: 'https://ufp-api-ms.juejin.im/v1/' + url,
     method: "GET",
     params: {
       uid: headers['x-uid'],
@@ -127,7 +127,7 @@ function userNotificationNum(ctx, url){
 /**
  * 获取未读消息数量（弃用）
  */
-router.get('/userNotificationNum', async (ctx, next)=>{
+router.get('/userNotificationNum', async (ctx, next) => {
   let { body } = await userNotificationNum(ctx, 'getUserNotificationNum')
   ctx.body = body
 })
@@ -135,7 +135,7 @@ router.get('/userNotificationNum', async (ctx, next)=>{
 /**
  * 设置未读消息数量（弃用）
  */
-router.put('/userNotificationNum', async (ctx, next)=>{
+router.put('/userNotificationNum', async (ctx, next) => {
   let { body } = await userNotificationNum(ctx, 'setUserNotificationNum')
   ctx.body = body
 })
@@ -144,7 +144,7 @@ router.put('/userNotificationNum', async (ctx, next)=>{
 function follow(ctx, url){
   const headers = ctx.headers
   const options = {
-    url: 'https://follow-api-ms.juejin.im/v1/'+url,
+    url: 'https://follow-api-ms.juejin.im/v1/' + url,
     method: "GET",
     params: {
       follower: ctx.request.body.follower,
@@ -165,7 +165,7 @@ function follow(ctx, url){
 router.put('/follow', validator({
   follower: { type: 'string', required: true },
   followee: { type: 'string', required: true }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   let { body } = await follow(ctx, 'follow')
   ctx.body = body
 })
@@ -178,7 +178,7 @@ router.put('/follow', validator({
 router.delete('/follow', validator({
   follower: { type: 'string', required: true },
   followee: { type: 'string', required: true }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   let { body } = await follow(ctx, 'unfollow')
   ctx.body = body
 })

@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
-const {apiJuejin} = require('../../config/url')
+const { apiJuejin } = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -152,7 +152,7 @@ router.get('/search', validator({
 function subscribe(ctx){
   const headers = ctx.headers
   const options = {
-    url: 'https://gold-tag-ms.juejin.im/v1/tag/subscribe/'+ctx.request.body.tagId,
+    url: 'https://gold-tag-ms.juejin.im/v1/tag/subscribe/' + ctx.request.body.tagId,
     method: ctx.method,
     headers: {
       'X-Juejin-Src': 'web',
@@ -170,7 +170,7 @@ function subscribe(ctx){
  */
 router.put('/subscribe', validator({
   tagId: { type: 'string', required: true }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   const { body, statusCode, headers } = await subscribe(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])
@@ -183,7 +183,7 @@ router.put('/subscribe', validator({
  */
 router.delete('/subscribe', validator({
   tagId: { type: 'string', required: true }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   const { body, statusCode, headers } = await subscribe(ctx)
   ctx.status = statusCode
   ctx.set('Content-Type', headers['content-type'])

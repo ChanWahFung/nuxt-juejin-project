@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const request = require('../../request')
-const {apiJuejin} = require('../../config/url')
+const { apiJuejin } = require('../../config/url')
 const validator = require('../../middleware/validator')
 
 /**
@@ -10,7 +10,7 @@ const validator = require('../../middleware/validator')
  */
 router.get('/detail', validator({
   article_id: { type: 'string', required: true }
-}), async (ctx, next)=>{
+}), async (ctx, next) => {
   const data = ctx.query
   const options = {
     url: `${apiJuejin}content_api/v1/article/detail`,
@@ -183,7 +183,7 @@ router.post('/recommendEntryByTagIds', validator({
  * @param {number} search_type - 0：全部、1：一天内、2：一周内、3：三个月内
  */
 router.get('/search', validator({
-  id_type: { type: 'enum', required: true, enum: ['0', '2', '9', '1']},
+  id_type: { type: 'enum', required: true, enum: ['0', '2', '9', '1'] },
   limit: { 
     type: 'string', 
     required: true,

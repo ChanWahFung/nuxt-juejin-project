@@ -37,6 +37,7 @@ module.exports = {
     'no-multi-spaces': 'off',
     'object-shorthand': 'warn',
     'no-unused-vars': 'warn',
-    'camelcase': 'off'
+    'camelcase': 'off',
+    "vue/comment-directive": 'off',
   }
 }

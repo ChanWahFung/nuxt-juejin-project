@@ -24,12 +24,12 @@
       <p v-if="hasDesc" class="artic-item__desc" v-html="highlight.description || highlight.text || item.article_info.brief_content"></p>
       <ul class="artic-item__action">
         <li class="action-item" :class="{active: item.article_info[likeField]}" @click.stop="articleLike">
-          <img v-if="item.article_info[likeField]" class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan-active.930baa2.svg">
-          <img v-else class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg">
+          <img v-if="item.article_info[likeField]" class="action-item__icon" src="~assets/images/png/like.png">
+          <img v-else class="action-item__icon" src="~assets/images/png/like.png">
           {{ item.article_info[likeCountField] }}
         </li>
         <li class="action-item" @click.stop="toDetail('#comment')">
-          <img class="action-item__icon" src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg">
+          <img class="action-item__icon" src="~assets/images/png/comment.png">
           {{ item.article_info.comment_count }}
         </li>
       </ul>
@@ -97,9 +97,9 @@ export default {
         // 更新视图点赞状态
         if (res.s === 1) {
           this.$emit('update:item', {
-            ...this.item, 
+            ...this.item,
             [this.likeField]: !this.item[this.likeField],
-            [this.likeCountField]: this.item[this.likeField] ? Number(this.item[this.likeCountField]) - 1 : Number(this.item[this.likeCountField]) + 1 
+            [this.likeCountField]: this.item[this.likeField] ? Number(this.item[this.likeCountField]) - 1 : Number(this.item[this.likeCountField]) + 1
           })
         }
       }
@@ -202,7 +202,7 @@ export default {
     text-decoration: underline;
   }
 
-  /deep/ em{
+   ::v-deep  em{
     color: #e8001c;
   }
 }
@@ -216,7 +216,7 @@ export default {
   white-space: nowrap;
   overflow: hidden;
 
-  /deep/ em{
+   ::v-deep  em{
     color: #e8001c;
   }
 }
@@ -237,6 +237,9 @@ export default {
 
     .action-item__icon{
       margin-right: 3px;
+      display: block;
+      width: 16px;
+      height: 16px;
     }
 
     &.active{
